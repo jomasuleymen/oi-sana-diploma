@@ -1,0 +1,57 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"module": "ESNext",
+		"target": "ES5",
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"esnext",
+			"esnext.asynciterable",
+			"ES5"
+		],
+		"useDefineForClassFields": true,
+		"allowJs": true,
+		"experimentalDecorators": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"removeComments": true,
+		"noFallthroughCasesInSwitch": true,
+		"skipLibCheck": true,
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"src/*"
+			]
+		},
+		"types": [
+			"vite/client"
+		]
+	},
+	"include": [
+		"src",
+		"**/*.ts",
+		"**/*.tsx", "postcss.config.js",
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	],
+	"references": [
+		{
+			"path": "./tsconfig.node.json"
+		}
+	]
+}

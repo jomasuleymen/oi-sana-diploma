@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  postgres-db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - /db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=root
+      - POSTGRES_DB=oi-sana
+
+  redisdb:
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t8
+    volumes:
+      - redis-data:/data
+
+volumes:
+  db:
+  redis-data:
