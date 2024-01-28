@@ -4,7 +4,7 @@ import {
 } from "@/components/data-table/data-table.types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import { PostCellAction } from "./post-cell-action-column";
+import { PostCellAction } from "./article-cell-action-column";
 import { SortingHeaderCell } from "@/components/data-table/data-table-header-cells/sorting-header-cell";
 import { Post } from "@/services/post.service";
 

@@ -1,11 +1,11 @@
-import UserDTO from "src/user/dto/user.dto";
+import { UserSession } from "src/auth/dto/session-user.dto";
 
-declare module 'django-hash';
+declare module "django-hash";
 
 declare global {
 	namespace Express {
 		export interface Request {
-			user: UserDTO;
+			user: UserSession;
 		}
 	}
 }

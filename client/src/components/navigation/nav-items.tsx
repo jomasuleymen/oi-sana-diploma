@@ -26,12 +26,12 @@ export const dashboardNavItems: NavItem[] = [
   // },
   {
     title: "Users",
-    href: "/dashboard/user",
+    href: "/dashboard/users",
     icon: User,
   },
   {
     title: "Posts",
-    href: "/dashboard/post",
+    href: "/dashboard/articles",
     icon: SquarePen,
   },
 ];

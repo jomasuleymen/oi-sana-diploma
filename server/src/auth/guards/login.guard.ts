@@ -1,9 +1,8 @@
 import { ExecutionContext, Injectable } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { validate } from "class-validator";
 import { Request } from "express";
-import UserLoginDTO from "../dto/user-login.dto";
-import LoginFailedException from "../exceptions/loginFailed.exception";
+import UserLoginDTO from "../dto/login-user.dto";
+import { LoginFailedException } from "../exceptions/auth.exceptions";
 
 @Injectable()
 export class LoginGuard extends AuthGuard("local") {
@@ -14,20 +13,15 @@ export class LoginGuard extends AuthGuard("local") {
 		const data = new UserLoginDTO();
 		Object.assign(data, request.body || {});
 
-		const errors = await validate(data);
-		if (errors.length > 0) {
+		if (!data.email || !data.password) {
 			throw new LoginFailedException();
 		}
 
-		try {
-			// call local startegy
-			const result = (await super.canActivate(context)) as boolean;
-			// call serializeUser funciton
-			await super.logIn(request);
+		// call local startegy
+		const result = (await super.canActivate(context)) as boolean;
+		// call validate function
+		await super.logIn(request);
 
-			return result;
-		} catch (err) {
-			throw new LoginFailedException();
-		}
+		return result;
 	}
 }

@@ -7,6 +7,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
+import { cn } from "@/lib/utils";
 import { HTMLInputTypeAttribute } from "react";
 import { FieldValues, FieldPath, UseFormReturn } from "react-hook-form";
 
@@ -18,6 +19,7 @@ type FormInputFieldProps<T extends FieldValues> = {
   label?: string;
   type?: HTMLInputTypeAttribute;
   disabled?: boolean;
+  className?: string;
 };
 
 export const FormInputField = <T extends FieldValues>({
@@ -28,13 +30,14 @@ export const FormInputField = <T extends FieldValues>({
   label,
   type,
   disabled,
+  className
 }: FormInputFieldProps<T>) => {
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem className="w-full">
+        <FormItem className={cn("w-full", className)}>
           {label && <Label htmlFor={name}>{label}</Label>}
           <FormControl>
             {type === "password" ? (

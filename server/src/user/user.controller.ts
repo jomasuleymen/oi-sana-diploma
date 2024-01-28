@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ClassSerializerInterceptor,
 	Controller,
 	Delete,
@@ -7,12 +8,14 @@ import {
 	Param,
 	UseInterceptors,
 } from "@nestjs/common";
-import { UseAuthorized } from "src/auth/decorators/useAuthRoles.decorator";
+import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
 import { SessionService } from "src/session/session.service";
 import { USER_ROLE } from "./user-roles";
 import { UserService } from "./user.service";
+import UseSession from "src/auth/decorators/use-session.decorator";
+import { UserSession } from "src/auth/dto/session-user.dto";
 
-@Controller("user")
+@Controller("users")
 export class UserController {
 	constructor(
 		private readonly userService: UserService,
@@ -21,8 +24,8 @@ export class UserController {
 
 	@UseInterceptors(ClassSerializerInterceptor)
 	@UseAuthorized(USER_ROLE.ADMIN)
-	@Get("sellers")
-	async sellers() {
+	@Get()
+	async findAll() {
 		try {
 			return this.userService.findAll();
 		} catch (err) {
@@ -32,24 +35,35 @@ export class UserController {
 		}
 	}
 
+	@UseInterceptors(ClassSerializerInterceptor)
 	@UseAuthorized(USER_ROLE.ADMIN)
-	@Delete("/:id")
-	async deleteSeller(@Param("id") userId: string) {
+	@Get(":id")
+	async findOne(@Param("id") id: string) {
 		try {
-			const user = await this.userService.deleleUser({ id: userId });
-			if (!user.affected) throw new Error("Пользователь не найден");
-
-			this.sessionService.deleteUserSessions(userId);
-
-			return {
-				success: true,
-				message: "Пользователь успешно удален",
-			};
-		} catch (e) {
-			return {
-				success: false,
-				message: "Ошибка при удалении пользователя",
-			};
+			return this.userService.findById(id);
+		} catch (err) {
+			throw new InternalServerErrorException({
+				message: "Ошибка в сервере",
+			});
 		}
+	}
+
+	@UseAuthorized()
+	@Delete(":id")
+	async delete(@Param("id") userId: string, @UseSession() user: UserSession) {
+		const userEntity = await this.userService.findById(userId);
+		if (!userEntity)
+			return new BadRequestException({ message: "User not found" });
+
+		if (!user.isAdmin && userEntity.id !== user.id) {
+			return new BadRequestException({
+				message: "User can be deleted on by himself",
+			});
+		}
+
+		await this.userService.deleleUser({ id: userId });
+		this.sessionService.deleteUserSessions(userId);
+
+		return { message: "Пользователь успешно удален" };
 	}
 }

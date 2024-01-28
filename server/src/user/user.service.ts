@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import bcrypt from "bcrypt";
-import UserRegisterDTO from "src/auth/dto/user-register.dto";
+import UserRegisterDTO from "src/auth/dto/register-user.dto";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
-import { UserEntity } from "./user.entity";
+import { UserEntity } from "./entities/user.entity";
 import { isEmail } from "class-validator";
+import { hashPlainText } from "src/lib/hash-utils";
 
 @Injectable()
 export class UserService {
@@ -19,6 +19,7 @@ export class UserService {
 				username: dto.username,
 			},
 		});
+
 		if (userByUsername)
 			throw new BadRequestException("username is already taken");
 
@@ -30,16 +31,13 @@ export class UserService {
 
 		if (userByEmail) throw new BadRequestException("email is already taken");
 
-		const decryptedPassword = bcrypt.hashSync(dto.password, 10);
-
 		const data: Partial<UserEntity> = {
 			username: dto.username,
 			email: dto.email,
-			password: decryptedPassword,
+			password: hashPlainText(dto.password),
 		};
 
-		const user = await this.usersRepository.insert(data);
-
+		const user = await this.usersRepository.save(data);
 		return user;
 	}
 
@@ -66,12 +64,19 @@ export class UserService {
 		return await this.usersRepository.findOneBy({ email });
 	}
 
-	async findByEmailOrUsername(username: string) {
-		if (isEmail(username)) {
-			return await this.findByEmail(username);
+	async findByEmailOrUsername(email: string) {
+		if (isEmail(email)) {
+			return await this.findByEmail(email);
 		}
 
-		return await this.findByUsername(username);
+		return await this.findByUsername(email);
+	}
+
+	async update(
+		filter: FindOptionsWhere<UserEntity> | UserEntity["id"],
+		data: Partial<UserEntity>,
+	) {
+		return await this.usersRepository.update(filter, data);
 	}
 
 	async deleleUser(filter: FindOptionsWhere<UserEntity> | UserEntity["id"][]) {

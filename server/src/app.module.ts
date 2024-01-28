@@ -10,6 +10,9 @@ import { getRedisConfig } from "./config/redis.config";
 import { SessionModule } from "./session/session.module";
 import { SessionService } from "./session/session.service";
 import { UserModule } from "./user/user.module";
+import { ArticleModule } from "./article/article.module";
+import { MailModule } from "./mail/mail.module";
+import { WEEK } from "time-constants";
 
 @Module({
 	imports: [
@@ -25,6 +28,8 @@ import { UserModule } from "./user/user.module";
 		SessionModule,
 		AuthModule,
 		UserModule,
+		ArticleModule,
+		MailModule,
 	],
 	controllers: [],
 	providers: [],
@@ -37,7 +42,6 @@ export class AppModule implements NestModule {
 
 	configure(consumer: MiddlewareConsumer) {
 		const sessionStore = this.sessionService.getSessionStore();
-		const oneDay = 1000 * 60 * 60 * 24;
 
 		consumer
 			.apply(
@@ -50,7 +54,7 @@ export class AppModule implements NestModule {
 						sameSite: false,
 						secure: false,
 						httpOnly: false,
-						maxAge: oneDay * 7,
+						maxAge: WEEK,
 					},
 				}),
 				passport.initialize(),

@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FaAt, FaLock, FaUser } from "react-icons/fa6";
-import { useParams } from "react-router-dom";
 import * as z from "zod";
 import { CardWrapper } from "../auth/card-wrapper/card-wrapper";
 import { FormInputField } from "../auth/inputField";
@@ -20,16 +19,10 @@ export function RegisterForm() {
 	const [success, setSuccess] = useState<string | undefined>("");
 	const [isPending, startTransition] = useTransition();
 
-	const searchParams = useParams();
-	const urlError =
-		searchParams.error === "OAuthAccountNotLinked"
-			? "Email already in use with different provider!"
-			: "";
-
 	const form = useForm<RegisterFormType>({
 		resolver: zodResolver(RegisterSchema),
 		defaultValues: {
-			name: "",
+			username: "",
 			email: "",
 			password: "",
 			confirmPassword: "",
@@ -41,19 +34,14 @@ export function RegisterForm() {
 		setSuccess("");
 
 		startTransition(() => {
-			registerUser(credentials)
-				.then((response) => {
-					const { success, message } = response;
-
-					if (success) {
-						setSuccess(message);
-					} else {
-						setError(message);
-					}
-				})
-				.catch(() => {
-					setError("Something went wrong");
-				});
+			registerUser(credentials).then((data) => {
+				const { success, message } = data;
+				if (success) {
+					setSuccess(message);
+				} else {
+					setError(message);
+				}
+			});
 		});
 	};
 
@@ -75,7 +63,7 @@ export function RegisterForm() {
 						icon={FaUser}
 						form={form}
 						disabled={isPending}
-						name="name"
+						name="username"
 						label="Username"
 						placeholder="Username"
 					/>
@@ -108,7 +96,7 @@ export function RegisterForm() {
 						placeholder="Confirm password"
 					/>
 					<div className="col-span-1 lg:col-span-2 space-y-2">
-						<FormError message={error || urlError} />
+						<FormError message={error} />
 						<FormSuccess message={success} />
 						<Button type="submit" disabled={isPending} className="w-full lg:w-28">
 							Sign up

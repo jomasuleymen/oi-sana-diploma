@@ -3,33 +3,31 @@ import { useEffect, useState } from "react";
 import { CardWrapper } from "@/components/auth/card-wrapper/card-wrapper";
 import { FormError } from "@/components/ui/form-error";
 import { FormSuccess } from "@/components/ui/form-success";
-import { LoaderIcon } from "lucide-react";
-import { useParams, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "@/services/auth.service";
+import { LoaderIcon } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
-const NewVerificationPage = () => {
+const EmailVerificationPage = () => {
 	const [error, setError] = useState<string | undefined>();
 	const [success, setSuccess] = useState<string | undefined>();
-	const params = useParams();
-	const token = params.token;
-
+	const [params] = useSearchParams();
+	const token = params.get("token");
+	
 	useEffect(() => {
 		if (!token) {
 			setError("Missing token!");
 			return;
 		}
 
-		verifyEmail(token)
-			.then((data) => {
-				if (data.success) {
-					setSuccess(data.success);
-				} else if (data.error) {
-					setError(data.error);
-				}
-			})
-			.catch(() => {
-				setError("Something went wrong!");
-			});
+		verifyEmail(token).then((data) => {
+			const { success, message } = data;
+
+			if (success) {
+				setSuccess(message);
+			} else {
+				setError(message);
+			}
+		});
 	}, [token]);
 
 	return (
@@ -51,4 +49,4 @@ const NewVerificationPage = () => {
 	);
 };
 
-export default NewVerificationPage;
+export default EmailVerificationPage;

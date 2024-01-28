@@ -12,13 +12,7 @@ export class AuthenticateGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest() as Request;
 
 		const isAuth = request.isAuthenticated();
-
-		if (!isAuth) {
-			throw new UnauthorizedException({
-				message: "Пользователь не авторизован",
-				code: 401,
-			});
-		}
+		if (!isAuth) throw new UnauthorizedException();
 
 		return true;
 	}

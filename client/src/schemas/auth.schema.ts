@@ -16,3 +16,12 @@ export const RegisterSchema = UserFieldsSchema.extend({
 	message: "Passwords don't match",
 	path: ["confirmPassword"],
 });
+
+export const ResetPasswordSchema = UserFieldsSchema.pick({ password: true })
+	.extend({
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords don't match",
+		path: ["confirmPassword"],
+	});

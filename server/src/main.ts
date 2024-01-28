@@ -1,5 +1,7 @@
+import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
+import ValidationException from "./exceptions/validation.exception";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
@@ -7,6 +9,12 @@ async function bootstrap() {
 	});
 
 	app.setGlobalPrefix("api");
+	app.useGlobalPipes(
+		new ValidationPipe({
+			exceptionFactory: errors => new ValidationException(errors),
+			stopAtFirstError: true,
+		}),
+	);
 
 	const PORT = process.env.SERVER_PORT || 3500;
 	const origin = process.env.ORIGINS

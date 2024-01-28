@@ -8,21 +8,22 @@ import * as z from "zod";
 import { FormError } from "@/components/ui/form-error";
 import { FormSuccess } from "@/components/ui/form-success";
 import { LoginSchema } from "@/schemas/auth.schema";
+import { useAuthStore } from "@/store/auth.store";
 import { useState, useTransition } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { CardWrapper } from "../auth/card-wrapper/card-wrapper";
 import { FormInputField } from "../auth/inputField";
-import { useAuthStore } from "@/store/auth.store";
 
 type ILoginForm = z.infer<typeof LoginSchema>;
 
 export function LoginForm() {
-	const searchParams = useParams();
+	const [searchParams] = useSearchParams();
 
 	const [error, setError] = useState<string | undefined>("");
 	const [success, setSuccess] = useState<string | undefined>("");
 	const [isPending, startTransition] = useTransition();
-  const login = useAuthStore(store => store.login);
+	const login = useAuthStore((store) => store.login);
+	const navigate = useNavigate();
 
 	const form = useForm<ILoginForm>({
 		resolver: zodResolver(LoginSchema),
@@ -35,7 +36,7 @@ export function LoginForm() {
 	const onSubmit = (credentials: ILoginForm) => {
 		setError("");
 		setSuccess("");
-		const callbackUrl = searchParams.callbackUrl;
+		const callbackUrl = searchParams.get("callbackUrl");
 
 		startTransition(() => {
 			login(credentials)
@@ -54,7 +55,6 @@ export function LoginForm() {
 					}
 				})
 				.catch((err) => {
-					console.log(err);
 					setError("Something went wrong");
 				});
 		});
@@ -83,15 +83,24 @@ export function LoginForm() {
 						placeholder="Username or Email"
 						type="text"
 					/>
-					<FormInputField
-						icon={FaLock}
-						form={form}
-						disabled={isPending}
-						name="password"
-						label="Password"
-						placeholder="Password"
-						type="password"
-					/>
+					<div>
+						<FormInputField
+							icon={FaLock}
+							form={form}
+							disabled={isPending}
+							name="password"
+							label="Password"
+							placeholder="Password"
+							type="password"
+							className="mb-0 pb-0"
+						/>
+						<div
+							onClick={() => navigate("forgot-password")}
+							className="text-[0.7rem] text-blue-600 cursor-pointer hover:text-blue-800 p-0 mt-1 text-right"
+						>
+							<span>Forgot password?</span>
+						</div>
+					</div>
 					<FormError message={error} />
 					<FormSuccess message={success} />
 					<div className="flex">

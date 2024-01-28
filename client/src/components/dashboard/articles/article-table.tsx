@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useCallback, useMemo } from "react";
-import { filterableColumns, generateColumns, searchableColumns } from "./post-columns";
+import { filterableColumns, generateColumns, searchableColumns } from "./article-columns";
 import { Post } from "@/services/post.service";
 
 const POSTS_API_ENDPOINT = "/api/post";
@@ -22,7 +22,7 @@ const deleteBlog = async (data: any) => {
   });
 };
 
-export const PostsTable: React.FC = () => {
+export const ArticlesTable: React.FC = () => {
   const queryClient = useQueryClient();
 
   const deleteRowsAction = useCallback(
