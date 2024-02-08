@@ -1,9 +1,7 @@
+import { BooksTable } from "./table/book-table";
+
 const BooksDashboard: React.FC = () => {
-	return (
-		<div>
-			<h1>Books</h1>
-		</div>
-	);
+	return <BooksTable />;
 };
 
 export default BooksDashboard;

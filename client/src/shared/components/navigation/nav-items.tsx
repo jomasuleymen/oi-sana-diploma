@@ -7,7 +7,7 @@ import {
 	MonitorPlayIcon,
 	NewspaperIcon,
 	PuzzleIcon,
-	User
+	User,
 } from "lucide-react";
 
 export interface NavItem {
@@ -88,13 +88,8 @@ export const mainNavItems: NavItem[] = [
 		icon: PuzzleIcon,
 	},
 	{
-		title: "About",
-		href: `/about-us`,
-		icon: BookIcon,
-	},
-	{
-		title: "Meditation",
-		href: `/meditation`,
+		title: "Meditations",
+		href: `/meditations`,
 		icon: BookIcon,
 	},
 ];

@@ -12,7 +12,7 @@ import { HTMLInputTypeAttribute } from "react";
 import { FieldValues, FieldPath, UseFormReturn } from "react-hook-form";
 
 type FormInputFieldProps<T extends FieldValues> = {
-  form: UseFormReturn<T, any, undefined>;
+  form: UseFormReturn<T, any, any>;
   name: FieldPath<T>;
   placeholder?: string;
   icon?: React.ElementType;

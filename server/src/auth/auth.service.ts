@@ -27,7 +27,18 @@ export class AuthService {
 	async validateUser(dto: UserLoginDTO): Promise<UserDTO> {
 		const user = await this.usersRepository.findOne({
 			where: [{ email: Equal(dto.email) }, { username: Equal(dto.email) }],
-			select: ["id", "username", "email", "password", "emailVerified"],
+			select: [
+				"id",
+				"username",
+				"email",
+				"password",
+				"emailVerified",
+				"firstname",
+				"lastname",
+				"role",
+				"createdAt",
+				"profileImage",
+			],
 		});
 		if (!user) throw new LoginFailedException();
 

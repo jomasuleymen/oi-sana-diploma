@@ -6,10 +6,11 @@ import BooksDashboard from "./books";
 import CoursesDashboard from "./courses";
 import DashboardLayout from "./dashboard.layout";
 import MeditationsDashboard from "./meditations";
-import NewMeditation from "./meditations/new";
+import MeditationCreatePage from "./meditations/new";
 import MethodologiesDashboard from "./methodologies";
 import SpecialistsDashboard from "./specialists";
 import UsersDashboard from "./users";
+import BookCreatePage from "./books/new";
 
 export const dashboardRoutes: RouteObject = {
 	path: "/dashboard",
@@ -48,13 +49,22 @@ export const dashboardRoutes: RouteObject = {
 				},
 				{
 					path: "new",
-					element: <NewMeditation />,
+					element: <MeditationCreatePage />,
 				},
 			],
 		},
 		{
 			path: "books",
-			element: <BooksDashboard />,
+			children: [
+				{
+					index: true,
+					element: <BooksDashboard />,
+				},
+				{
+					path: "new",
+					element: <BookCreatePage />,
+				},
+			],
 		},
 	],
 };

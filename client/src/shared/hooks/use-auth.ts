@@ -9,9 +9,7 @@ type useAuthParams = {
 	doNavigate?: boolean;
 };
 
-export const useAuth = (
-	{ admin, specialist, doNavigate }: useAuthParams = { doNavigate: true }
-) => {
+export const useAuth = ({ admin, specialist, doNavigate = true }: useAuthParams) => {
 	const navigate = useNavigate();
 	const [done, setDone] = useState(false);
 	const [user, loading, triedFetch, fetchMe] = useAuthStore((store) => [

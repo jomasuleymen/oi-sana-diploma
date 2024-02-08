@@ -32,7 +32,6 @@
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": [ "src/*" ],
 			"@pages/*": [ "src/pages/*" ],
 			"@store/*": [ "src/store/*" ],
 			"@components/*": [ "src/shared/components/*" ],
@@ -40,6 +39,7 @@
 			"@utils/*": [ "src/shared/utils/*" ],
 			"@lib/*": [ "src/shared/lib/*" ],
 			"@constants/*": [ "src/shared/constants/*" ],
+			"@/*": [ "src/*" ],
 		},
 		"types": [
 			"vite/client"

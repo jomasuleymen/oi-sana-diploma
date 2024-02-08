@@ -9,7 +9,7 @@ const MarketingPage = (props: Props) => {
 	const user = useAuthStore((store) => store.user);
 
 	if (user) {
-		return <Navigate to="/client" replace={true} />;
+		return <Navigate to="/books" replace={true} />;
 	}
 
 	return (
