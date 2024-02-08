@@ -1,4 +1,4 @@
-import { UsersTable } from "@/components/dashboard/user/users-table";
+import { UsersTable } from "./table/users-table";
 import React from "react";
 
 type Props = {};

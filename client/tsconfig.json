@@ -32,9 +32,14 @@
 		"jsx": "react-jsx",
 		"baseUrl": ".",
 		"paths": {
-			"@/*": [
-				"src/*"
-			]
+			"@/*": [ "src/*" ],
+			"@pages/*": [ "src/pages/*" ],
+			"@store/*": [ "src/store/*" ],
+			"@components/*": [ "src/shared/components/*" ],
+			"@hooks/*": [ "src/shared/hooks/*" ],
+			"@utils/*": [ "src/shared/utils/*" ],
+			"@lib/*": [ "src/shared/lib/*" ],
+			"@constants/*": [ "src/shared/constants/*" ],
 		},
 		"types": [
 			"vite/client"
@@ -43,7 +48,8 @@
 	"include": [
 		"src",
 		"**/*.ts",
-		"**/*.tsx", "postcss.config.js",
+		"**/*.tsx",
+		"postcss.config.js"
 	],
 	"exclude": [
 		"node_modules",

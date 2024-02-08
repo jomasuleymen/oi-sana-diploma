@@ -11,6 +11,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { VerificationTokenEntity } from "./entities/email-verification.entity";
 import { ResetPasswordEntity } from "./entities/reset-password.entity";
 import { ResetPasswordTokenService } from "./token/reset-password.service";
+import { GoogleStrategy } from "./passport/strategies/google.strategy";
 
 @Module({
 	imports: [
@@ -23,10 +24,11 @@ import { ResetPasswordTokenService } from "./token/reset-password.service";
 	providers: [
 		AuthService,
 		LocalStrategy,
+		GoogleStrategy,
 		SessionSerializer,
 		EmailVerificationService,
 		ResetPasswordTokenService,
 	],
-	exports: [AuthService, EmailVerificationService],
+	exports: [TypeOrmModule, AuthService, EmailVerificationService],
 })
 export class AuthModule {}

@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MailService } from "src/mail/mail.service";
 import { HOUR } from "time-constants";
-import { Repository } from "typeorm";
+import { Equal, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { VerificationTokenEntity } from "../entities/email-verification.entity";
 import { isEmail } from "class-validator";
@@ -19,10 +19,7 @@ export class EmailVerificationService {
 		private readonly mailService: MailService,
 		private readonly config: ConfigService,
 	) {
-		if (!this.config.get(this.DOMAIN_ENV))
-			throw new Error(`${this.DOMAIN_ENV} env variable is not set!`);
-
-		this.domain = this.config.get(this.DOMAIN_ENV)!;
+		this.domain = this.config.getOrThrow(this.DOMAIN_ENV)!;
 	}
 
 	private generateToken = () => {
@@ -33,7 +30,7 @@ export class EmailVerificationService {
 	};
 
 	private createVerificationToken = async (email: string) => {
-		await this.emailVerificationRepo.delete({ email });
+		await this.emailVerificationRepo.delete({ email: Equal(email) });
 		const { token, expires } = this.generateToken();
 
 		const tokenDTO = { email, expires, token };
@@ -55,13 +52,16 @@ export class EmailVerificationService {
 	};
 
 	public checkAndGetEmail = async (token: string): Promise<string> => {
-		const tokenEntity = await this.emailVerificationRepo.findOneBy({ token });
+		const tokenEntity = await this.emailVerificationRepo.findOneBy({
+			token: Equal(token),
+		});
 		if (!tokenEntity) throw new BadRequestException("Token does not exist!");
+
+		await this.emailVerificationRepo.delete({ id: Equal(tokenEntity.id) });
 
 		const hasExpired = new Date(tokenEntity.expires) < new Date();
 		if (hasExpired) throw new BadRequestException("Token has expired!");
 
-		await this.emailVerificationRepo.delete({ id: tokenEntity.id });
 		return tokenEntity.email;
 	};
 

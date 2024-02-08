@@ -1,5 +1,5 @@
-import { ArticlesTable } from "@/components/dashboard/articles/article-table";
 import React from "react";
+import { ArticlesTable } from "./table/article-table";
 
 type Props = {};
 

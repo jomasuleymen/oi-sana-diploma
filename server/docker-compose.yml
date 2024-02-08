@@ -3,10 +3,11 @@ version: "3.9"
 services:
   postgres-db:
     image: postgres
+    restart: always
     ports:
       - 5432:5432
     volumes:
-      - /db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=root

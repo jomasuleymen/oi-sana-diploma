@@ -13,6 +13,8 @@ async function bootstrap() {
 		new ValidationPipe({
 			exceptionFactory: errors => new ValidationException(errors),
 			stopAtFirstError: true,
+			whitelist: true,
+			transform: true,
 		}),
 	);
 

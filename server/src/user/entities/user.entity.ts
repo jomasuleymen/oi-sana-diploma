@@ -1,47 +1,46 @@
 import { Exclude } from "class-transformer";
-import { USER_ROLE } from "../user-roles";
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
 	Index,
-	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { ArticleEntity } from "src/article/entities/article.entity";
+import { USER_ROLE } from "../user-roles";
 
 @Entity({
 	name: "users",
 })
 export class UserEntity {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("increment")
 	id: string;
 
-	@Index()
 	@Column({ type: "varchar", length: 30, unique: true, nullable: false })
 	username: string;
+
+	@Index()
+	@Column({ type: "varchar", length: 120, nullable: true })
+	firstname: string;
+
+	@Index()
+	@Column({ type: "varchar", length: 120, nullable: true })
+	lastname: string;
 
 	@Index()
 	@Column({ type: "varchar", unique: true, nullable: false })
 	email: string;
 
-	@Column({ type: "timestamp", default: null })
+	@Column({ type: "timestamp", default: null, select: false })
 	emailVerified: Date;
-
-	@Column({ type: "varchar", nullable: true })
-	firstname?: string;
-
-	@Column({ type: "varchar", nullable: true })
-	lastname?: string;
 
 	@Column({ type: "varchar", nullable: true })
 	profileImage?: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt: Date;
 
 	@Index()
@@ -53,12 +52,7 @@ export class UserEntity {
 	})
 	role: USER_ROLE;
 
-	@Column({ type: "varchar", nullable: false })
+	@Column({ type: "varchar", nullable: false, select: false })
 	@Exclude()
 	password: string;
-
-	@OneToMany(() => ArticleEntity, article => article.author, {
-		onDelete: "CASCADE",
-	})
-	articles: ArticleEntity[];
 }

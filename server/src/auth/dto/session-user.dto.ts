@@ -13,7 +13,7 @@ export class UserSession implements Partial<UserDTO> {
 		session.id = dto.id;
 		session.username = dto.username;
 		session.email = dto.email;
-		session.isAdmin = dto.isAdmin;
+		session.isAdmin = dto.role == USER_ROLE.ADMIN;
 		session.role = dto.role;
 		return session;
 	}

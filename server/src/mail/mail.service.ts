@@ -14,10 +14,10 @@ export class MailService {
 			host: "smtp.gmail.com",
 			port: 465,
 			secure: true,
-			from: config.get("MAIL_EMAIL"),
+			from: config.getOrThrow("MAIL_EMAIL"),
 			auth: {
-				user: this.config.get("MAIL_EMAIL"),
-				pass: this.config.get("MAIL_PASSWORD"),
+				user: this.config.getOrThrow("MAIL_EMAIL"),
+				pass: this.config.getOrThrow("MAIL_PASSWORD"),
 			},
 		});
 	}

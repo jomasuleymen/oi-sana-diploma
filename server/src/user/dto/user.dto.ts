@@ -7,12 +7,10 @@ export class UserDTO implements Partial<UserEntity> {
 	email: string;
 	firstname?: string;
 	lastname?: string;
-	isAdmin: boolean;
 	role: USER_ROLE;
 	createdAt?: Date;
 	emailVerified?: Date;
 	profileImage?: string;
-	updatedAt?: Date;
 
 	public static fromEntity(user: UserEntity): UserDTO {
 		return {
@@ -21,12 +19,10 @@ export class UserDTO implements Partial<UserEntity> {
 			email: user.email,
 			firstname: user.firstname,
 			lastname: user.lastname,
-			isAdmin: user.role == USER_ROLE.ADMIN,
 			role: user.role,
 			createdAt: user.createdAt,
 			emailVerified: user.emailVerified,
 			profileImage: user.profileImage,
-			updatedAt: user.updatedAt,
 		};
 	}
 }

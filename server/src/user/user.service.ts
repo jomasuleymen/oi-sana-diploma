@@ -1,10 +1,15 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import UserRegisterDTO from "src/auth/dto/register-user.dto";
-import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
-import { UserEntity } from "./entities/user.entity";
 import { isEmail } from "class-validator";
-import { hashPlainText } from "src/lib/hash-utils";
+import UserRegisterDTO from "src/auth/dto/register-user.dto";
+import { Filtering } from "src/decorators/filtering-params.decorator";
+import { Pagination } from "src/decorators/pagination-params.decorator";
+import { Sorting } from "src/decorators/sorting-params.decorator";
+import { hashPlainText } from "src/lib/hash.util";
+import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
+import { Equal, FindManyOptions, Repository } from "typeorm";
+import UserDTO from "./dto/user.dto";
+import { UserEntity } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
@@ -53,15 +58,43 @@ export class UserService {
 	}
 
 	async findById(id: string) {
-		return await this.usersRepository.findOneBy({ id });
+		return await this.usersRepository.findOneBy({ id: Equal(id) });
 	}
 
 	async findByUsername(username: string) {
-		return await this.usersRepository.findOneBy({ username });
+		return await this.usersRepository.findOneBy({ username: Equal(username) });
 	}
 
 	async findByEmail(email: string) {
-		return await this.usersRepository.findOneBy({ email });
+		return await this.usersRepository.findOneBy({ email: Equal(email) });
+	}
+
+	async findBy(
+		{ limit, offset, size }: Pagination,
+		sort?: Sorting[],
+		filter?: Filtering[],
+	): Promise<PaginatedResource<UserDTO>> {
+		const where = getWhere(filter);
+		const order = getOrder(sort);
+
+		const [users, count] = await this.usersRepository.findAndCount({
+			where,
+			order,
+			take: limit,
+			skip: offset,
+		});
+
+		const usersDto: Array<UserDTO> = [];
+
+		for (const user of users) {
+			usersDto.push(UserDTO.fromEntity(user));
+		}
+
+		return {
+			totalItems: count,
+			items: usersDto,
+			pageCount: Math.ceil(count / size),
+		};
 	}
 
 	async findByEmailOrUsername(email: string) {
@@ -72,14 +105,18 @@ export class UserService {
 		return await this.findByUsername(email);
 	}
 
-	async update(
-		filter: FindOptionsWhere<UserEntity> | UserEntity["id"],
-		data: Partial<UserEntity>,
-	) {
-		return await this.usersRepository.update(filter, data);
+	async updateById(userId: UserEntity["id"], data: Partial<UserEntity>) {
+		return await this.usersRepository.update({ id: Equal(userId) }, data);
 	}
 
-	async deleleUser(filter: FindOptionsWhere<UserEntity> | UserEntity["id"][]) {
-		return await this.usersRepository.delete(filter);
+	async updateManyById(ids: UserEntity["id"][], data: Partial<UserEntity>) {
+		return await this.usersRepository.update(ids, data);
+	}
+
+	async deleteById(userId: UserEntity["id"]) {
+		return await this.usersRepository.delete({ id: Equal(userId) });
+	}
+	async deleteManyById(ids: UserEntity["id"][]) {
+		return await this.usersRepository.delete(ids);
 	}
 }

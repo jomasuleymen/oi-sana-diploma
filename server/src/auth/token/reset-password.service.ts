@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { isEmail } from "class-validator";
 import { MailService } from "src/mail/mail.service";
 import { HOUR } from "time-constants";
-import { Repository } from "typeorm";
+import { Equal, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { ResetPasswordEntity } from "../entities/reset-password.entity";
 
@@ -19,10 +19,7 @@ export class ResetPasswordTokenService {
 		private readonly mailService: MailService,
 		private readonly config: ConfigService,
 	) {
-		if (!this.config.get(this.DOMAIN_ENV))
-			throw new Error(`${this.DOMAIN_ENV} env variable is not set!`);
-
-		this.domain = this.config.get(this.DOMAIN_ENV)!;
+		this.domain = this.config.getOrThrow(this.DOMAIN_ENV)!;
 	}
 
 	private generateToken = () => {
@@ -33,7 +30,7 @@ export class ResetPasswordTokenService {
 	};
 
 	private createResetPasswordToken = async (email: string) => {
-		await this.resetPasswordRepo.delete({ email });
+		await this.resetPasswordRepo.delete({ email: Equal(email) });
 		const { token, expires } = this.generateToken();
 
 		const tokenDTO = { email, expires, token };
@@ -55,13 +52,15 @@ export class ResetPasswordTokenService {
 	};
 
 	public checkAndGetEmail = async (token: string): Promise<string> => {
-		const tokenEntity = await this.resetPasswordRepo.findOneBy({ token });
+		const tokenEntity = await this.resetPasswordRepo.findOneBy({
+			token: Equal(token),
+		});
 		if (!tokenEntity) throw new BadRequestException("Token does not exist!");
 
 		const hasExpired = new Date(tokenEntity.expires) < new Date();
 		if (hasExpired) throw new BadRequestException("Token has expired!");
 
-		await this.resetPasswordRepo.delete({ id: tokenEntity.id });
+		await this.resetPasswordRepo.delete({ id: Equal(tokenEntity.id) });
 		return tokenEntity.email;
 	};
 

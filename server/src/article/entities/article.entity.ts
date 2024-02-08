@@ -4,38 +4,44 @@ import {
 	CreateDateColumn,
 	Entity,
 	Index,
-	OneToMany,
+	ManyToOne,
 	PrimaryGeneratedColumn,
+	Unique,
 	UpdateDateColumn,
 } from "typeorm";
 
 @Entity({
 	name: "articles",
 })
+@Index(["title", "slug"])
+@Unique(["author", "title"])
 export class ArticleEntity {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@OneToMany(() => UserEntity, user => user.articles, { onDelete: "CASCADE" })
+	@ManyToOne(() => UserEntity, {
+		onDelete: "CASCADE",
+		nullable: false,
+	})
 	author: UserEntity;
 
 	@Column({ type: "varchar", nullable: false })
 	content: string;
 
-	@Column({ type: "varchar", nullable: false, unique: true })
+	@Column({ type: "varchar", nullable: false })
 	@Index({ fulltext: true })
 	title: string;
 
-	@Column({ type: "varchar", nullable: false, unique: true })
+	@Column({ type: "varchar", nullable: false })
 	@Index({ fulltext: true })
 	slug: string;
 
 	@Column({ type: "varchar", nullable: false })
 	coverImage: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt: Date;
 }
