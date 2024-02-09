@@ -1,24 +1,27 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Param,
+	Patch,
+	Post
 } from "@nestjs/common";
+import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
 import {
-  Filtering,
-  FilteringParams,
+	Filtering,
+	FilteringParams,
 } from "src/decorators/filtering-params.decorator";
 import {
-  Pagination,
-  PaginationParams,
+	Pagination,
+	PaginationParams,
 } from "src/decorators/pagination-params.decorator";
 import {
-  Sorting,
-  SortingParams,
+	Sorting,
+	SortingParams,
 } from "src/decorators/sorting-params.decorator";
+import { UserDeleteDTO } from "src/user/dto/user-delete.dto";
+import { USER_ROLE } from "src/user/user-roles";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { UpdateBookDto } from "./dto/update-book.dto";
@@ -44,7 +47,7 @@ export class BookController {
 
 	@Get(":id")
 	async findOne(@Param("id") id: string) {
-		return await this.bookService.findOne(+id);
+		return await this.bookService.findById(+id);
 	}
 
 	@Patch(":id")
@@ -52,8 +55,20 @@ export class BookController {
 		return await this.bookService.update(+id, updateBookDto);
 	}
 
+	@UseAuthorized(USER_ROLE.ADMIN)
+	@Delete("many")
+	async deleteMany(@Body() dto: UserDeleteDTO) {
+		if (typeof dto.id === "string") dto.id = [dto.id];
+		await this.bookService.deleteManyById(dto.id as any);
+
+		return { message: "Пользователь успешно удален" };
+	}
+
+	@UseAuthorized(USER_ROLE.ADMIN)
 	@Delete(":id")
-	async remove(@Param("id") id: string) {
-		return await this.bookService.remove(+id);
+	async deleteOne(@Param("id") id: string) {
+		await this.bookService.deleteById(+id);
+
+		return { message: "Пользователь успешно удален" };
 	}
 }

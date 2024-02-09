@@ -29,7 +29,8 @@ async function bootstrap() {
 		exposedHeaders: [
 			"Content-Disposition",
 			"Content-Length",
-			"X-File-Name",
+			"Upload-Offset",
+			"Upload-Length",
 			"Content-Type",
 		],
 	});

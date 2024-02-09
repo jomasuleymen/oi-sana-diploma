@@ -27,7 +27,7 @@ import { BookModule } from './book/book.module';
 			isGlobal: true,
 			envFilePath: [".env", ".env.production", ".env.development"],
 		}),
-		ServeStaticModule.forRoot({ rootPath: PUBLIC_PATH, exclude: ['/api/(.*)'], }),
+		ServeStaticModule.forRoot({ rootPath: PUBLIC_PATH, exclude: ['/api/(.*)'] }),
 		TypeOrmModule.forRoot(getPostgresConfig()),
 		RedisModule.forRootAsync({
 			inject: [ConfigService],

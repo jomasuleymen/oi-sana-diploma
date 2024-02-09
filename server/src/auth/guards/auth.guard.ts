@@ -10,6 +10,8 @@ import { Request } from "express";
 export class AuthenticateGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest() as Request;
+		console.log(request.headers);
+		console.log(request.body);
 		const isAuth = request.isAuthenticated();
 		if (!isAuth) throw new UnauthorizedException();
 
