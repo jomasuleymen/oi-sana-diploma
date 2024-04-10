@@ -17,9 +17,9 @@ export interface Filtering {
 const getFilter = (filter: string, available: any[]): Filtering => {
 	if (
 		!filter.match(
-			/^[a-zA-Z0-9_]+:(eq|neq|gt|gte|lt|lte|like|nlike|in|nin):[a-zA-Z0-9_,]+$/,
+			/^[a-zA-Z0-9._]+:(eq|neq|gt|gte|lt|lte|like|nlike|in|nin):(.*?)+$/,
 		) &&
-		!filter.match(/^[a-zA-Z0-9_]+:(isnull|isnotnull)$/)
+		!filter.match(/^[a-zA-Z0-9._]+:(isnull|isnotnull)$/)
 	) {
 		throw new BadRequestException("Invalid filter parameter");
 	}
@@ -35,7 +35,7 @@ const getFilter = (filter: string, available: any[]): Filtering => {
 };
 
 // e.g. ?filter=createdAt:gte:2020-01-01
-export const FilteringParams = <T>(validParams: Array<keyof T>) =>
+export const FilteringParams = <T>(validParams: Array<keyof T> | Array<string>) =>
 	createParamDecorator((_, ctx: ExecutionContext): Filtering[] | null => {
 		const req: Request = ctx.switchToHttp().getRequest();
 		const filters = req.query.filter as string;

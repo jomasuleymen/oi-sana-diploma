@@ -56,12 +56,18 @@ export function DataTableToolbar<TData>({
 													?.getFilterValue() as any
 											)?.value ?? ""
 										}
-										onChange={(event) =>
-											table.getColumn(String(column.id))?.setFilterValue({
-												value: event.target.value,
-												operation: column.operation,
-											})
-										}
+										onChange={(event) => {
+											if (event.target.value === "") {
+												table
+													.getColumn(String(column.id))
+													?.setFilterValue(null);
+											} else {
+												table.getColumn(String(column.id))?.setFilterValue({
+													value: event.target.value,
+													operation: column.operation,
+												});
+											}
+										}}
 										className="h-8 w-[150px] lg:w-[250px]"
 									/>
 								)

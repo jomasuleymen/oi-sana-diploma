@@ -28,7 +28,7 @@ export function useDataTable<TData, TValue>({
 	queryKey,
 	url,
 }: UseDataTableProps<TData, TValue>) {
-	const { onPaginationChange, pagination } = usePagination({ pageSize: 10 });
+	const { onPaginationChange, pagination } = usePagination({ pageSize: 100 });
 	const { onSortingChange, sorting } = useSorting();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const columnFiltersDebouned = useDebounce<ColumnFiltersState>(columnFilters, 700);
@@ -49,7 +49,6 @@ export function useDataTable<TData, TValue>({
 		data: data?.items || [],
 		columns,
 		pageCount: isNumber(data?.pageCount) ? data.pageCount : -1,
-
 		getCoreRowModel: getCoreRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),

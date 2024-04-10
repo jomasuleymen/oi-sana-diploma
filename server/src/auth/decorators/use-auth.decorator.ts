@@ -1,9 +1,9 @@
 import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
-import { USER_ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-roles";
 import { AuthenticateGuard } from "../guards/auth.guard";
 import { RolesGuard } from "../guards/roles.guard";
 
-export const UseAuthorized = (...roles: USER_ROLE[]): MethodDecorator => {
+export const UseAuthorized = (...roles: ROLE[]): MethodDecorator => {
 	if (!roles || !roles.length) {
 		return applyDecorators(UseGuards(AuthenticateGuard));
 	}

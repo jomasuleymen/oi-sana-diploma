@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const useArticles = (userId?: string) => {
+export const useArticles = (userId?: number) => {
 	const [page, setPage] = useState<number>(1);
 	const { data, error, isError, isLoading } = useQuery({
 		queryKey: ["articles", userId, page.toString()],

@@ -4,19 +4,19 @@ import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import { getOrder, getWhere } from "src/lib/typeorm.util";
-import { Repository } from "typeorm";
+import { Equal, Repository } from "typeorm";
 import { CreateMeditationCategoryDto } from "./dto/create-meditation-category.dto";
 import { CreateMeditationDto } from "./dto/create-meditation.dto";
-import { MeditationCategoryEntity } from "./entities/meditation-catergory.entity";
-import { MeditationEntity } from "./entities/meditation.entity";
+import { MeditationCategory } from "./entities/meditation-catergory.entity";
+import { Meditation } from "./entities/meditation.entity";
 
 @Injectable()
 export class MeditationService {
 	constructor(
-		@InjectRepository(MeditationEntity)
-		private meditationRepository: Repository<MeditationEntity>,
-		@InjectRepository(MeditationCategoryEntity)
-		private categoryRepository: Repository<MeditationCategoryEntity>,
+		@InjectRepository(Meditation)
+		private meditationRepository: Repository<Meditation>,
+		@InjectRepository(MeditationCategory)
+		private categoryRepository: Repository<MeditationCategory>,
 	) {}
 
 	async create(createMeditationDto: CreateMeditationDto) {
@@ -28,18 +28,24 @@ export class MeditationService {
 			throw new Error("Category not found");
 		}
 
-		await this.meditationRepository.save({
-			...createMeditationDto,
-			category,
-		});
+		for (const audio of createMeditationDto.audio) {
+			await this.meditationRepository.save({
+				category,
+				audio: audio,
+			});
+		}
 	}
 
 	async findAllCategory() {
-		return await this.categoryRepository.find();
+		return await this.categoryRepository.find({ loadRelationIds: true });
 	}
 
 	async createCategory(dto: CreateMeditationCategoryDto) {
-		await this.categoryRepository.save(dto);
+		return await this.categoryRepository.save(dto);
+	}
+
+	async deleteCategory(id: number) {
+		return await this.categoryRepository.delete({ id: Equal(id) });
 	}
 
 	async findAll(
@@ -47,7 +53,7 @@ export class MeditationService {
 		sort?: Sorting[],
 		filter?: Filtering[],
 	) {
-		const where = getWhere<MeditationEntity>(filter);
+		const where = getWhere<Meditation>(filter);
 		const order = getOrder(sort);
 
 		const [articles, count] = await this.meditationRepository.findAndCount({
@@ -55,12 +61,7 @@ export class MeditationService {
 			order,
 			take: limit,
 			skip: offset,
-			select: {
-				id: true,
-				title: true,
-				video: true,
-				category: { id: true, name: true, image: true },
-			},
+			relations: ["category"],
 		});
 
 		return {
@@ -76,7 +77,16 @@ export class MeditationService {
 		});
 	}
 
-	async remove(id: number) {
-		await this.meditationRepository.delete(id);
+	async findByCategoryId(id: number) {
+		return await this.meditationRepository.findBy({
+			category: { id },
+		});
+	}
+
+	async deleteById(id: Meditation["id"]) {
+		return await this.meditationRepository.delete({ id: Equal(id) });
+	}
+	async deleteManyById(ids: Meditation["id"][]) {
+		return await this.meditationRepository.delete(ids);
 	}
 }

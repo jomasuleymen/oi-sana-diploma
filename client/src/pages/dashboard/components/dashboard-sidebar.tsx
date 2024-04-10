@@ -1,4 +1,4 @@
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 import { dashboardGroupNavItems } from "@components/navigation/nav-items";
 import { SideNav } from "@components/navigation/side-nav";
 

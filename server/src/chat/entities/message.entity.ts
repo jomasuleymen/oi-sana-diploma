@@ -1,25 +1,27 @@
-import { UserEntity } from "src/user/entities/user.entity";
+import { User } from "src/user/entities/user.entity";
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
 	ManyToOne,
-	PrimaryGeneratedColumn
+	PrimaryGeneratedColumn,
 } from "typeorm";
-import { RoomEntity } from "./room.entity";
 
 @Entity({
 	name: "messages",
 })
-export class MessageEntity {
+export class Message {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@ManyToOne(() => UserEntity)
-	sender: UserEntity;
+	@Column("varchar")
+	roomId: string;
 
-	@ManyToOne(() => RoomEntity, room => room.messages)
-	room: RoomEntity;
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
+	sender: User;
+
+	@ManyToOne(() => User, { onDelete: "CASCADE" })
+	receiver: User;
 
 	@Column("boolean", { default: false })
 	read: boolean;
@@ -30,6 +32,6 @@ export class MessageEntity {
 	@Column("text")
 	content: string;
 
-	@CreateDateColumn({ type: "timestamp" })
+	@CreateDateColumn({ type: "timestamptz" })
 	createdAt: Date;
 }

@@ -1,8 +1,8 @@
 import { Type } from "class-transformer";
 import { IsOptional } from "class-validator";
 
-export class UserDeleteDTO {
+export class DeleteManyDTO {
 	@IsOptional()
 	@Type(() => String)
-	id?: string | string[];
+	id?: number | number[];
 }

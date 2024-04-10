@@ -70,20 +70,19 @@ const CreateMeditationCategory: React.FC<Props> = ({ isOpen, setIsOpen }) => {
 			onClose={() => setIsOpen(false)}
 		>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
 					<FormField
 						control={form.control}
 						name="image"
 						render={({ field }) => (
 							<FormItem className="w-full">
-								<FormLabel>Video</FormLabel>
+								<FormLabel>Image</FormLabel>
 								<FormControl>
 									<UploadDropZone
 										acceptedFileTypes={["image/*"]}
-										onChange={(fileId) => {
-											if (fileId) form.setValue("image", fileId);
-											else form.resetField("image");
-										}}
+										onChange={field.onChange}
+										value={field.value}
+										allowImagePreview
 									/>
 								</FormControl>
 								<FormMessage className="mx-2 my-1 mb-0 text-xs" />

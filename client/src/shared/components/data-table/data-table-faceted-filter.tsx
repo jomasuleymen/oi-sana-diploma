@@ -12,7 +12,7 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@components/ui/command";
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
 import { Separator } from "@components/ui/separator";
@@ -107,6 +107,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 															: undefined
 													);
 												}}
+												data-disabled={false}
 											>
 												<div
 													className={cn(

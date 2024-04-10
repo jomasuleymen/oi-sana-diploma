@@ -15,7 +15,10 @@ import {
 import { CreateMeditationCategoryDto } from "./dto/create-meditation-category.dto";
 import { CreateMeditationDto } from "./dto/create-meditation.dto";
 import { MeditationService } from "./meditation.service";
-import { MeditationEntity } from "./entities/meditation.entity";
+import { Meditation } from "./entities/meditation.entity";
+import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
+import { ROLE } from "src/user/user-roles";
+import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
 
 @Controller("meditations")
 export class MeditationController {
@@ -29,8 +32,8 @@ export class MeditationController {
 	@Get()
 	async findAll(
 		@PaginationParams() pagination: Pagination,
-		@SortingParams<MeditationEntity>(["title"]) sort?: Sorting[],
-		@FilteringParams<MeditationEntity>(["title", "category", "video"])
+		@SortingParams<Meditation>([]) sort?: Sorting[],
+		@FilteringParams<Meditation>(["category.id", "category.name"])
 		filter?: Filtering[],
 	) {
 		return await this.meditationService.findAll(pagination, sort, filter);
@@ -50,13 +53,35 @@ export class MeditationController {
 		);
 	}
 
+	@Delete("categories/:id")
+	async deleteCategory(@Param("id") id: string) {
+		return await this.meditationService.deleteCategory(+id);
+	}
+
 	@Get(":id")
 	async findOne(@Param("id") id: string) {
 		return await this.meditationService.findOne(+id);
 	}
 
+	@Get("categories/:id")
+	async findByCategoryId(@Param("id") id: string) {
+		return await this.meditationService.findByCategoryId(+id);
+	}
+
+	@UseAuthorized(ROLE.ADMIN)
+	@Delete("many")
+	async deleteMany(@Body() dto: DeleteManyDTO) {
+		if (typeof dto.id === "string") dto.id = [dto.id];
+		await this.meditationService.deleteManyById(dto.id as any);
+
+		return { message: "Медитация успешно удалены" };
+	}
+
+	@UseAuthorized(ROLE.ADMIN)
 	@Delete(":id")
-	async remove(@Param("id") id: string) {
-		return await this.meditationService.remove(+id);
+	async deleteOne(@Param("id") id: number) {
+		await this.meditationService.deleteById(id);
+
+		return { message: "Медитация успешно удален" };
 	}
 }

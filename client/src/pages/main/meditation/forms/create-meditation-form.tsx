@@ -14,8 +14,9 @@ import * as z from "zod";
 import { MeditationSchema } from "@pages/main/meditation/meditation.schema";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Input } from "@components/ui/input";
 
+import Container from "@components/ui/container";
+import { FormErrorProps } from "@components/ui/form-error";
 import {
 	Select,
 	SelectContent,
@@ -23,6 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@components/ui/select";
+import { UploadDropZone } from "@components/upload-dropzone";
 import {
 	CreateMeditationType,
 	MeditationCategory,
@@ -31,8 +33,6 @@ import {
 } from "@pages/main/meditation/meditation.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import "react-quill/dist/quill.snow.css";
-import { FormErrorProps } from "@components/ui/form-error";
-import { UploadDropZone } from "@components/upload-dropzone";
 import CreateMeditationCategory from "./create-meditation-category-form";
 
 type IForm = z.infer<typeof MeditationSchema>;
@@ -58,9 +58,8 @@ export function CreateMeditationForm() {
 	const form = useForm<IForm>({
 		resolver: zodResolver(MeditationSchema),
 		defaultValues: {
-			title: "",
 			categoryId: "",
-			video: "",
+			audio: [],
 		},
 	});
 
@@ -80,93 +79,87 @@ export function CreateMeditationForm() {
 	return (
 		<>
 			<CreateMeditationCategory isOpen={addCatergory} setIsOpen={setAddCategory} />
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="">
-					<FormField
-						control={form.control}
-						name="video"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<FormLabel>Video</FormLabel>
-								<FormControl>
-									<UploadDropZone
-										acceptedFileTypes={["video/*"]}
-										onChange={(fileId) => {
-											if (fileId) form.setValue("video", fileId);
-											else form.resetField("video");
-										}}
-									/>
-								</FormControl>
-								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="title"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<FormLabel>Title</FormLabel>
-								<FormControl>
-									<Input
-										type="text"
-										disabled={isPending}
-										placeholder="Title"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-							</FormItem>
-						)}
-					/>
+			<Container className="px-5 max-w-5xl">
+				<Container transparent className="text-center text-xl font-semibold mb-4">
+					New meditation
+				</Container>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+						<div className="flex gap-2">
+							<FormField
+								control={form.control}
+								name="categoryId"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Category</FormLabel>
+										<div className="flex gap-2">
+											<FormControl>
+												<Select
+													onValueChange={field.onChange}
+													value={field.value}
+													disabled={categoryLoading}
+												>
+													<SelectTrigger className="w-[180px]">
+														<SelectValue
+															placeholder={
+																categoryLoading
+																	? "...Loading"
+																	: field.value
+															}
+														/>
+													</SelectTrigger>
+													<SelectContent>
+														{categorySuccess &&
+															categories &&
+															categories?.map(
+																(category: MeditationCategory) => (
+																	<SelectItem
+																		key={category.id}
+																		value={category.id.toString()}
+																	>
+																		{category.name}
+																	</SelectItem>
+																)
+															)}
+													</SelectContent>
+												</Select>
+											</FormControl>
+											<Button
+												type="button"
+												onClick={() => setAddCategory(true)}
+											>
+												Add category
+											</Button>
+										</div>
 
-					<div className="flex gap-2 items-end">
+										<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+									</FormItem>
+								)}
+							/>
+						</div>
 						<FormField
 							control={form.control}
-							name="categoryId"
+							name="audio"
 							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Category</FormLabel>
+								<FormItem className="w-full">
+									<FormLabel>Meditation audio</FormLabel>
 									<FormControl>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-											disabled={categoryLoading}
-										>
-											<SelectTrigger className="w-[180px]">
-												<SelectValue
-													placeholder={
-														categoryLoading ? "...Loading" : field.value
-													}
-												/>
-											</SelectTrigger>
-											<SelectContent>
-												{categorySuccess &&
-													categories &&
-													categories?.map(
-														(category: MeditationCategory) => (
-															<SelectItem
-																key={category.id}
-																value={category.id.toString()}
-															>
-																{category.name}
-															</SelectItem>
-														)
-													)}
-											</SelectContent>
-										</Select>
+										<UploadDropZone
+											allowMultiple
+											maxFiles={true}
+											acceptedFileTypes={["audio/*"]}
+											onChange={field.onChange}
+											value={field.value}
+										/>
 									</FormControl>
 									<FormMessage className="mx-2 my-1 mb-0 text-xs" />
 								</FormItem>
 							)}
 						/>
-						<Button type="button" onClick={() => setAddCategory(true)}>
-							Add category
-						</Button>
-					</div>
-					<Button type="submit">Submit</Button>
-				</form>
-			</Form>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+			</Container>
 		</>
 	);
 }

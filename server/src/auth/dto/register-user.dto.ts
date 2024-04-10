@@ -1,14 +1,24 @@
 import {
 	IsEmail,
 	IsNotEmpty,
+	IsString,
 	IsStrongPassword,
 	MinLength,
 } from "class-validator";
 
 class UserRegisterDTO {
+	@IsString()
 	@IsNotEmpty()
 	@MinLength(4)
 	username: string;
+
+	@IsString()
+	@IsNotEmpty()
+	firstname: string;
+
+	@IsString()
+	@IsNotEmpty()
+	lastname: string;
 
 	@IsEmail()
 	@IsNotEmpty()

@@ -2,7 +2,7 @@ import { DataTable } from "@components/data-table/data-table";
 import { Heading } from "@components/ui/heading";
 import { Separator } from "@components/ui/separator";
 import $api from "@lib/http";
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 import { Article } from "@pages/main/article/article.service";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useMemo } from "react";
@@ -13,7 +13,7 @@ const ARTICLE_QUERY_KEY = "article";
 
 const deleteArticles = async (articles: Article | Article[]) => {
 	const id = Array.isArray(articles) ? articles.map((article) => article.id) : articles.id;
-	return $api.delete(POSTS_API_ENDPOINT, { data: { id } });
+	return $api.delete(POSTS_API_ENDPOINT + "/many", { data: { id } });
 };
 
 export const ArticlesTable: React.FC = () => {

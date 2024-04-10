@@ -2,7 +2,7 @@ import { DataTable } from "@components/data-table/data-table";
 import { Heading } from "@components/ui/heading";
 import { Separator } from "@components/ui/separator";
 import $api from "@lib/http";
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback, useMemo } from "react";
 import { filterableColumns, generateColumns, searchableColumns } from "./book-columns";
@@ -13,7 +13,7 @@ const QUERY_KEY = "books";
 
 const deleteBooks = async (books: Book | Book[]) => {
 	const id = Array.isArray(books) ? books.map((book) => book.id) : books.id;
-	return $api.delete(API_ENDPOINT, { data: { id } });
+	return $api.delete(API_ENDPOINT + "/many", { data: { id } });
 };
 
 export const BooksTable: React.FC = () => {

@@ -6,7 +6,7 @@ import { MailService } from "src/mail/mail.service";
 import { HOUR } from "time-constants";
 import { Equal, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
-import { ResetPasswordEntity } from "../entities/reset-password.entity";
+import { ResetPassword } from "../entities/reset-password.entity";
 
 @Injectable()
 export class ResetPasswordTokenService {
@@ -14,8 +14,8 @@ export class ResetPasswordTokenService {
 	private DOMAIN_ENV = "CLIENT_DOMAIN";
 
 	constructor(
-		@InjectRepository(ResetPasswordEntity)
-		private resetPasswordRepo: Repository<ResetPasswordEntity>,
+		@InjectRepository(ResetPassword)
+		private resetPasswordRepo: Repository<ResetPassword>,
 		private readonly mailService: MailService,
 		private readonly config: ConfigService,
 	) {

@@ -1,19 +1,29 @@
 import { Button } from "@components/ui/button";
-import { Form, FormField, FormItem, FormMessage } from "@components/ui/form";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import { Input } from "@components/ui/input";
 import { ArticleSchema } from "@pages/main/article/article.schema";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ReactQuill from "react-quill";
 import { toast } from "sonner";
 
 import { FormErrorProps } from "@components/ui/form-error";
+import { UploadDropZone } from "@components/upload-dropzone";
 import { CreateArticleType, createArticle } from "@pages/main/article/article.service";
 import { useMutation } from "@tanstack/react-query";
 import "react-quill/dist/quill.snow.css";
+import Container from "@components/ui/container";
+import RichTextEditor from "@components/rich-text-editor";
 
 type IArticleForm = z.infer<typeof ArticleSchema>;
 
@@ -23,7 +33,6 @@ export function CreateArticleForm() {
 		FormErrorProps,
 		CreateArticleType
 	>({ mutationFn: createArticle });
-	const [imageUrl, setImageUrl] = useState<string | null>(null);
 
 	const form = useForm<IArticleForm>({
 		resolver: zodResolver(ArticleSchema),
@@ -47,68 +56,72 @@ export function CreateArticleForm() {
 		}
 	}, [isSuccess, isError]);
 
-	const uploadImages = async (files: File[]) => {};
-
 	return (
-		<>
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="">
-					<FormField
-						control={form.control}
-						name="coverImage"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								{imageUrl && <img src={imageUrl} width={200} height={200} />}
-								<Input
-									type="file"
-									accept="image/*"
-									disabled={isPending}
-									onChange={(e) => {
-										e.preventDefault();
-										const files = e.target.files;
-										if (!files || !files.length) return;
-										uploadImages(Array.from(files));
-									}}
-								/>
-								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="title"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<Input
-									type="text"
-									disabled={isPending}
-									placeholder="Title"
-									{...field}
-								/>
-								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="content"
-						render={({ field }) => (
-							<FormItem className="w-full">
-								<ReactQuill
-									theme="snow"
-									placeholder="Write something..."
-									className="h-72 mb-12"
-									onChange={(value) => {
-										form.setValue("content", value);
-									}}
-								/>
-								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit">Submit</Button>
-				</form>
-			</Form>
-		</>
+		<Container transparent>
+			<Container transparent className="text-center text-lg font-semibold mb-4">
+				New Article
+			</Container>
+			<Container>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+						<FormField
+							control={form.control}
+							name="coverImage"
+							render={({ field }) => (
+								<FormItem className="w-full">
+									<FormLabel>Cover image</FormLabel>
+									<FormControl>
+										<UploadDropZone
+											acceptedFileTypes={["image/*"]}
+											onChange={field.onChange}
+											value={field.value}
+											allowImagePreview
+										/>
+									</FormControl>
+									<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="title"
+							render={({ field }) => (
+								<FormItem className="w-full">
+									<FormLabel>Title</FormLabel>
+									<FormControl>
+										<Input
+											type="text"
+											disabled={isPending}
+											placeholder="Title"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="content"
+							render={({ field }) => (
+								<FormItem className="w-full">
+									<FormLabel>Content</FormLabel>
+									<FormControl>
+										<RichTextEditor
+											onChange={(value) => {
+												form.setValue("content", value);
+											}}
+											value={field.value}
+										/>
+									</FormControl>
+									<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+			</Container>
+		</Container>
 	);
 }

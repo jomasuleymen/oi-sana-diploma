@@ -11,7 +11,7 @@ const DashboardLayout: React.FC<Props> = ({}) => {
 		<div className="flex flex-col h-screen !overflow-hidden">
 			<Header className="h-16" />
 			<div className="flex flex-1 !overflow-hidden">
-				<DashboardSidebar className="overflow-y-auto hidden md:block" />
+				<DashboardSidebar className="overflow-y-auto" />
 				<main className="flex-1 overflow-y-auto paragraph p-2">
 					<Outlet />
 				</main>

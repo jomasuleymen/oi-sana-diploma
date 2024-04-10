@@ -15,6 +15,6 @@ export class VerificationTokenEntity {
 	@Column({ type: "varchar", nullable: false, unique: true })
 	token: string;
 
-	@Column({ type: "timestamp", nullable: false })
+	@Column({ type: "timestamptz", nullable: false })
 	expires: Date;
 }

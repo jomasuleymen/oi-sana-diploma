@@ -9,7 +9,11 @@ type useAuthParams = {
 	doNavigate?: boolean;
 };
 
-export const useAuth = ({ admin, specialist, doNavigate = true }: useAuthParams) => {
+export const useAuth = (
+	{ admin, specialist, doNavigate }: useAuthParams = {
+		doNavigate: true,
+	}
+) => {
 	const navigate = useNavigate();
 	const [done, setDone] = useState(false);
 	const [user, loading, triedFetch, fetchMe] = useAuthStore((store) => [
@@ -34,6 +38,8 @@ export const useAuth = ({ admin, specialist, doNavigate = true }: useAuthParams)
 				searchParams.append("callbackUrl", window.location.pathname);
 				navigate(`/auth?${searchParams.toString()}`);
 			} else if (admin && !user.isAdmin) {
+				navigate("/");
+			} else if (specialist && !user.isSpecialist) {
 				navigate("/");
 			}
 		}

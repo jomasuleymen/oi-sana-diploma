@@ -7,13 +7,13 @@ import {
 	Patch,
 	Post,
 } from "@nestjs/common";
-import { ArticleService } from "./article.service";
-import { CreateArticleDto } from "./dto/create-article.dto";
-import { UpdateArticleDto } from "./dto/update-article.dto";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
-import { USER_ROLE } from "src/user/user-roles";
-import { UserSession } from "src/auth/dto/session-user.dto";
 import UseSession from "src/auth/decorators/use-session.decorator";
+import { UserSession } from "src/auth/dto/session-user.dto";
+import {
+	Filtering,
+	FilteringParams,
+} from "src/decorators/filtering-params.decorator";
 import {
 	Pagination,
 	PaginationParams,
@@ -22,37 +22,38 @@ import {
 	Sorting,
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
-import {
-	Filtering,
-	FilteringParams,
-} from "src/decorators/filtering-params.decorator";
-import { ArticleEntity } from "./entities/article.entity";
+import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
+import { ROLE } from "src/user/user-roles";
+import { ArticleService } from "./article.service";
+import { CreateArticleDto } from "./dto/create-article.dto";
+import { UpdateArticleDto } from "./dto/update-article.dto";
+import { Article } from "./entities/article.entity";
 
 @Controller("articles")
 export class ArticleController {
 	constructor(private readonly articleService: ArticleService) {}
 
 	@Post()
-	@UseAuthorized(USER_ROLE.SPECIAL, USER_ROLE.ADMIN)
+	@UseAuthorized(ROLE.SPECIAL, ROLE.ADMIN)
 	async create(
 		@Body() createArticleDto: CreateArticleDto,
 		@UseSession() user: UserSession,
 	) {
-		return await this.articleService.create(user.id, createArticleDto);
+		return await this.articleService.create(+user.id, createArticleDto);
 	}
 
 	@Get()
 	async find(
 		@PaginationParams() pagination: Pagination,
-		@SortingParams<ArticleEntity>(["title", "createdAt"]) sort?: Sorting[],
-		@FilteringParams<ArticleEntity>(["title", "author"]) filter?: Filtering[],
+		@SortingParams<Article>(["title", "createdAt"]) sort?: Sorting[],
+		@FilteringParams<Article>(["title", "author"]) filter?: Filtering[],
 	) {
 		return await this.articleService.findBy(pagination, sort, filter);
 	}
 
-	@Get(":id")
-	findOne(@Param("id") id: string) {
-		return this.articleService.findOne(+id);
+	@Get(":slug")
+	findOne(@Param("slug") slug: string) {
+		return this.articleService.findOneBySlug(slug);
 	}
 
 	@Patch(":id")
@@ -60,8 +61,20 @@ export class ArticleController {
 		return this.articleService.update(+id, updateArticleDto);
 	}
 
+	@UseAuthorized(ROLE.ADMIN)
+	@Delete("many")
+	async deleteMany(@Body() dto: DeleteManyDTO) {
+		if (typeof dto.id === "string") dto.id = [dto.id];
+		await this.articleService.deleteManyById(dto.id as any);
+
+		return { message: "Артиклы успешно удалены" };
+	}
+
+	@UseAuthorized(ROLE.ADMIN, ROLE.SPECIAL)
 	@Delete(":id")
-	remove(@Param("id") id: string) {
-		return this.articleService.remove(+id);
+	async deleteOne(@Param("id") id: string, @UseSession() user: UserSession) {
+		await this.articleService.deleteById(id, user.id);
+
+		return { message: "Артикл успешно удален" };
 	}
 }

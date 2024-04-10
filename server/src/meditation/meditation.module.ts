@@ -2,12 +2,12 @@ import { Module } from "@nestjs/common";
 import { MeditationService } from "./meditation.service";
 import { MeditationController } from "./meditation.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { MeditationEntity } from "./entities/meditation.entity";
-import { MeditationCategoryEntity } from "./entities/meditation-catergory.entity";
+import { Meditation } from "./entities/meditation.entity";
+import { MeditationCategory } from "./entities/meditation-catergory.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([MeditationEntity, MeditationCategoryEntity]),
+		TypeOrmModule.forFeature([Meditation, MeditationCategory]),
 	],
 	controllers: [MeditationController],
 	providers: [MeditationService],

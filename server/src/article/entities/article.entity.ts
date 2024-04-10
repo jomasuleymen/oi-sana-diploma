@@ -1,4 +1,4 @@
-import { UserEntity } from "src/user/entities/user.entity";
+import { Specialist } from "src/specialist/entities/specialist.entity";
 import {
 	Column,
 	CreateDateColumn,
@@ -15,15 +15,14 @@ import {
 })
 @Index(["title", "slug"])
 @Unique(["author", "title"])
-export class ArticleEntity {
+export class Article {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@ManyToOne(() => UserEntity, {
+	@ManyToOne(() => Specialist, specialist => specialist.articles, {
 		onDelete: "CASCADE",
-		nullable: false,
 	})
-	author: UserEntity;
+	author: Specialist;
 
 	@Column({ type: "varchar", nullable: false })
 	content: string;
@@ -39,9 +38,9 @@ export class ArticleEntity {
 	@Column({ type: "varchar", nullable: false })
 	coverImage: string;
 
-	@CreateDateColumn({ type: "timestamp" })
+	@CreateDateColumn({ type: "timestamptz" })
 	createdAt: Date;
 
-	@UpdateDateColumn({ type: "timestamp" })
+	@UpdateDateColumn({ type: "timestamptz" })
 	updatedAt: Date;
 }

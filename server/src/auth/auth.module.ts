@@ -9,15 +9,17 @@ import { MailModule } from "src/mail/mail.module";
 import { EmailVerificationService } from "./token/email-verification.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { VerificationTokenEntity } from "./entities/email-verification.entity";
-import { ResetPasswordEntity } from "./entities/reset-password.entity";
+import { ResetPassword } from "./entities/reset-password.entity";
 import { ResetPasswordTokenService } from "./token/reset-password.service";
 import { GoogleStrategy } from "./passport/strategies/google.strategy";
+import { SpecialistModule } from "src/specialist/specialist.module";
 
 @Module({
 	imports: [
 		UserModule,
 		MailModule,
-		TypeOrmModule.forFeature([VerificationTokenEntity, ResetPasswordEntity]),
+		SpecialistModule,
+		TypeOrmModule.forFeature([VerificationTokenEntity, ResetPassword]),
 		PassportModule.register({ session: true }),
 	],
 	controllers: [AuthController],

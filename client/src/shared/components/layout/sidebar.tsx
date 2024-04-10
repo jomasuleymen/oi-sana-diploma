@@ -4,19 +4,13 @@ import { MenuIcon } from "lucide-react";
 
 import { SideNav } from "@components/navigation/side-nav";
 import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet";
-import { GroupNavItems, dashboardGroupNavItems, mainNavItems } from "../navigation/nav-items";
+import { GroupNavItems } from "../navigation/nav-items";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+	navGroups: GroupNavItems[];
+}
 
-const navGroups: GroupNavItems[] = [
-	{
-		title: "Overview",
-		items: mainNavItems,
-	},
-	...dashboardGroupNavItems,
-];
-
-export function Sidebar({}: SidebarProps) {
+export function Sidebar({ navGroups }: SidebarProps) {
 	const [open, setOpen] = useState(false);
 
 	return (

@@ -1,18 +1,18 @@
-import { UserEntity } from "src/user/entities/user.entity";
-import { USER_ROLE } from "../user-roles";
+import { User } from "src/user/entities/user.entity";
+import { ROLE } from "../user-roles";
 
-export class UserDTO implements Partial<UserEntity> {
-	id: string;
+export class UserDTO implements Partial<User> {
+	id: number;
 	username: string;
 	email: string;
-	firstname?: string;
-	lastname?: string;
-	role: USER_ROLE;
+	firstname: string;
+	lastname: string;
+	role: ROLE;
 	createdAt?: Date;
 	emailVerified?: Date;
 	profileImage?: string;
 
-	public static fromEntity(user: UserEntity): UserDTO {
+	public static fromEntity(user: User): UserDTO {
 		return {
 			id: user.id,
 			username: user.username,

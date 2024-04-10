@@ -1,9 +1,7 @@
+import { CoursesTable } from "./table/course-table";
+
 const CoursesDashboard: React.FC = () => {
-	return (
-		<div>
-			<h1>Courses</h1>
-		</div>
-	);
+	return <CoursesTable />;
 };
 
 export default CoursesDashboard;

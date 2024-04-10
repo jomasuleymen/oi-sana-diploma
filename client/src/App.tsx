@@ -11,7 +11,9 @@ import { marketingRoutes } from "@pages/marketing/marketing.route";
 import { dashboardRoutes } from "./pages/dashboard/dashboard.route";
 import { specialistRoutes } from "./pages/specialist/specialist.route";
 import NotFound from "./shared/components/404";
-import ScreenLoading from "./shared/components/loading-page";
+import ScreenLoading from "./shared/components/global-loading-page";
+import { chatRoutes } from "@pages/chat/chat.route";
+import { authRoutes } from "@pages/auth/auth.route";
 
 const App = () => {
 	const fetchMe = useAuthStore((store) => store.fetchMe);
@@ -26,8 +28,10 @@ const App = () => {
 			<RouterProvider
 				router={createBrowserRouter([
 					marketingRoutes,
+					authRoutes,
 					specialistRoutes,
 					dashboardRoutes,
+					chatRoutes,
 					mainRoutes,
 					{
 						path: "*",

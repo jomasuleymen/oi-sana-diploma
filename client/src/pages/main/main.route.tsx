@@ -3,60 +3,151 @@ import { RouteObject } from "react-router-dom";
 import MainLayout from "./main.layout";
 
 import ProtectedRoute from "@/shared/components/protected-route";
-import NewArticlePage from "./article/new-article";
-import AuthPage from "./auth";
-import EmailVerificationPage from "./auth/pages/email-verification";
-import ForgotPasswordPage from "./auth/pages/forgot-password";
-import ResetPasswordPage from "./auth/pages/reset-password";
+import ArticlesPage from "./article";
+import ArticlePage from "./article/components/article-item";
+import CreateArticlePage from "./article/components/new";
 import BooksPage from "./book";
-import ProfilePage from "./profile";
+import CoursesPage from "./course";
+import CoursePage from "./course/components/course-page";
+import CourseViewPage from "./course/components/course-view-page";
+import CreateCoursePage from "./course/components/new";
+import ReviewCoursePage from "./course/components/review";
+import HomePage from "./home";
+import MeditationCategoriesPage from "./meditation";
+import MeditationsPage from "./meditation/components/meditations";
+import MethodologiesPage from "./methodology";
+import NewsPage from "./news";
+import SettingsPage from "./settings";
+import SpecialistsPage from "./specialists";
 
 export const mainRoutes: RouteObject = {
 	path: "/",
 	element: <MainLayout />,
 	children: [
 		{
-			path: "articles",
+			path: "home",
+			element: <ProtectedRoute />,
 			children: [
 				{
-					path: "new",
-					element: <ProtectedRoute element={<NewArticlePage />} />,
+					index: true,
+					element: <HomePage />,
 				},
 			],
 		},
 		{
-			path: "profile",
+			path: "articles",
+			element: <ProtectedRoute />,
 			children: [
 				{
-					path: ":userId",
-					element: <ProtectedRoute element={<ProfilePage />} />,
+					index: true,
+					element: <ArticlesPage />,
+				},
+				{
+					path: ":slug",
+					element: <ArticlePage />,
+				},
+				{
+					path: "new",
+					element: <CreateArticlePage />,
+				},
+			],
+		},
+		{
+			path: "news",
+			element: <ProtectedRoute />,
+			children: [
+				{
+					path: ":slug",
+					element: <NewsPage />,
+				},
+			],
+		},
+		{
+			path: "courses",
+			element: <ProtectedRoute />,
+			children: [
+				{
+					index: true,
+					element: <CoursesPage />,
+				},
+				{
+					path: ":slug",
+					children: [
+						{
+							index: true,
+							element: <CoursePage />,
+						},
+					],
+				},
+				{
+					path: "view",
+					children: [
+						{
+							path: ":slug",
+							children: [
+								{
+									index: true,
+									element: <CourseViewPage />,
+								},
+								{
+									path: "review",
+									element: <ReviewCoursePage />,
+								},
+							],
+						},
+					],
+				},
+				{
+					path: "new",
+					element: <CreateCoursePage />,
+				},
+			],
+		},
+		{
+			path: "settings",
+			element: <ProtectedRoute />,
+			children: [
+				{
+					index: true,
+					element: <SettingsPage />,
 				},
 			],
 		},
 		{
 			path: "books",
-			element: <BooksPage />,
-		},
-		{
-			path: "auth",
+			element: <ProtectedRoute />,
 			children: [
 				{
 					index: true,
-					element: <AuthPage />,
-				},
-				{
-					path: "email-verification",
-					element: <EmailVerificationPage />,
-				},
-				{
-					path: "forgot-password",
-					element: <ForgotPasswordPage />,
-				},
-				{
-					path: "reset-password",
-					element: <ResetPasswordPage />,
+					element: <BooksPage />,
 				},
 			],
+		},
+		{
+			path: "specialists",
+			element: <ProtectedRoute />,
+			children: [
+				{
+					index: true,
+					element: <SpecialistsPage />,
+				},
+			],
+		},
+		{
+			path: "meditations",
+			element: <ProtectedRoute />,
+			children: [
+				{ index: true, element: <MeditationCategoriesPage /> },
+				{
+					path: ":category",
+					element: <MeditationsPage />,
+				},
+			],
+		},
+		{
+			path: "methodologies",
+			element: <ProtectedRoute />,
+			children: [{ index: true, element: <MethodologiesPage /> }],
 		},
 	],
 };

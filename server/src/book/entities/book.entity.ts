@@ -4,7 +4,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 	name: "books",
 })
 @Index(["title"], { unique: true })
-export class BookEntity {
+export class Book {
 	@PrimaryGeneratedColumn("increment")
 	id: number;
 
@@ -19,4 +19,7 @@ export class BookEntity {
 
 	@Column({ type: "varchar", nullable: false })
 	details: string;
+
+	@Column({ type: "varchar", nullable: false })
+	link: string;
 }

@@ -7,7 +7,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { User } from "@pages/main/profile/user.service";
+import { User } from "@pages/main/user/user.service";
 import { Row } from "@tanstack/react-table";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
@@ -41,13 +41,6 @@ export const UserCellAction: React.FC<UserCellActionProps> = ({ row, onRowDelete
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-					<DropdownMenuItem
-						onClick={() => navigate(`/dashboard/user/${row.original.id}`)}
-					>
-						<Edit className="mr-2 h-4 w-4" /> Update
-					</DropdownMenuItem>
-
 					{onRowDeleteAction && (
 						<DropdownMenuItem onClick={() => setOpen(true)}>
 							<Trash className="mr-2 h-4 w-4" /> Delete

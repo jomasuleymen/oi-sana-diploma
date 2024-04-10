@@ -55,7 +55,10 @@ export async function fetchData<TData>({
 
 	if (sorting) {
 		for (const sort of sorting) {
-			params.append("sort", `${sort.id}:${sort.desc ? "desc" : "asc"}`);
+			if (sort.id) {
+				sort.id = String(sort.id).replaceAll("_", ".");
+				params.append("sort", `${sort.id}:${sort.desc ? "desc" : "asc"}`);
+			}
 		}
 	}
 
@@ -63,10 +66,12 @@ export async function fetchData<TData>({
 		for (const filter of columnFilters) {
 			const { id, value: valueWrapper } = filter;
 			const value = valueWrapper?.value || valueWrapper;
-			const operation = value?.operation || defaultOperation;
-
-			if (value) {
-				params.append("filter", `${id}:${operation}:${value}`);
+			const operation = valueWrapper?.operation || defaultOperation;
+			if (
+				value &&
+				(typeof value === "string" || Array.isArray(value) || typeof value === "number")
+			) {
+				params.append("filter", `${id.replaceAll("_", ".")}:${operation}:${value}`);
 			}
 		}
 	}

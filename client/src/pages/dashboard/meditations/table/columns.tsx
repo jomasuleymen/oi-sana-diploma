@@ -1,4 +1,3 @@
-import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
 import {
 	DataTableFilterableColumn,
 	DataTableSearchableColumn,
@@ -6,6 +5,7 @@ import {
 import { Checkbox } from "@components/ui/checkbox";
 import { Meditation } from "@pages/main/meditation/meditation.service";
 import { ColumnDef } from "@tanstack/react-table";
+import Plyr from "plyr-react";
 import { MeditationCellAction } from "./cell-action-column";
 
 interface GenerateColumnsProps {
@@ -35,12 +35,41 @@ export const generateColumns = ({
 		enableHiding: false,
 	},
 	{
-		accessorKey: "title",
-		header: (params) => <SortingHeaderCell headerContext={params} name="Title" />,
+		accessorKey: "category.name",
+		header: () => <span>Category</span>,
+		cell: ({ getValue }) => {
+			const value = getValue() as any;
+			return <div className="max-w-36 break-words">{value}</div>;
+		},
 	},
 	{
-		accessorKey: "category",
-		header: () => <span>Category</span>,
+		accessorKey: "audio",
+		header: () => <span>Audio</span>,
+		cell: ({ getValue }) => {
+			return (
+				<div>
+					<Plyr
+						width="100%"
+						source={{
+							type: "audio",
+							sources: [
+								{
+									src:
+										import.meta.env.VITE_SERVER_URL +
+										"/api/upload/stream/" +
+										getValue(),
+									type: "audio/mp3",
+								},
+							],
+						}}
+						options={{
+							settings: [],
+							controls: ["play", "progress", "play-large", "current-time"],
+						}}
+					/>
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: "createdAt",
@@ -61,19 +90,12 @@ export const generateColumns = ({
 	},
 ];
 
-export const filterableColumns: DataTableFilterableColumn<Meditation>[] = [
-	{
-		id: "category",
-		title: "Category",
-		operation: "in",
-		options: []
-	},
-];
+export const filterableColumns: DataTableFilterableColumn<Meditation>[] = [];
 
 export const searchableColumns: DataTableSearchableColumn<Meditation>[] = [
 	{
-		id: "title",
-		title: "Title",
+		id: "category_name",
+		title: "category",
 		operation: "like",
 	},
 ];

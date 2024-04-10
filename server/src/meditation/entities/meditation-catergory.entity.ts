@@ -5,13 +5,13 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
-import { MeditationEntity } from "./meditation.entity";
+import { Meditation } from "./meditation.entity";
 
 @Entity({
 	name: "meditation_category",
 })
 @Index(["name"], { unique: true })
-export class MeditationCategoryEntity {
+export class MeditationCategory {
 	@PrimaryGeneratedColumn("increment")
 	id: number;
 
@@ -27,8 +27,8 @@ export class MeditationCategoryEntity {
 	})
 	image: string;
 
-	@OneToMany(() => MeditationEntity, meditation => meditation.category, {
+	@OneToMany(() => Meditation, meditation => meditation.category, {
 		onDelete: "CASCADE",
 	})
-	meditations: MeditationEntity[];
+	meditations: Meditation[];
 }

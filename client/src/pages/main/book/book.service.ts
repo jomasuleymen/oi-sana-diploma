@@ -22,11 +22,12 @@ export type Book = {
 	author: string;
 	image: string;
 	details: string;
+	link: string;
 };
 
 export const getBooks = async (params: GetArticlesParams = { page: 1 }) => {
 	const pagination: FetchDataParams["pagination"] = {
-		pageSize: 10,
+		pageSize: 100,
 		pageIndex: params.page - 1,
 	};
 

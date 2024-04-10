@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import {
@@ -17,7 +18,7 @@ export const getOrder = (sorts?: Sorting[]) => {
 
 	const result: any = {};
 	for (const sort of sorts) {
-		if (sort) result[sort.property] = sort.direction;
+		if (sort) _.set(result, sort.property, sort.direction);
 	}
 	return result;
 };
@@ -58,7 +59,7 @@ export const getWhere = <T>(filters?: Filtering[]): FindOptionsWhere<T> => {
 	const transformedFilters = filters.reduce((acc: any, filter) => {
 		const transformFunction = ruleMappings[filter.rule as FilterRule];
 		if (transformFunction) {
-			acc[filter.property] = transformFunction(filter.value as any);
+			_.set(acc, filter.property, transformFunction(filter.value as any));
 		}
 		return acc;
 	}, {});

@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "/colored-logo-text.png?url";
 import WhiteLogo from "/white-logo-text.png?url";
 
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 
 import { useHeaderStore } from "@/store/header-mode.store";
 import { TopNav } from "@components/navigation/top-nav";
 import { UserNav } from "@components/navigation/user-nav";
 import { Sidebar } from "./sidebar";
+import { GroupNavItems, dashboardGroupNavItems, mainNavItems } from "../navigation/nav-items";
+import { useAuthStore } from "@store/auth.store";
 
 type HeaderProps = {
 	className?: React.HTMLAttributes<HTMLDivElement>["className"];
@@ -17,6 +19,25 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ className }) => {
 	const headerMode = useHeaderStore((s) => s.mode);
+	const user = useAuthStore((store) => store.user);
+	const [navGroups, setNavGroups] = useState<GroupNavItems[]>([]);
+
+	useEffect(() => {
+		if (!user) return;
+
+		const groups = [
+			{
+				title: "Overview",
+				items: mainNavItems,
+			},
+		];
+
+		if (user.isAdmin) {
+			groups.push(...dashboardGroupNavItems);
+		}
+
+		setNavGroups(groups);
+	}, [user]);
 
 	return (
 		<div
@@ -26,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 				{ "bg-transparent shadow-none border-none": headerMode === "transparent" }
 			)}
 		>
-			<div className="left hidden items-center justify-start sm:flex">
+			<div className="left items-center justify-start flex">
 				<Link to="/">
 					<img
 						src={headerMode === "transparent" ? WhiteLogo : Logo}
@@ -36,12 +57,11 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 				</Link>
 			</div>
 
-			<div className={cn("block sm:!hidden cursor-pointer")}>
-				<Sidebar />
-			</div>
-
 			<div className="right flex items-center justify-center">
-				<TopNav className={cn("top-nav hidden sm:block mr-6")} />
+				<TopNav
+					className={cn("top-nav block mr-6")}
+					navitems={user ? mainNavItems : []}
+				/>
 				<UserNav />
 			</div>
 		</div>

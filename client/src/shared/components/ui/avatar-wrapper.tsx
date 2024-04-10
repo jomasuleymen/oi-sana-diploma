@@ -1,7 +1,6 @@
+import { cn, getUsernameColor } from "@utils/utils";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
-import { cn } from "@utils/tailwind.utils";
-import { UserRound } from "lucide-react";
 
 function getInitials(name?: string | null): string {
 	if (!name) return "US";
@@ -21,13 +20,22 @@ type Props = {
 	src?: string | null;
 	username?: string | null;
 	className?: string;
+	rounded?: boolean;
 };
 
-const AvatarWrapper: React.FC<Props> = ({ src, username, className }) => {
+const AvatarWrapper: React.FC<Props> = ({ src, username, className, rounded = true }) => {
 	return (
-		<Avatar className={cn("h-10 w-10", className)}>
-			<AvatarImage src={src || ""} alt="avatar" />
-			<AvatarFallback>{getInitials(username)}</AvatarFallback>
+		<Avatar className={cn("h-10 w-10", !rounded && "rounded-none", className)}>
+			<AvatarImage
+				src={src ? import.meta.env.VITE_SERVER_URL + "/uploads/" + src : ""}
+				alt="avatar"
+			/>
+			<AvatarFallback
+				style={{ backgroundColor: getUsernameColor(username) }}
+				className={cn(!rounded && "rounded-none")}
+			>
+				{getInitials(username)}
+			</AvatarFallback>
 		</Avatar>
 	);
 };

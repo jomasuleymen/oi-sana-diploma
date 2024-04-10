@@ -23,7 +23,6 @@ import { Request, Response } from "express";
 import fs, { createReadStream, statSync } from "fs";
 import { diskStorage } from "multer";
 import path from "path";
-import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
 import { promisify } from "util";
 import { v4 as uuid } from "uuid";
 import { PUBLIC_PATH } from "./upload.constant";
@@ -37,14 +36,13 @@ export class UploadController {
 	} = {};
 
 	@Post()
-	@UseAuthorized()
 	@UseInterceptors(
 		FileInterceptor("file", {
 			storage: diskStorage({
 				destination: path.join(PUBLIC_PATH, "uploads"),
 				filename: (req, file, cb) => {
 					const fileNameSplit = file.originalname.split(".");
-					if (fileNameSplit.length !== 2)
+					if (fileNameSplit.length < 2)
 						return cb(new NotAcceptableException("Invalid file extension"), "");
 
 					const fileExt = fileNameSplit[fileNameSplit.length - 1];
@@ -57,12 +55,10 @@ export class UploadController {
 		@Req() req: Request,
 		@Res() res: Response,
 		@UploadedFile(
-			new ParseFilePipeBuilder()
-				.addFileTypeValidator({ fileType: /jpeg|jpg|png|mp4|mov/ }) // images
-				.build({
-					errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-					fileIsRequired: false,
-				}),
+			new ParseFilePipeBuilder().build({
+				errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+				fileIsRequired: false,
+			}),
 		)
 		file?: Express.Multer.File,
 	) {
@@ -75,7 +71,6 @@ export class UploadController {
 
 	@Head()
 	head() {
-		console.log("head");
 		return { message: "head" };
 	}
 
@@ -93,11 +88,7 @@ export class UploadController {
 		const contentLength = req.header("Content-Length")!;
 
 		const extension = path.extname(uploadName);
-		const filePath = path.join(
-			PUBLIC_PATH,
-			"uploads",
-			`${fileId}${extension}`,
-		);
+		const filePath = path.join(PUBLIC_PATH, "uploads", `${fileId}${extension}`);
 
 		if (
 			parseInt(uploadOffset) + parseInt(contentLength) >=
@@ -114,7 +105,6 @@ export class UploadController {
 
 	@Delete()
 	deleteImage(@Body() filename: string) {
-		console.log(filename);
 		// delete file
 		unlinkAsync(
 			path.join(__dirname, "..", "..", "public", "uploads", filename),
@@ -146,7 +136,7 @@ export class UploadController {
 			const readStreamfile = createReadStream(videoPath, {
 				start,
 				end,
-				highWaterMark: 60,
+				highWaterMark: 32768,
 			});
 			const head = {
 				"Content-Range": `bytes ${start}-${end}/${size}`,

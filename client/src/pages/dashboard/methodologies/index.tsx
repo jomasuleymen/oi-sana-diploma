@@ -1,9 +1,7 @@
+import { MethodologiesTable } from "./table/table";
+
 const MethodologiesDashboard: React.FC = () => {
-	return (
-		<div>
-			<h1>Methodologies</h1>
-		</div>
-	);
+	return <MethodologiesTable />;
 };
 
 export default MethodologiesDashboard;

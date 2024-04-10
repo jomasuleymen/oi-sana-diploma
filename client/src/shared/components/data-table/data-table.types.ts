@@ -1,4 +1,5 @@
 import { FilterOperation } from "@utils/data-fetcher";
+import { LeavesUnderscore } from "@utils/type.utils";
 
 export type DataTableFilterOption = {
 	label: string;
@@ -7,7 +8,7 @@ export type DataTableFilterOption = {
 };
 
 export interface DataTableSearchableColumn<TData> {
-	id: keyof TData;
+	id: LeavesUnderscore<TData>;
 	title: string;
 	operation: FilterOperation;
 }

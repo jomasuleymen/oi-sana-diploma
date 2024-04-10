@@ -5,19 +5,19 @@ import {
 	MaxLength,
 	MinLength,
 } from "class-validator";
-import { ArticleEntity } from "../entities/article.entity";
+import { Article } from "../entities/article.entity";
 
-export class CreateArticleDto implements Partial<ArticleEntity> {
+export class CreateArticleDto implements Partial<Article> {
 	@IsString()
 	@IsNotEmpty()
 	@MinLength(5)
-	@MaxLength(60)
+	@MaxLength(255)
 	title: string;
 
 	@IsString()
 	@IsNotEmpty()
 	@MinLength(10)
-	@MaxLength(3000)
+	@MaxLength(15000)
 	content: string;
 
 	@IsString()

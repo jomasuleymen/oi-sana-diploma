@@ -18,8 +18,12 @@ import { PUBLIC_PATH } from "./upload/upload.constant";
 import { UploadModule } from "./upload/upload.module";
 import { UserModule } from "./user/user.module";
 import { SpecialistModule } from "./specialist/specialist.module";
-import { MeditationModule } from './meditation/meditation.module';
-import { BookModule } from './book/book.module';
+import { MeditationModule } from "./meditation/meditation.module";
+import { BookModule } from "./book/book.module";
+import { CourseModule } from "./course/course.module";
+import { MethodologyModule } from './methodology/methodology.module';
+import { NewsModule } from './news/news.module';
+import { AffirmationsModule } from './affirmations/affirmations.module';
 
 @Module({
 	imports: [
@@ -27,7 +31,10 @@ import { BookModule } from './book/book.module';
 			isGlobal: true,
 			envFilePath: [".env", ".env.production", ".env.development"],
 		}),
-		ServeStaticModule.forRoot({ rootPath: PUBLIC_PATH, exclude: ['/api/(.*)'] }),
+		ServeStaticModule.forRoot({
+			rootPath: PUBLIC_PATH,
+			exclude: ["/api/(.*)"],
+		}),
 		TypeOrmModule.forRoot(getPostgresConfig()),
 		RedisModule.forRootAsync({
 			inject: [ConfigService],
@@ -43,6 +50,10 @@ import { BookModule } from './book/book.module';
 		SpecialistModule,
 		MeditationModule,
 		BookModule,
+		CourseModule,
+		MethodologyModule,
+		NewsModule,
+		AffirmationsModule,
 	],
 	controllers: [],
 	providers: [],

@@ -1,5 +1,5 @@
 import { Button } from "@components/ui/button";
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 import { HeaderContext } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 

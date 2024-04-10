@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { createRoot } from "react-dom/client";
+import "plyr-react/plyr.css";
 
 import App from "./App";
 
@@ -9,13 +9,6 @@ const queryClient = new QueryClient();
 
 root.render(
 	<QueryClientProvider client={queryClient}>
-		<NextThemesProvider
-			attribute="class"
-			defaultTheme="system"
-			enableSystem
-			disableTransitionOnChange
-		>
-			<App />
-		</NextThemesProvider>
+		<App />
 	</QueryClientProvider>
 );

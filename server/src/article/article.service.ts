@@ -5,43 +5,44 @@ import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
-import { UserService } from "src/user/user.service";
+import { SpecialistService } from "src/specialist/specialist.service";
 import { Equal, Repository } from "typeorm";
 import { ArticleDTO } from "./dto/article.dto";
 import { CreateArticleDto } from "./dto/create-article.dto";
 import { UpdateArticleDto } from "./dto/update-article.dto";
-import { ArticleEntity } from "./entities/article.entity";
+import { Article } from "./entities/article.entity";
+import { ROLE } from "src/user/user-roles";
 
 @Injectable()
 export class ArticleService {
 	constructor(
-		@InjectRepository(ArticleEntity)
-		private articleRepository: Repository<ArticleEntity>,
-		private readonly userService: UserService,
+		@InjectRepository(Article)
+		private articleRepository: Repository<Article>,
+		private readonly spevService: SpecialistService,
 	) {}
 
-	async create(userId: string, dto: CreateArticleDto) {
-		const user = await this.userService.findById(userId);
-		if (!user) {
-			throw new BadRequestException("User not found");
+	async create(userId: number, dto: CreateArticleDto) {
+		const specialist = await this.spevService.findOne(userId);
+		if (!specialist) {
+			throw new BadRequestException("Specialist not found");
 		}
 
 		const exists = await this.articleRepository.exists({
-			where: { title: Equal(dto.title), author: user },
+			where: { title: Equal(dto.title), author: specialist },
 		});
 
 		if (exists) {
 			throw new BadRequestException("Article with this title already exists");
 		}
 
-		const articleEntity = this.articleRepository.create(dto);
+		const article = this.articleRepository.create(dto);
 
-		articleEntity.author = user;
-		articleEntity.slug = slugify(dto.title, { lower: true, trim: true });
+		article.author = specialist;
+		article.slug = slugify(dto.title, { lower: true, trim: true });
 
-		await this.articleRepository.save(articleEntity);
+		await this.articleRepository.save(article);
 
-		return articleEntity;
+		return article;
 	}
 
 	async findByUserId() {}
@@ -51,12 +52,12 @@ export class ArticleService {
 		sort?: Sorting[],
 		filter?: Filtering[],
 	): Promise<PaginatedResource<ArticleDTO>> {
-		const where = getWhere<ArticleEntity>(filter);
+		const where = getWhere<Article>(filter);
 		const order = getOrder(sort);
 
 		if (where.author) {
 			where.author = {
-				id: where.author as string,
+				userId: where.author as number,
 			};
 		}
 
@@ -66,7 +67,7 @@ export class ArticleService {
 			take: limit,
 			skip: offset,
 			relations: {
-				author: true,
+				author: { user: true },
 			},
 		});
 
@@ -87,16 +88,47 @@ export class ArticleService {
 		return `This action returns all article`;
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} article`;
+	findOneBySlug(slug: string) {
+		return this.articleRepository.findOne({
+			where: { slug },
+			relations: {
+				author: {
+					user: true,
+				},
+			},
+		});
 	}
 
 	update(id: number, updateArticleDto: UpdateArticleDto) {
-		console.log(updateArticleDto);
+		updateArticleDto;
 		return `This action updates a #${id} article`;
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} article`;
+	async deleteById(id: Article["id"], userId: number) {
+		if (!userId) {
+			throw new BadRequestException("User not found");
+		}
+
+		const article = await this.articleRepository.findOne({
+			where: { id },
+			relations: ["author"],
+		});
+
+		if (!article) {
+			throw new BadRequestException("Article not found");
+		}
+
+		if (
+			article.author.userId !== userId &&
+			article.author.user.role !== ROLE.ADMIN
+		) {
+			throw new BadRequestException("You can't delete this article");
+		}
+
+		return await this.articleRepository.delete({ id: Equal(id) });
+	}
+
+	async deleteManyById(ids: Article["id"][]) {
+		return await this.articleRepository.delete(ids);
 	}
 }

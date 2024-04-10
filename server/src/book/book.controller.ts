@@ -20,12 +20,12 @@ import {
 	Sorting,
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
-import { UserDeleteDTO } from "src/user/dto/user-delete.dto";
-import { USER_ROLE } from "src/user/user-roles";
+import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
+import { ROLE } from "src/user/user-roles";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { UpdateBookDto } from "./dto/update-book.dto";
-import { BookEntity } from "./entities/book.entity";
+import { Book } from "./entities/book.entity";
 
 @Controller("books")
 export class BookController {
@@ -39,8 +39,8 @@ export class BookController {
 	@Get()
 	async findAll(
 		@PaginationParams() pagination: Pagination,
-		@SortingParams<BookEntity>(["title"]) sort?: Sorting[],
-		@FilteringParams<BookEntity>(["title", "author"]) filter?: Filtering[],
+		@SortingParams<Book>(["title"]) sort?: Sorting[],
+		@FilteringParams<Book>(["title", "author"]) filter?: Filtering[],
 	) {
 		return await this.bookService.findAll(pagination, sort, filter);
 	}
@@ -55,16 +55,16 @@ export class BookController {
 		return await this.bookService.update(+id, updateBookDto);
 	}
 
-	@UseAuthorized(USER_ROLE.ADMIN)
+	@UseAuthorized(ROLE.ADMIN)
 	@Delete("many")
-	async deleteMany(@Body() dto: UserDeleteDTO) {
+	async deleteMany(@Body() dto: DeleteManyDTO) {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.bookService.deleteManyById(dto.id as any);
 
 		return { message: "Пользователь успешно удален" };
 	}
 
-	@UseAuthorized(USER_ROLE.ADMIN)
+	@UseAuthorized(ROLE.ADMIN)
 	@Delete(":id")
 	async deleteOne(@Param("id") id: string) {
 		await this.bookService.deleteById(+id);

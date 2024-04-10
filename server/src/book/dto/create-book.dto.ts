@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class CreateBookDto {
 	@IsString()
@@ -14,6 +14,10 @@ export class CreateBookDto {
 	image: string;
 
 	@IsString()
-	@IsNotEmpty()
+	@MinLength(10)
 	details: string;
+
+	@IsString()
+	@IsNotEmpty()
+	link: string;
 }

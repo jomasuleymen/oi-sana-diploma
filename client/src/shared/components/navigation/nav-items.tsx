@@ -1,12 +1,15 @@
 import {
 	BookIcon,
 	HelpingHand,
+	ImageIcon,
 	LayoutDashboardIcon,
 	Lightbulb,
+	LightbulbIcon,
 	LucideFlower,
+	MessageSquareCode,
 	MonitorPlayIcon,
 	NewspaperIcon,
-	PuzzleIcon,
+	PersonStandingIcon,
 	User,
 } from "lucide-react";
 
@@ -52,6 +55,16 @@ export const dashboardGroupNavItems: GroupNavItems[] = [
 				href: "/dashboard/books",
 				icon: BookIcon,
 			},
+			{
+				title: "Affirmations",
+				href: "/dashboard/affirmations",
+				icon: ImageIcon,
+			},
+			{
+				title: "News",
+				href: "/dashboard/news",
+				icon: NewspaperIcon,
+			},
 		],
 	},
 	{
@@ -68,6 +81,11 @@ export const dashboardGroupNavItems: GroupNavItems[] = [
 				icon: MonitorPlayIcon,
 			},
 			{
+				title: "Course reviews",
+				href: "/dashboard/course-reviews",
+				icon: MessageSquareCode,
+			},
+			{
 				title: "Articles",
 				href: "/dashboard/articles",
 				icon: NewspaperIcon,
@@ -78,18 +96,33 @@ export const dashboardGroupNavItems: GroupNavItems[] = [
 
 export const mainNavItems: NavItem[] = [
 	{
-		title: "Lessons",
-		href: `/lessons`,
-		icon: BookIcon,
+		title: "Articles",
+		href: `/articles`,
+		icon: NewspaperIcon,
+	},
+	{
+		title: "Specialists",
+		href: `/specialists`,
+		icon: PersonStandingIcon,
 	},
 	{
 		title: "Books",
 		href: `/books`,
-		icon: PuzzleIcon,
+		icon: BookIcon,
+	},
+	{
+		title: "Courses",
+		href: `/courses`,
+		icon: MonitorPlayIcon,
 	},
 	{
 		title: "Meditations",
 		href: `/meditations`,
-		icon: BookIcon,
+		icon: LucideFlower,
+	},
+	{
+		title: "Methodologies",
+		href: `/methodologies`,
+		icon: LightbulbIcon,
 	},
 ];

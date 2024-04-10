@@ -1,34 +1,29 @@
 import {
 	Column,
+	CreateDateColumn,
 	Entity,
-	Index,
 	ManyToOne,
-	PrimaryGeneratedColumn,
+	PrimaryGeneratedColumn
 } from "typeorm";
-import { MeditationCategoryEntity } from "./meditation-catergory.entity";
+import { MeditationCategory } from "./meditation-catergory.entity";
 
 @Entity({
 	name: "meditation",
 })
-@Index(["title"], { unique: true })
-export class MeditationEntity {
+export class Meditation {
 	@PrimaryGeneratedColumn("increment")
 	id: number;
 
 	@Column("varchar", {
-		length: 255,
 		nullable: false,
 	})
-	title: string;
+	audio: string;
 
-	@Column("varchar", {
-		length: 255,
-		nullable: false,
-	})
-	video: string;
-
-	@ManyToOne(() => MeditationCategoryEntity, category => category.meditations, {
+	@ManyToOne(() => MeditationCategory, category => category.meditations, {
 		onDelete: "CASCADE",
 	})
-	category: MeditationCategoryEntity;
+	category: MeditationCategory;
+
+	@CreateDateColumn({ type: "timestamptz" })
+	createdAt: Date;
 }

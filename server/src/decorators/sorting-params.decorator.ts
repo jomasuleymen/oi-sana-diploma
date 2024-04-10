@@ -11,7 +11,7 @@ export interface Sorting {
 }
 
 const getSorting = (sort: string, available: any[]): Sorting => {
-	const sortPattern = /^([a-zA-Z0-9]+):(asc|desc)$/;
+	const sortPattern = /^([a-zA-Z0-9.]+):(asc|desc)$/;
 	if (!sort.match(sortPattern))
 		throw new BadRequestException("Invalid sort parameter");
 
@@ -22,7 +22,7 @@ const getSorting = (sort: string, available: any[]): Sorting => {
 	return { property, direction };
 };
 // e.g. ?sort=createdAt:desc
-export const SortingParams = <T>(validParams: Array<keyof T>) =>
+export const SortingParams = <T>(validParams: Array<keyof T> | Array<string>) =>
 	createParamDecorator((_, ctx: ExecutionContext): Sorting[] | null => {
 		const req: Request = ctx.switchToHttp().getRequest();
 		const sorts = req.query.sort as string;

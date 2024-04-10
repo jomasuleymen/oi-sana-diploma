@@ -6,6 +6,7 @@ import {
 	Delete,
 	Get,
 	Param,
+	Put,
 	UseInterceptors,
 } from "@nestjs/common";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
@@ -23,26 +24,23 @@ import {
 	Sorting,
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
-import { SessionService } from "src/session/session.service";
-import { UserDeleteDTO } from "./dto/user-delete.dto";
-import { USER_ROLE } from "./user-roles";
+import { DeleteManyDTO } from "./dto/user-delete.dto";
+import { User } from "./entities/user.entity";
+import { ROLE } from "./user-roles";
 import { UserService } from "./user.service";
-import { UserEntity } from "./entities/user.entity";
+import { UserUpdateDTO } from "./dto/user-update.dto";
 
 @Controller("users")
 export class UserController {
-	constructor(
-		private readonly userService: UserService,
-		private readonly sessionService: SessionService,
-	) {}
+	constructor(private readonly userService: UserService) {}
 
 	@UseInterceptors(ClassSerializerInterceptor)
-	@UseAuthorized(USER_ROLE.ADMIN)
+	@UseAuthorized(ROLE.ADMIN)
 	@Get()
 	async find(
 		@PaginationParams() pagination: Pagination,
-		@SortingParams<UserEntity>(["username", "email"]) sort?: Sorting[],
-		@FilteringParams<UserEntity>(["username", "email", "role"])
+		@SortingParams<User>(["username", "email"]) sort?: Sorting[],
+		@FilteringParams<User>(["username", "email", "role", "firstname", "lastname"])
 		filter?: Filtering[],
 	) {
 		return await this.userService.findBy(pagination, sort, filter);
@@ -51,13 +49,13 @@ export class UserController {
 	@UseInterceptors(ClassSerializerInterceptor)
 	@Get(":id")
 	async findOne(@Param("id") id: string) {
-		return this.userService.findById(id);
+		return this.userService.findById(+id);
 	}
 
-	@UseAuthorized(USER_ROLE.ADMIN)
+	@UseAuthorized(ROLE.ADMIN)
 	@Delete("many")
 	async deleteMany(
-		@Body() dto: UserDeleteDTO,
+		@Body() dto: DeleteManyDTO,
 		@UseSession() user: UserSession,
 	) {
 		if (!dto || !dto.id) return new BadRequestException("User id is required");
@@ -66,9 +64,8 @@ export class UserController {
 			return new BadRequestException("Users can be deleted by admin");
 		}
 
-		if (typeof dto.id === "string") dto.id = [dto.id];
+		if (!Array.isArray(dto.id)) dto.id = [dto.id];
 		await this.userService.deleteManyById(dto.id);
-		this.sessionService.deleteUserSessions(dto.id);
 
 		return { message: "Пользователь успешно удален" };
 	}
@@ -77,18 +74,26 @@ export class UserController {
 	@Delete(":id")
 	async deleteOne(
 		@Param("id") userId: string,
-		@UseSession() user: UserSession,
+		@UseSession() session: UserSession,
 	) {
-		const userEntity = await this.userService.findById(userId);
-		if (!userEntity) return new BadRequestException("User not found");
+		const user = await this.userService.findById(+userId);
+		if (!user) return new BadRequestException("User not found");
 
-		if (!user.isAdmin && userEntity.id !== user.id) {
+		if (!session.isAdmin && user.id !== session.id) {
 			return new BadRequestException("User can be deleted on by himself");
 		}
 
-		await this.userService.deleteById(userId);
-		this.sessionService.deleteUserSessions(userId);
+		await this.userService.deleteById(+userId);
 
 		return { message: "Пользователь успешно удален" };
+	}
+
+	@UseAuthorized()
+	@Put()
+	async updateOne(
+		@Body() dto: UserUpdateDTO,
+		@UseSession() session: UserSession,
+	) {
+		return this.userService.updateById(session.id, dto);
 	}
 }

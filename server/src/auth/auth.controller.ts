@@ -7,14 +7,17 @@ import {
 	Post,
 	Query,
 	Req,
+	Res,
 	UseGuards,
 	UseInterceptors,
 	UsePipes,
 	ValidationPipe,
 } from "@nestjs/common";
-import { Request } from "express";
+import { ConfigService } from "@nestjs/config";
+import { Request, Response } from "express";
 import UserDTO from "src/user/dto/user.dto";
 import { UserService } from "src/user/user.service";
+import SpecialistRegisterDTO from "../specialist/dto/register-specialist.dto";
 import { AuthService } from "./auth.service";
 import { UseAuthorized } from "./decorators/use-auth.decorator";
 import UseSession from "./decorators/use-session.decorator";
@@ -23,15 +26,14 @@ import ResetPasswordDTO from "./dto/reset-password.dto";
 import { UserSession } from "./dto/session-user.dto";
 import { GoogleOAuthGuard } from "./guards/passport/google-login.guard";
 import { LoginGuard } from "./guards/passport/login.guard";
-import { EmailVerificationService } from "./token/email-verification.service";
 import { ResetPasswordTokenService } from "./token/reset-password.service";
 
 @Controller("auth")
 export class AuthController {
 	constructor(
 		private readonly authService: AuthService,
+		private readonly configService: ConfigService,
 		private readonly userService: UserService,
-		private readonly emailVerificationService: EmailVerificationService,
 		private readonly resetPasswordService: ResetPasswordTokenService,
 	) {}
 
@@ -43,14 +45,24 @@ export class AuthController {
 		if (!user) throw new BadRequestException("User not found");
 		const dto = UserDTO.fromEntity(user);
 
-		return { ...dto, isAdmin: session.isAdmin };
+		return {
+			...dto,
+			isAdmin: session.isAdmin,
+			isSpecialist: session.isSpecialist,
+		};
 	}
 
 	@UsePipes(new ValidationPipe())
 	@Post("register")
 	async register(@Body() dto: UserRegisterDTO) {
-		const user = await this.authService.register(dto);
-		this.emailVerificationService.sendEmailVerificationToken(user.email);
+		await this.authService.register(dto);
+		return { message: "Send verification link to the email" };
+	}
+
+	@UsePipes(new ValidationPipe())
+	@Post("register/specialist")
+	async registerSpecialist(@Body() dto: SpecialistRegisterDTO) {
+		await this.authService.registerSpecialist(dto);
 		return { message: "Send verification link to the email" };
 	}
 
@@ -66,8 +78,8 @@ export class AuthController {
 
 	@Get("callback/google")
 	@UseGuards(GoogleOAuthGuard)
-	googleAuthRedirect(@UseSession() user: UserSession) {
-		return user;
+	googleAuthRedirect(@Res() res: Response) {
+		res.redirect(this.configService.get("CLIENT_DOMAIN", "/"));
 	}
 
 	@Get("logout")
@@ -83,9 +95,7 @@ export class AuthController {
 
 	@Get("email-verification")
 	async verifyEmail(@Query("token") token: string) {
-		const email = await this.emailVerificationService.checkAndGetEmail(token);
-		await this.authService.verifyEmail(email);
-
+		await this.authService.verifyEmailWithToken(token);
 		return { message: "Email verified" };
 	}
 

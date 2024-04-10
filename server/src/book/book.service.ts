@@ -3,7 +3,7 @@ import { CreateBookDto } from "./dto/create-book.dto";
 import { UpdateBookDto } from "./dto/update-book.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Equal, Repository } from "typeorm";
-import { BookEntity } from "./entities/book.entity";
+import { Book } from "./entities/book.entity";
 import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import { Filtering } from "src/decorators/filtering-params.decorator";
@@ -12,8 +12,8 @@ import { getOrder, getWhere } from "src/lib/typeorm.util";
 @Injectable()
 export class BookService {
 	constructor(
-		@InjectRepository(BookEntity)
-		private bookRepository: Repository<BookEntity>,
+		@InjectRepository(Book)
+		private bookRepository: Repository<Book>,
 	) {}
 
 	async create(createBookDto: CreateBookDto) {
@@ -25,7 +25,7 @@ export class BookService {
 		sort?: Sorting[],
 		filter?: Filtering[],
 	) {
-		const where = getWhere<BookEntity>(filter);
+		const where = getWhere<Book>(filter);
 		const order = getOrder(sort);
 
 		const [books, count] = await this.bookRepository.findAndCount({
@@ -50,11 +50,11 @@ export class BookService {
 		return await this.bookRepository.update({ id }, updateBookDto);
 	}
 
-	async deleteById(id: BookEntity["id"]) {
+	async deleteById(id: Book["id"]) {
 		return await this.bookRepository.delete({ id: Equal(id) });
 	}
 
-	async deleteManyById(ids: BookEntity["id"][]) {
+	async deleteManyById(ids: Book["id"][]) {
 		return await this.bookRepository.delete(ids);
 	}
 }

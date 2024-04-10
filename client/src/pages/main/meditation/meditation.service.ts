@@ -5,8 +5,7 @@ import { MeditationCategorySchema, MeditationSchema } from "./meditation.schema"
 
 export type Meditation = {
 	id: number;
-	title: string;
-	video: string;
+	audio: string;
 	category: MeditationCategory;
 };
 
@@ -21,21 +20,21 @@ export const createMeditation = async (data: CreateMeditationType) => {
 
 type GetMeditationsParams = {
 	page: number;
-	userId?: string;
+	category?: string;
 };
 
 export const getMeditations = async (params: GetMeditationsParams = { page: 1 }) => {
 	const pagination: FetchDataParams["pagination"] = {
-		pageSize: 10,
+		pageSize: 100,
 		pageIndex: params.page - 1,
 	};
 
 	const filters: FetchDataParams["columnFilters"] = [];
 
-	if (params.userId) {
+	if (params.category) {
 		filters.push({
-			id: "author",
-			value: params.userId,
+			id: "category.id",
+			value: params.category,
 		});
 	}
 
@@ -51,6 +50,7 @@ export type MeditationCategory = {
 	id: number;
 	name: string;
 	image: string;
+	meditations: { id: string }[];
 };
 
 export type CreateMeditationCategoryType = z.infer<typeof MeditationCategorySchema>;
@@ -62,5 +62,10 @@ export const createMeditationCategory = async (data: CreateMeditationCategoryTyp
 
 export const fetchCategories = async () => {
 	const response = await $api.get<MeditationCategory[]>(`${MEDITATION_ENDPOINT}/categories`);
+	return response.data;
+};
+
+export const deleteCategory = async (id: number) => {
+	const response = await $api.delete(`${MEDITATION_ENDPOINT}/categories/${id}`);
 	return response.data;
 };

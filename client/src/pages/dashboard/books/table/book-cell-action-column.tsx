@@ -41,13 +41,6 @@ export const CellAction: React.FC<CellActionProps> = ({ row, onRowDeleteAction }
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-					<DropdownMenuItem
-						onClick={() => navifate(`/dashboard/book/${row.original.id}`)}
-					>
-						<Edit className="mr-2 h-4 w-4" /> Update
-					</DropdownMenuItem>
-
 					{onRowDeleteAction && (
 						<DropdownMenuItem onClick={() => setOpen(true)}>
 							<Trash className="mr-2 h-4 w-4" /> Delete

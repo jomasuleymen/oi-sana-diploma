@@ -7,9 +7,6 @@ export const getRedisConfig = (config: ConfigService): RedisModuleOptions => {
 			host: config.getOrThrow<string>("REDIS_HOST"),
 			port: parseInt(config.getOrThrow<string>("REDIS_PORT", "6379")),
 			password: config.getOrThrow<string>("REDIS_PASSWORD"),
-			onClientCreated: () => {
-				console.log("Redis client created successfully");
-			},
 		},
 	};
 };

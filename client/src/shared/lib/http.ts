@@ -1,7 +1,9 @@
 import axios from "axios";
 
+export const API_ENDPOINT = import.meta.env.VITE_SERVER_URL + "/api";
+
 const axiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_SERVER_URL + "/api",
+	baseURL: API_ENDPOINT,
 	headers: { "Content-Type": "application/json" },
 	withCredentials: true,
 });

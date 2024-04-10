@@ -7,7 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import capitalize from "lodash/capitalize";
 import { UserCellAction } from "./user-cell-action-column";
 import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
-import { User, USER_ROLE } from "@pages/main/profile/user.service";
+import { User, USER_ROLE } from "@pages/main/user/user.service";
 
 interface GenerateColumnsProps {
 	onRowDeleteAction?: (user: User) => Promise<any>;
@@ -38,6 +38,14 @@ export const generateColumns = ({ onRowDeleteAction }: GenerateColumnsProps): Co
 		header: (params) => <SortingHeaderCell headerContext={params} name="Username" />,
 	},
 	{
+		accessorKey: "firstname",
+		header: (params) => <span>Firstname</span>,
+	},
+	{
+		accessorKey: "lastname",
+		header: (params) => <span>Lastname</span>,
+	},
+	{
 		accessorKey: "email",
 		header: (params) => <SortingHeaderCell headerContext={params} name="Email" />,
 	},
@@ -66,21 +74,31 @@ export const generateColumns = ({ onRowDeleteAction }: GenerateColumnsProps): Co
 ];
 
 export const filterableColumns: DataTableFilterableColumn<User>[] = [
-	{
-		id: "role",
-		title: "Role",
-		options: Object.values(USER_ROLE).map((role) => ({
-			label: capitalize(role),
-			value: role,
-		})),
-		operation: "in",
-	},
+	// {
+	// 	id: "role",
+	// 	title: "Role",
+	// 	options: Object.values(USER_ROLE).map((role) => ({
+	// 		label: capitalize(role),
+	// 		value: role,
+	// 	})),
+	// 	operation: "in",
+	// },
 ];
 
 export const searchableColumns: DataTableSearchableColumn<User>[] = [
 	{
 		id: "username",
-		title: "Name",
+		title: "Username",
+		operation: "like",
+	},
+	{
+		id: "firstname",
+		title: "Firstname",
+		operation: "like",
+	},
+	{
+		id: "lastname",
+		title: "Lastname",
 		operation: "like",
 	},
 	{

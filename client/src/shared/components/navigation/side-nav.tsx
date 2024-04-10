@@ -1,5 +1,5 @@
 import { NavItem } from "@components/navigation/nav-items";
-import { cn } from "@utils/tailwind.utils";
+import { cn } from "@utils/utils";
 import { Link2 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 

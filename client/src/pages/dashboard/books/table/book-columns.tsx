@@ -7,6 +7,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./book-cell-action-column";
 import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
 import { Book } from "@pages/main/book/book.service";
+import { Link } from "react-router-dom";
+import { LinkIcon } from "lucide-react";
+import ServerImage from "@components/ui/image";
 
 interface GenerateColumnsProps {
 	onRowDeleteAction?: (user: Book) => Promise<any>;
@@ -35,23 +38,29 @@ export const generateColumns = ({ onRowDeleteAction }: GenerateColumnsProps): Co
 	{
 		accessorKey: "title",
 		header: (params) => <SortingHeaderCell headerContext={params} name="Title" />,
+		cell: ({ getValue, row }) => {
+			const title = getValue() as any;
+			return (
+				<Link to={row.original.link} className="text-blue-700" target="_blank">
+					{title}
+				</Link>
+			);
+		},
+	},
+	{
+		accessorKey: "image",
+		header: (params) => <span>Image</span>,
+		cell: ({ row }) => {
+			return (
+				<div className="w-32 h-44 flex items-center">
+					<ServerImage src={row.original.image} className="w-full h-full object-fill" />
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: "author",
 		header: () => <span>Author</span>,
-	},
-	{
-		accessorKey: "createdAt",
-		header: "Created date",
-		cell: ({ getValue }) => {
-			const value = getValue() as any;
-			if (value) {
-				const date = new Date(value);
-				return <span className="text-green-500">{date.toLocaleString("ru-Ru")}</span>;
-			}
-
-			return null;
-		},
 	},
 	{
 		id: "actions",

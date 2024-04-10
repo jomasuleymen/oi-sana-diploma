@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 import "react-quill/dist/quill.snow.css";
 import { BookSchema } from "../book.schema";
 import { CreateBookType, createBook } from "../book.service";
+import Container from "@components/ui/container";
 
 type IForm = z.infer<typeof BookSchema>;
 
@@ -38,6 +39,7 @@ export function BookCreateForm() {
 			author: "",
 			details: "",
 			image: "",
+			link: "",
 		},
 	});
 
@@ -55,83 +57,105 @@ export function BookCreateForm() {
 	}, [isSuccess, isError]);
 
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="">
-				<FormField
-					control={form.control}
-					name="image"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>Cover image</FormLabel>
-							<FormControl>
-								<UploadDropZone
-									acceptedFileTypes={["image/*"]}
-									onChange={(fileId) => {
-										if (fileId) form.setValue("image", fileId);
-										else form.resetField("image");
-									}}
-								/>
-							</FormControl>
-							<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="title"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>Title</FormLabel>
-							<FormControl>
-								<Input
-									type="text"
-									disabled={isPending}
-									placeholder="Title"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="author"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>Author</FormLabel>
-							<FormControl>
-								<Input
-									type="text"
-									disabled={isPending}
-									placeholder="Title"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="details"
-					render={({ field }) => (
-						<FormItem className="w-full">
-							<FormLabel>Details</FormLabel>
-							<FormControl>
-								<Input
-									type="text"
-									disabled={isPending}
-									placeholder="Title"
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage className="mx-2 my-1 mb-0 text-xs" />
-						</FormItem>
-					)}
-				/>
-				<Button type="submit">Submit</Button>
-			</form>
-		</Form>
+		<Container>
+			<Container transparent className="text-center text-xl font-semibold mb-4">
+				New book
+			</Container>
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<FormField
+						control={form.control}
+						name="image"
+						render={({ field }) => (
+							<FormItem className="w-full">
+								<FormLabel>Cover image</FormLabel>
+								<FormControl>
+									<UploadDropZone
+										allowImagePreview
+										acceptedFileTypes={["image/*"]}
+										onChange={field.onChange}
+										value={field.value}
+									/>
+								</FormControl>
+								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="title"
+						render={({ field }) => (
+							<FormItem className="w-full">
+								<FormLabel>Title</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										disabled={isPending}
+										placeholder="Title"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="author"
+						render={({ field }) => (
+							<FormItem className="w-full">
+								<FormLabel>Author</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										disabled={isPending}
+										placeholder="Title"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="details"
+						render={({ field }) => (
+							<FormItem className="w-full">
+								<FormLabel>Details</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										disabled={isPending}
+										placeholder="Title"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="link"
+						render={({ field }) => (
+							<FormItem className="w-full">
+								<FormLabel>Credit link</FormLabel>
+								<FormControl>
+									<Input
+										type="text"
+										disabled={isPending}
+										placeholder="Credit link"
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage className="mx-2 my-1 mb-0 text-xs" />
+							</FormItem>
+						)}
+					/>
+					<Button type="submit">Submit</Button>
+				</form>
+			</Form>
+		</Container>
 	);
 }

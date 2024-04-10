@@ -9,16 +9,17 @@ import { hashPlainText } from "src/lib/hash.util";
 import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
 import { Equal, FindManyOptions, Repository } from "typeorm";
 import UserDTO from "./dto/user.dto";
-import { UserEntity } from "./entities/user.entity";
+import { User } from "./entities/user.entity";
+import { ROLE } from "./user-roles";
 
 @Injectable()
 export class UserService {
 	constructor(
-		@InjectRepository(UserEntity)
-		private usersRepository: Repository<UserEntity>,
+		@InjectRepository(User)
+		private usersRepository: Repository<User>,
 	) {}
 
-	async createUser(dto: UserRegisterDTO) {
+	async createUser(dto: UserRegisterDTO, role: ROLE = ROLE.USER) {
 		const userByUsername = await this.usersRepository.exists({
 			where: {
 				username: dto.username,
@@ -36,19 +37,20 @@ export class UserService {
 
 		if (userByEmail) throw new BadRequestException("email is already taken");
 
-		const data: Partial<UserEntity> = {
+		const data: Partial<User> = {
+			firstname: dto.firstname,
+			lastname: dto.lastname,
 			username: dto.username,
 			email: dto.email,
 			password: hashPlainText(dto.password),
+			role,
 		};
 
 		const user = await this.usersRepository.save(data);
 		return user;
 	}
 
-	async findAll(
-		filter: FindManyOptions<UserEntity> = {},
-	): Promise<UserEntity[]> {
+	async findAll(filter: FindManyOptions<User> = {}): Promise<User[]> {
 		return await this.usersRepository.find({
 			order: {
 				role: "DESC",
@@ -57,7 +59,7 @@ export class UserService {
 		});
 	}
 
-	async findById(id: string) {
+	async findById(id: number) {
 		return await this.usersRepository.findOneBy({ id: Equal(id) });
 	}
 
@@ -105,18 +107,18 @@ export class UserService {
 		return await this.findByUsername(email);
 	}
 
-	async updateById(userId: UserEntity["id"], data: Partial<UserEntity>) {
+	async updateById(userId: User["id"], data: Partial<User>) {
 		return await this.usersRepository.update({ id: Equal(userId) }, data);
 	}
 
-	async updateManyById(ids: UserEntity["id"][], data: Partial<UserEntity>) {
+	async updateManyById(ids: User["id"][], data: Partial<User>) {
 		return await this.usersRepository.update(ids, data);
 	}
 
-	async deleteById(userId: UserEntity["id"]) {
+	async deleteById(userId: User["id"]) {
 		return await this.usersRepository.delete({ id: Equal(userId) });
 	}
-	async deleteManyById(ids: UserEntity["id"][]) {
+	async deleteManyById(ids: User["id"][]) {
 		return await this.usersRepository.delete(ids);
 	}
 }

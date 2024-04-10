@@ -9,7 +9,7 @@ import {
 } from "@components/ui/dropdown-menu";
 import { Meditation } from "@pages/main/meditation/meditation.service";
 import { Row } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,6 @@ interface CellActionProps {
 }
 
 export const MeditationCellAction: React.FC<CellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navifate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (
@@ -29,7 +28,7 @@ export const MeditationCellAction: React.FC<CellActionProps> = ({ row, onRowDele
 					isOpen={open}
 					setOpen={setOpen}
 					onDelete={() => onRowDeleteAction(row.original)}
-					title={`Delete post ${row.original.title}?`}
+					title={`Delete meditation?`}
 				/>
 			)}
 			<DropdownMenu>
@@ -41,13 +40,6 @@ export const MeditationCellAction: React.FC<CellActionProps> = ({ row, onRowDele
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-					<DropdownMenuItem
-						onClick={() => navifate(`/dashboard/meditation/${row.original.id}`)}
-					>
-						<Edit className="mr-2 h-4 w-4" /> Update
-					</DropdownMenuItem>
-
 					{onRowDeleteAction && (
 						<DropdownMenuItem onClick={() => setOpen(true)}>
 							<Trash className="mr-2 h-4 w-4" /> Delete

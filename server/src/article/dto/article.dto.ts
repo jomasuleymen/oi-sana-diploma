@@ -1,16 +1,16 @@
-import UserDTO from "src/user/dto/user.dto";
-import { ArticleEntity } from "../entities/article.entity";
+import { Specialist } from "src/specialist/entities/specialist.entity";
+import { Article } from "../entities/article.entity";
 
-export class ArticleDTO implements Partial<ArticleEntity> {
+export class ArticleDTO implements Partial<Article> {
 	id: string;
 	title: string;
 	content: string;
 	coverImage: string;
 	slug?: string;
 	createdAt?: Date;
-	user: Partial<UserDTO>;
+	author: Specialist;
 
-	static fromEntity(entity: ArticleEntity) {
+	static fromEntity(entity: Article) {
 		const dto = new ArticleDTO();
 		dto.id = entity.id;
 		dto.title = entity.title;
@@ -18,14 +18,7 @@ export class ArticleDTO implements Partial<ArticleEntity> {
 		dto.coverImage = entity.coverImage;
 		dto.slug = entity.slug;
 		dto.createdAt = entity.createdAt;
-
-		if (entity.author) {
-			dto.user = {
-				profileImage: entity.author.profileImage,
-				username: entity.author.username,
-				id: entity.author.id,
-			};
-		}
+		dto.author = entity.author;
 
 		return dto;
 	}

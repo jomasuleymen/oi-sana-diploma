@@ -7,14 +7,14 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { USER_ROLE } from "../user-roles";
+import { ROLE } from "../user-roles";
 
 @Entity({
 	name: "users",
 })
-export class UserEntity {
+export class User {
 	@PrimaryGeneratedColumn("increment")
-	id: string;
+	id: number;
 
 	@Column({ type: "varchar", length: 30, unique: true, nullable: false })
 	username: string;
@@ -31,26 +31,26 @@ export class UserEntity {
 	@Column({ type: "varchar", unique: true, nullable: false })
 	email: string;
 
-	@Column({ type: "timestamp", default: null, select: false })
+	@Column({ type: "timestamptz", default: null })
 	emailVerified: Date;
 
 	@Column({ type: "varchar", nullable: true })
 	profileImage?: string;
 
-	@CreateDateColumn({ type: "timestamp" })
+	@CreateDateColumn({ type: "timestamptz" })
 	createdAt: Date;
 
-	@UpdateDateColumn({ type: "timestamp" })
+	@UpdateDateColumn({ type: "timestamptz" })
 	updatedAt: Date;
 
 	@Index()
 	@Column({
 		type: "enum",
-		enum: USER_ROLE,
-		default: USER_ROLE.USER,
+		enum: ROLE,
+		default: ROLE.USER,
 		nullable: false,
 	})
-	role: USER_ROLE;
+	role: ROLE;
 
 	@Column({ type: "varchar", nullable: false, select: false })
 	@Exclude()

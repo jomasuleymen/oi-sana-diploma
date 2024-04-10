@@ -1,151 +1,206 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserService } from "src/user/user.service";
-import { Equal, FindOneOptions, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { MessageDTO } from "./dto/message.dto";
-import { MessageEntity } from "./entities/message.entity";
-import { RoomEntity } from "./entities/room.entity";
+import { Message } from "./entities/message.entity";
+import { isUUID } from "class-validator";
 
 @Injectable()
 export class ChatService {
-	private readonly findOptions: FindOneOptions<RoomEntity> = {
-		relations: ["u1", "u2", "messages"],
-		select: {
-			id: true,
-			messages: true,
-			createdAt: true,
-			u1: {
-				id: true,
-				username: true,
-				profileImage: true,
-			},
-			u2: {
-				id: true,
-				username: true,
-				profileImage: true,
-			},
-		},
-		order: {
-			createdAt: "DESC",
-		},
-	};
-
 	constructor(
-		@InjectRepository(MessageEntity)
-		private messageRepo: Repository<MessageEntity>,
-		@InjectRepository(RoomEntity)
-		private roomRepo: Repository<RoomEntity>,
-		private readonly userService: UserService,
+		@InjectRepository(Message)
+		readonly messageRepo: Repository<Message>,
+		readonly userService: UserService,
 	) {}
 
-	async getRoom(user1Id: string, user2Id: string): Promise<RoomEntity> {
-		let existsRoom = await this.roomRepo.findOne({
-			where: [
-				{
-					u1: {
-						id: user1Id,
-					},
-					u2: {
-						id: user2Id,
-					},
-				},
-				{
-					u1: {
-						id: user2Id,
-					},
-					u2: {
-						id: user1Id,
-					},
-				},
-			],
-			...this.findOptions,
-		});
+	async findDialogDetailsById(userId: number, anotherUserId: number) {
+		const roomId = this.getRoomIdByUsers(userId, anotherUserId);
 
-		if (existsRoom) return existsRoom;
-
-		if (!existsRoom) {
-			const [user1, user2] = await Promise.all([
-				this.userService.findById(user1Id),
-				this.userService.findById(user2Id),
-			]);
-
-			if (!user1 || !user2) {
-				throw new BadRequestException("User not found");
-			}
-
-			const roomEntity = this.roomRepo.create({
-				u1: user1,
-				u2: user2,
+		const qb = this.messageRepo
+			.createQueryBuilder("msg")
+			.addSelect("u.id", "u_id")
+			.addSelect("u.username", "u_username")
+			.addSelect("u.profileImage", "u_profileImage")
+			.addSelect(
+				qb =>
+					qb
+						.from(Message, "msg")
+						.select(`COUNT(*)`, "unreadMessagesCount")
+						.where(`msg."receiverId" = :userId AND msg."read" = false`, {
+							userId,
+						}),
+				"unread_messages_count",
+			)
+			.innerJoin(
+				"users",
+				"u",
+				`(CASE WHEN msg."senderId" = :userId THEN msg."receiverId" ELSE msg."senderId" END) = u.id`,
+				{ userId },
+			)
+			.where(`:roomId = msg."roomId"`, {
+				roomId,
 			});
 
-			existsRoom = await this.roomRepo.save(roomEntity);
+		const result = await qb.getRawOne();
+
+		if (!result) {
+			return null;
 		}
 
-		return await this.getRoom(user1Id, user2Id);
+		return {
+			id: roomId,
+			user: {
+				id: result.u_id,
+				username: result.u_username,
+				profileImage: result.u_profileImage,
+			},
+			latestMessage: {
+				id: result.msg_id,
+				content: result.msg_content,
+				date: result.msg_createdAt,
+				read: result.msg_read,
+				delivered: result.msg_delivered,
+				senderId: result.msg_senderId,
+				roomId,
+			},
+			unreadMessagesCount: Number(result.unread_messages_count) || 0,
+		};
 	}
 
-	async createMessage(userId: string, createChatDto: MessageDTO) {
+	async findDialogMessages(roomId: string, before?: string) {
+		const query = this.messageRepo
+			.createQueryBuilder("msg")
+			.addSelect("sender.id", "sender_id")
+			.addSelect("receiver.id", "receiver_id")
+			.innerJoinAndSelect("msg.sender", "sender")
+			.innerJoinAndSelect("msg.receiver", "receiver")
+			.where(`msg."roomId" = :roomId`, { roomId })
+			.orderBy("msg.createdAt", "ASC");
+
+		// before is uuid, id of message
+		if (before) {
+			if (!isUUID(before)) {
+				throw new BadRequestException("Invalid before param");
+			}
+
+			query.andWhere(
+				`msg.createdAt < (
+				SELECT "createdAt" FROM "messages" WHERE "id" = :before
+			)`,
+				{ before },
+			);
+		}
+
+		const messages = await query.getMany();
+
+		const messagesDto = messages.map(message => ({
+			id: message.id,
+			content: message.content,
+			date: message.createdAt,
+			read: message.read,
+			delivered: message.delivered,
+			senderId: message.sender.id,
+			roomId,
+		}));
+
+		return messagesDto;
+	}
+
+	async sendMessage(userId: number, createChatDto: MessageDTO) {
 		try {
 			const sender = await this.userService.findById(userId);
 			if (!sender) {
 				throw new BadRequestException("Sender user not found");
 			}
 
-			const room = await this.roomRepo.findOneBy({
-				id: Equal(createChatDto.roomId),
-			});
-			if (!room) {
-				throw new BadRequestException("Room not found");
+			const receiver = await this.userService.findById(
+				+createChatDto.receiverId,
+			);
+			if (!receiver) {
+				throw new BadRequestException("Receiver not found");
 			}
 
 			// TODO: Check if user is part of the room
-
-			const messageEntity = this.messageRepo.create({
-				sender: sender,
-				room: room,
+			const message = await this.messageRepo.save({
+				sender,
+				receiver,
+				roomId: this.getRoomIdByUsers(userId, +createChatDto.receiverId),
 				content: createChatDto.content,
 			});
 
-			return await this.messageRepo.save(messageEntity);
+			return message;
 		} catch (e) {
-			throw new BadRequestException("Room not found");
+			throw new BadRequestException("Receiver not found");
 		}
 	}
 
-	async findRooms(userId: string) {
-		const query = this.roomRepo
-			.createQueryBuilder("rooms")
-			.select([
-				"rooms.id",
-				"u1.id",
-				"u1.username",
-				"u1.profileImage",
-				"u2.id",
-				"u2.username",
-				"u2.profileImage",
-				"messages.id",
-				"messages.content",
-				"messages.createdAt",
-			])
-			.leftJoin(
-				subQuery =>
-					subQuery
-						.select(
-							`messages."id", messages."roomId", ROW_NUMBER() OVER (PARTITION BY messages.roomId ORDER BY messages.createdAt DESC) AS RowNumber`,
-						)
-						.from(MessageEntity, "messages"),
-				`messagesLined`,
-				`"messagesLined"."roomId" = rooms."id" AND "messagesLined"."rownumber" = 1`,
-			)
-			.leftJoin(
-				"rooms.messages",
-				"messages",
-				`messages.id = "messagesLined"."id"`,
-			)
-			.leftJoin("rooms.u1", "u1")
-			.leftJoin("rooms.u2", "u2")
-			.where("u1.id = :userId OR u2.id = :userId", { userId });
+	getRoomIdByUsers(senderId: number, receiverId: number) {
+		return `room_${Math.min(senderId, receiverId)}_${Math.max(senderId, receiverId)}`;
+	}
 
-		return await query.getMany();
+	isMemberOfRoom(roomId: string, userId: number) {
+		if (!roomId) return false;
+		const [, id1, id2] = roomId.split("_");
+		if (!id1 || !id2) return false;
+		return +id1 == userId || +id2 == userId;
+	}
+
+	async findRecentDialogs(userId: number) {
+		const messageQuery = this.messageRepo
+			.createQueryBuilder("msg")
+			.addSelect("u.id", "u_id")
+			.addSelect("u.username", "u_username")
+			.addSelect("u.profileImage", "u_profileImage")
+			.addSelect(
+				`ROW_NUMBER() OVER(PARTITION BY "msg"."roomId" ORDER BY "msg"."createdAt" DESC)`,
+				"row_n",
+			)
+			.addSelect(
+				qb =>
+					qb
+						.from(Message, "msg")
+						.select(`COUNT(*)`, "unreadMessagesCount")
+						.where(`msg."receiverId" = :userId AND msg."read" = false`),
+				"unread_messages_count",
+			)
+			.innerJoin(
+				"users",
+				"u",
+				`(CASE WHEN msg."senderId" = :userId THEN msg."receiverId" ELSE msg."senderId" END) = u.id`,
+			)
+			.where(`:userId IN (msg."senderId", msg."receiverId")`);
+
+		const query = this.messageRepo.manager
+			.createQueryBuilder()
+			.select("*")
+			.from(`(${messageQuery.getSql()})`, "msg")
+			.where(`msg."row_n" = 1`)
+			.setParameters({
+				userId,
+			});
+
+		const rows = await query.getRawMany();
+
+		const result = rows.map(row => ({
+			id: row.msg_roomId,
+			user: {
+				id: row.u_id,
+				username: row.u_username,
+				profileImage: row.u_profileImage,
+			},
+			latestMessage: {
+				id: row.msg_id,
+				content: row.msg_content,
+				date: row.msg_createdAt,
+				read: row.msg_read,
+				delivered: row.msg_delivered,
+				senderId: row.msg_senderId,
+				roomId: row.msg_roomId,
+			},
+			unreadMessagesCount: Number(row.unread_messages_count) || 0,
+		}));
+
+		return result;
 	}
 }

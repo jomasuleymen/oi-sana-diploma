@@ -1,0 +1,74 @@
+.form-box,
+.panel {
+  box-shadow: 0 5px 25px rgb(0 0 0 / 15%);
+}
+
+.form-box {
+  z-index: 7;
+  overflow: hidden;
+  min-height: 32rem;
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  z-index: 8;
+  height: 26rem;
+
+  img {
+    max-width: 17rem;
+  }
+}
+
+.form-container {
+
+  &.hide {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+
+    .sign-in-box,
+    .sign-in-panel {
+      transform: translateX(-100%);
+    }
+
+    .sign-up-panel,
+    .sign-up-box {
+      transform: translateX(100%);
+    }
+  }
+
+  &.show {
+    .sign-in-box,
+    .sign-up-box,
+    .sign-up-panel,
+    .sign-in-panel {
+      transform: translateX(0);
+      visibility: visible;
+      transition: 0.5s ease;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sign-in-container {
+    flex-direction: column-reverse;
+  }
+
+  .sign-up-container {
+    flex-direction: column;
+  }
+
+  .sign-in-container,
+  .sign-up-container {
+    & > div {
+      border: none;
+      box-shadow: none;
+      height: max-content;
+      min-height: max-content;
+    }
+  }
+}
