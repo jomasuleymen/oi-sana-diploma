@@ -22,6 +22,7 @@ import {
 	Sorting,
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
+import { PaymentService } from "src/payment/payment.service";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
 import { ROLE } from "src/user/user-roles";
 import { CourseService } from "./course.service";
@@ -32,7 +33,10 @@ import { CourseReview } from "./entities/review.entity";
 
 @Controller("courses")
 export class CourseController {
-	constructor(private readonly courseService: CourseService) {}
+	constructor(
+		private readonly courseService: CourseService,
+		private readonly paymentService: PaymentService,
+	) {}
 
 	@Post()
 	@UseAuthorized(ROLE.SPECIAL, ROLE.ADMIN)
@@ -44,11 +48,22 @@ export class CourseController {
 	}
 
 	@Get()
+	@UseAuthorized()
 	async findAll(
+		@UseSession() session: UserSession,
 		@PaginationParams() pagination: Pagination,
 		@SortingParams<Course>(["title"]) sort?: Sorting[],
 		@FilteringParams<Course>(["title", "author"]) filter?: Filtering[],
+		@Query("my") my?: boolean,
 	) {
+		if (my) {
+			return await this.courseService.findBy(
+				pagination,
+				sort,
+				filter,
+				session.id,
+			);
+		}
 		return await this.courseService.findBy(pagination, sort, filter);
 	}
 
@@ -64,8 +79,28 @@ export class CourseController {
 	}
 
 	@Get(":slug")
-	async findOne(@Param("slug") slug: string) {
-		return this.courseService.findOneBySlug(slug);
+	@UseAuthorized()
+	async findOne(
+		@Param("slug") slug: string,
+		@UseSession() session: UserSession,
+	) {
+		return this.courseService.findOneBySlug(slug, session);
+	}
+
+	@Get("enroll/:id")
+	@UseAuthorized()
+	async enroll(
+		@Param("id") courseId: string,
+		@UseSession() session: UserSession,
+	) {
+		const redirectData = await this.paymentService.createOrder({
+			userId: session.id,
+			courseId,
+		});
+
+		return {
+			redirectUrl: redirectData.url,
+		};
 	}
 
 	@Post(":slug/reviews")
@@ -119,14 +154,9 @@ export class CourseController {
 		return { message: "Отзывы успешно удалены" };
 	}
 
-	@UseAuthorized(ROLE.ADMIN, ROLE.SPECIAL)
-	@Delete("reviews/:id")
-	async deleteOneReview(
-		@Param("id") id: string,
-		@UseSession() user: UserSession,
-	) {
-		await this.courseService.deleteReviewById(id, user.id);
-
-		return { message: "Отзыв успешно удален" };
+	@UseAuthorized(ROLE.ADMIN)
+	@Get("statistics/count")
+	async countStatistics() {
+		return await this.courseService.getCountStatistics();
 	}
 }

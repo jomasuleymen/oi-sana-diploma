@@ -1,5 +1,7 @@
 import {
 	BookIcon,
+	BookOpenCheck,
+	CreditCard,
 	HelpingHand,
 	ImageIcon,
 	LayoutDashboardIcon,
@@ -31,7 +33,7 @@ export const dashboardGroupNavItems: GroupNavItems[] = [
 		title: "Admin",
 		items: [
 			{
-				title: "Dashboard",
+				title: "Overview",
 				href: "/dashboard",
 				icon: LayoutDashboardIcon,
 			},
@@ -64,6 +66,11 @@ export const dashboardGroupNavItems: GroupNavItems[] = [
 				title: "News",
 				href: "/dashboard/news",
 				icon: NewspaperIcon,
+			},
+			{
+				title: "Payments",
+				href: "/dashboard/payments",
+				icon: CreditCard,
 			},
 		],
 	},
@@ -124,5 +131,10 @@ export const mainNavItems: NavItem[] = [
 		title: "Methodologies",
 		href: `/methodologies`,
 		icon: LightbulbIcon,
+	},
+	{
+		title: "Tests",
+		href: `/tests`,
+		icon: BookOpenCheck,
 	},
 ];

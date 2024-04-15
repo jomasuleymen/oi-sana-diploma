@@ -39,7 +39,7 @@ export const useAuth = (
 				navigate(`/auth?${searchParams.toString()}`);
 			} else if (admin && !user.isAdmin) {
 				navigate("/");
-			} else if (specialist && !user.isSpecialist) {
+			} else if (specialist && !user.isAdmin && !user.isSpecialist) {
 				navigate("/");
 			}
 		}

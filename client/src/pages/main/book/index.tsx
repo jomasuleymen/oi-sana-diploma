@@ -1,10 +1,10 @@
 import React from "react";
 
+import NoDataFound from "@components/empty-data";
+import Loading from "@components/loading";
 import Container from "@components/ui/container";
 import Book from "./components/book";
 import { useBooks } from "./hooks/use-books";
-import Loading from "@components/loading";
-import EmptyDataPage from "@components/empty-data";
 
 type Props = {};
 
@@ -18,14 +18,14 @@ const BooksPage: React.FC<Props> = ({}) => {
 	if (!items.length) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}
 
 	return (
 		<Container className="py-4">
-			<div className="gap-2 flex flex-wrap justify-center">
+			<div className="flex flex-wrap justify-center gap-4">
 				{items.map((item) => (
 					<Book item={item} key={item.id} />
 				))}

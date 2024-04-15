@@ -14,7 +14,22 @@ export class ChatService {
 		readonly userService: UserService,
 	) {}
 
-	async findDialogDetailsById(userId: number, anotherUserId: number) {
+	async findDialogByRoomId(userId: number, roomId: string) {
+		const [, id1, id2] = roomId.split("_");
+		if (!id1 || !id2) {
+			throw new BadRequestException("Invalid room id");
+		}
+
+		const anotherUserId = +id1 == userId ? +id2 : +id1;
+		return await this.findDialog(userId, anotherUserId);
+	}
+
+	async findDialog(userId: number, anotherUserId: number) {
+		const anotherUser = await this.userService.findById(anotherUserId);
+		if (!anotherUser) {
+			throw new BadRequestException("User not found");
+		}
+
 		const roomId = this.getRoomIdByUsers(userId, anotherUserId);
 
 		const qb = this.messageRepo
@@ -45,7 +60,16 @@ export class ChatService {
 		const result = await qb.getRawOne();
 
 		if (!result) {
-			return null;
+			return {
+				id: this.getRoomIdByUsers(userId, anotherUser.id),
+				user: {
+					id: anotherUser.id,
+					username: anotherUser.username,
+					profileImage: anotherUser.profileImage,
+				},
+				latestMessage: null,
+				unreadMessagesCount: 0,
+			};
 		}
 
 		return {
@@ -135,17 +159,6 @@ export class ChatService {
 		}
 	}
 
-	getRoomIdByUsers(senderId: number, receiverId: number) {
-		return `room_${Math.min(senderId, receiverId)}_${Math.max(senderId, receiverId)}`;
-	}
-
-	isMemberOfRoom(roomId: string, userId: number) {
-		if (!roomId) return false;
-		const [, id1, id2] = roomId.split("_");
-		if (!id1 || !id2) return false;
-		return +id1 == userId || +id2 == userId;
-	}
-
 	async findRecentDialogs(userId: number) {
 		const messageQuery = this.messageRepo
 			.createQueryBuilder("msg")
@@ -202,5 +215,18 @@ export class ChatService {
 		}));
 
 		return result;
+	}
+
+	getRoomIdByUsers(senderId: number, receiverId: number) {
+		senderId = Number(senderId);
+		receiverId = Number(receiverId);
+		return `room_${Math.min(senderId, receiverId)}_${Math.max(senderId, receiverId)}`;
+	}
+
+	isMemberOfRoom(roomId: string, userId: number) {
+		if (!roomId) return false;
+		const [, id1, id2] = roomId.split("_");
+		if (!id1 || !id2) return false;
+		return +id1 == userId || +id2 == userId;
 	}
 }

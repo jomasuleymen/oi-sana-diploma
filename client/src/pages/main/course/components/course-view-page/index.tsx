@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCourse } from "../../hooks/use-course";
 import CourseContent from "./components/CourseContent";
 import CourseHeader from "./components/CourseHeader";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 type Props = {};
@@ -29,7 +29,7 @@ const CourseViewPage: React.FC<Props> = () => {
 	if (!course) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

@@ -23,6 +23,7 @@ export class SpecialistService {
 		const specialist = new Specialist();
 		specialist.user = user;
 		specialist.resume = dto.resume;
+		specialist.phone = dto.phone;
 
 		return await this.specRepository.save(specialist);
 	}
@@ -80,5 +81,37 @@ export class SpecialistService {
 		);
 
 		await Promise.all([updateUser, updateSpec]);
+	}
+
+	async getCountStatistics() {
+		const thisMonthSql = this.specRepository
+			.createQueryBuilder("spec")
+			.select("COUNT(*)")
+			.leftJoin("spec.user", "user")
+			.where(
+				"EXTRACT(MONTH FROM user.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE)",
+			)
+			.groupBy("user.id")
+			.getRawOne();
+
+		const lastMonthSql = this.specRepository
+			.createQueryBuilder("spec")
+			.select("COUNT(*)")
+			.leftJoin("spec.user", "user")
+			.where(
+				"EXTRACT(MONTH FROM user.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '1 month')",
+			)
+			.groupBy("user.id")
+			.getRawOne();
+
+		const [thisMonthCount, lastMonthCount] = await Promise.all([
+			thisMonthSql,
+			lastMonthSql,
+		]);
+
+		return {
+			thisMonth: Number(thisMonthCount?.count) || 0,
+			lastMonth: Number(lastMonthCount?.count) || 0,
+		};
 	}
 }

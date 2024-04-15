@@ -5,7 +5,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useMeditations } from "../hooks/use-meditations";
 import MeditationItem from "./meditation-item";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 type Props = {};
@@ -21,7 +21,7 @@ const MeditationsPage: React.FC<Props> = ({}) => {
 	if (!items.length) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

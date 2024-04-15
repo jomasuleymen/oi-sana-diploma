@@ -19,11 +19,11 @@ export function ChatLayout({
 	const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
 	const [isMobile, setIsMobile] = useState(false);
 
-	const [rooms, fetchRecentDialogs] = useChatStore((state) => [state.rooms, state.fetchRooms]);
+	const [fetchRooms] = useChatStore((state) => [state.fetchRooms]);
 
 	useEffect(() => {
-		fetchRecentDialogs();
-	}, [fetchRecentDialogs]);
+		fetchRooms();
+	}, [fetchRooms]);
 
 	useEffect(() => {
 		const checkScreenWidth = () => {
@@ -61,11 +61,7 @@ export function ChatLayout({
 						"min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
 				)}
 			>
-				<ChatSidebar
-					isCollapsed={isCollapsed || isMobile}
-					rooms={rooms}
-					isMobile={isMobile}
-				/>
+				<ChatSidebar isCollapsed={isCollapsed || isMobile} isMobile={isMobile} />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>

@@ -1,18 +1,26 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import _ from "lodash";
 import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
 import { SpecialistService } from "src/specialist/specialist.service";
+import { User } from "src/user/entities/user.entity";
+import { ROLE } from "src/user/user-roles";
 import { UserService } from "src/user/user.service";
 import { slugifyText } from "src/utils/slug";
-import { Equal, In, Repository } from "typeorm";
+import {
+	Equal,
+	FindOptionsRelations,
+	FindOptionsWhere,
+	In,
+	Repository,
+} from "typeorm";
 import { CreateCourseDto } from "./dto/create-course.dto";
 import { Course } from "./entities/course.entity";
 import { Lesson } from "./entities/lesson.entity";
 import { CourseReview } from "./entities/review.entity";
-import { ROLE } from "src/user/user-roles";
 
 @Injectable()
 export class CourseService {
@@ -60,7 +68,14 @@ export class CourseService {
 	}
 
 	async addReview(slug: string, review: string, rate: number, userId: number) {
-		const course = await this.courseRepository.findOneBy({ slug: slug });
+		const course = await this.courseRepository.findOne({
+			where: { slug: slug },
+			relations: {
+				author: {
+					user: true,
+				},
+			},
+		});
 		if (!course) {
 			throw new BadRequestException("Course not found");
 		}
@@ -68,6 +83,10 @@ export class CourseService {
 		const user = await this.userSerivce.findById(userId);
 		if (!user) {
 			throw new BadRequestException("User not found");
+		}
+
+		if (course.author.user.id === user.id) {
+			throw new BadRequestException("You can't review your own course");
 		}
 
 		const foundReview = await this.reviewRepository.findOne({
@@ -91,9 +110,9 @@ export class CourseService {
 		reviewEntity.rate = rate;
 		reviewEntity.user = user;
 
-		const avgRate = course.avgRate * course.rateCount + rate;
+		const totalRate = course.avgRate * course.rateCount + rate;
 		course.rateCount += 1;
-		course.avgRate = avgRate / course.rateCount;
+		course.avgRate = totalRate / course.rateCount;
 
 		await this.courseRepository.manager.transaction(async manager => {
 			await manager.save(reviewEntity);
@@ -166,13 +185,20 @@ export class CourseService {
 		{ size, limit, offset }: Pagination,
 		sort?: Sorting[],
 		filter?: Filtering[],
+		enrollerId?: User["id"],
 	): Promise<PaginatedResource<Course>> {
 		const where = getWhere<Course>(filter);
 		const order = getOrder(sort);
 
 		if (where.author) {
 			where.author = {
-				userId: where.author as number,
+				userId: Equal(where.author),
+			};
+		}
+
+		if (enrollerId) {
+			where.enrollers = {
+				id: Equal(enrollerId),
 			};
 		}
 
@@ -222,18 +248,50 @@ export class CourseService {
 		};
 	}
 
-	async findOneBySlug(slug: string) {
-		const data = await this.courseRepository.findOne({
-			where: { slug },
-			relations: {
-				author: {
-					user: true,
-				},
-				lessons: true,
+	async findOneBySlug(
+		slug: string,
+		{ id: userId, isAdmin }: { id: number; isAdmin: boolean },
+	) {
+		const relations: FindOptionsRelations<Course> = {
+			author: {
+				user: true,
+			},
+			lessons: true,
+		};
+
+		const where: FindOptionsWhere<Course> = {
+			slug,
+		};
+
+		const course = await this.courseRepository.findOne({
+			where,
+			relations,
+		});
+
+		if (!course) {
+			throw new BadRequestException("Course not found");
+		}
+
+		if (isAdmin || course.author.userId === userId) {
+			return { ...course, enrolled: true };
+		}
+
+		if (!userId) {
+			return { ...course, enrolled: false };
+		}
+
+		const found = await this.courseRepository.existsBy({
+			id: course.id,
+			enrollers: {
+				id: Equal(userId),
 			},
 		});
 
-		return data;
+		return { ...course, enrolled: found };
+	}
+
+	async findById(id: string) {
+		return await this.courseRepository.findOneBy({ id });
 	}
 
 	async findLessonById(id: string) {
@@ -243,6 +301,27 @@ export class CourseService {
 				lessons: true,
 			},
 		});
+	}
+
+	async giveAccessToCourse(courseId: string, userId: number) {
+		const course = await this.courseRepository.findOne({
+			where: { id: courseId },
+			relations: ["enrollers"],
+		});
+
+		const user = await this.userSerivce.findById(userId);
+
+		if (!course) {
+			throw new BadRequestException("Course not found");
+		}
+
+		if (!user) {
+			throw new BadRequestException("User not found");
+		}
+
+		course.enrollers.push(user);
+
+		return await this.courseRepository.save(course);
 	}
 
 	async deleteById(id: Course["id"], userId: number) {
@@ -277,27 +356,6 @@ export class CourseService {
 		return await this.courseRepository.delete(ids);
 	}
 
-	async deleteReviewById(id: Course["id"], userId: number) {
-		if (!userId) {
-			throw new BadRequestException("User not found");
-		}
-
-		const review = await this.reviewRepository.findOne({
-			where: { id },
-			relations: ["user"],
-		});
-
-		if (!review) {
-			throw new BadRequestException("Review not found");
-		}
-
-		if (review.user.id !== userId || review.user.role !== ROLE.ADMIN) {
-			throw new BadRequestException("You can't delete this course");
-		}
-
-		return await this.reviewRepository.delete({ id: Equal(id) });
-	}
-
 	async deleteManyReviewsById(ids: Course["id"][]) {
 		const reviews = await this.reviewRepository.find({
 			where: {
@@ -315,12 +373,13 @@ export class CourseService {
 
 		courses.forEach(course => {
 			const courseReviews = reviews.filter(
-				review => review.course.id === course.id,
+				review => review.course.id == course.id,
 			);
 
-			const avgRate = course.avgRate * course.rateCount;
+			const sumRates = _.sumBy(courseReviews, "rate");
+			const avgRate = course.avgRate * course.rateCount - sumRates;
 			course.rateCount -= courseReviews.length;
-			if (course.rateCount === 0) {
+			if (course.rateCount == 0) {
 				course.avgRate = 0;
 			} else {
 				course.avgRate = avgRate / course.rateCount;
@@ -331,5 +390,33 @@ export class CourseService {
 			await manager.remove(reviews);
 			await manager.save(courses);
 		});
+	}
+
+	async getCountStatistics() {
+		const thisMonthSql = this.courseRepository
+			.createQueryBuilder("course")
+			.select("COUNT(*)")
+			.where(
+				"EXTRACT(MONTH FROM course.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE)",
+			)
+			.getRawOne();
+
+		const lastMonthSql = this.courseRepository
+			.createQueryBuilder("course")
+			.select("COUNT(*)")
+			.where(
+				"EXTRACT(MONTH FROM course.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '1 month')",
+			)
+			.getRawOne();
+
+		const [thisMonthCount, lastMonthCount] = await Promise.all([
+			thisMonthSql,
+			lastMonthSql,
+		]);
+
+		return {
+			thisMonth: Number(thisMonthCount?.count) || 0,
+			lastMonth: Number(lastMonthCount?.count) || 0,
+		};
 	}
 }

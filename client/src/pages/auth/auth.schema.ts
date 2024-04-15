@@ -20,6 +20,7 @@ export const RegisterSchema = UserFieldsSchema.extend({
 export const SpecialistRegisterSchema = UserFieldsSchema.extend({
 	confirmPassword: z.string(),
 	resume: z.string(),
+	phone: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
 	message: "Passwords don't match",
 	path: ["confirmPassword"],

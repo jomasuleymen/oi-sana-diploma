@@ -5,7 +5,7 @@ import { useCourse } from "../../hooks/use-course";
 import ReviewHeader from "./ReviewHeader";
 import ReviewContent from "./ReviewContent";
 import ReviewFooter from "./ReviewFooter";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 type Props = {};
@@ -28,7 +28,7 @@ const ReviewCoursePage: React.FC<Props> = ({}) => {
 	if (!course) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

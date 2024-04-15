@@ -10,6 +10,7 @@ export type Specialist = {
 	user: User;
 	resume: string;
 	about?: string;
+	phone?: string;
 };
 
 export const getSpecialist = async (id: string) => {

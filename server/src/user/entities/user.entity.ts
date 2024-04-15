@@ -1,9 +1,11 @@
 import { Exclude } from "class-transformer";
+import { Payment } from "src/payment/entities/payment.entity";
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
 	Index,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
@@ -55,4 +57,7 @@ export class User {
 	@Column({ type: "varchar", nullable: false, select: false })
 	@Exclude()
 	password: string;
+
+	@OneToMany(() => Payment, (payment) => payment.user)
+	payments: Payment[];
 }

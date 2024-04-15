@@ -17,6 +17,7 @@ export type Course = {
 	rateCount: number;
 	avgRate: number | null;
 	lessons: Lesson[];
+	enrolled: boolean;
 };
 
 export type Lesson = {
@@ -41,8 +42,9 @@ export const deleteCourse = async (id: number | string) => {
 
 type GetCoursesParams = {
 	page: number;
-	userId?: number | string;
 	name?: string;
+	specId?: number | string;
+	my?: boolean;
 };
 
 export const getCourses = async (params: GetCoursesParams = { page: 1 }) => {
@@ -53,10 +55,10 @@ export const getCourses = async (params: GetCoursesParams = { page: 1 }) => {
 
 	const filters: FetchDataParams["columnFilters"] = [];
 
-	if (params.userId) {
+	if (params.specId) {
 		filters.push({
 			id: "author",
-			value: params.userId,
+			value: params.specId,
 		});
 	}
 
@@ -70,16 +72,28 @@ export const getCourses = async (params: GetCoursesParams = { page: 1 }) => {
 		});
 	}
 
+	const additionalParams: FetchDataParams["additionalParams"] = {};
+
+	if (params.my) {
+		additionalParams["my"] = true;
+	}
+
 	const response = await fetchData<Course>({
 		url: COURSES_ENDPOINT,
 		pagination,
 		columnFilters: filters,
+		additionalParams,
 	});
 	return response;
 };
 
 export const getCourse = async (slug: string) => {
 	const response = await $api.get<Course>(`${COURSES_ENDPOINT}/${slug}`);
+	return response.data;
+};
+
+export const buyCourse = async (id: string | number) => {
+	const response = await $api.get<{ redirectUrl: string }>(`${COURSES_ENDPOINT}/enroll/${id}`);
 	return response.data;
 };
 

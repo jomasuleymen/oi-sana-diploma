@@ -14,7 +14,7 @@ const CourseDetails: React.FC<Props> = ({ course }) => {
 	return (
 		<div className="flex-1 py-1 px-2 flex flex-col justify-between">
 			<div className="flex flex-col gap-1">
-				<Link to={course.slug} className="m-0 p-0 flex flex-col gap-0">
+				<Link to={`/courses/${course.slug}`} className="m-0 p-0 flex flex-col gap-0">
 					<span className="font-semibold text-base line-clamp-2">
 						{capitalize(course.title)}
 					</span>

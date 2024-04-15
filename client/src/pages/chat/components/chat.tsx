@@ -12,7 +12,7 @@ export function Chat({}: ChatProps) {
 
 	return (
 		<div className="flex flex-col justify-between w-full h-full">
-			<ChatTopbar selectedUser={room.user} />
+			<ChatTopbar selectedUser={room.user} room={room} />
 			<ChatList />
 			<ChatBottombar room={room} />
 		</div>

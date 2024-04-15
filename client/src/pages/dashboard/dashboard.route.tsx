@@ -15,6 +15,8 @@ import MethodologiesDashboard from "./methodologies";
 import NewMethodologyPage from "./methodologies/new";
 import NewsDashboard from "./news";
 import NewsCreatePage from "./news/new";
+import OverviewDashboard from "./overview";
+import PaymentsDashboard from "./payments";
 import SpecialistsDashboard from "./specialists";
 import SpecialistUpdate from "./specialists/specialist";
 import UsersDashboard from "./users";
@@ -25,7 +27,7 @@ export const dashboardRoutes: RouteObject = {
 	children: [
 		{
 			index: true,
-			element: <div>Dashboard</div>,
+			element: <OverviewDashboard />,
 		},
 		{
 			path: "users",
@@ -107,6 +109,10 @@ export const dashboardRoutes: RouteObject = {
 					element: <AffirmationCreatePage />,
 				},
 			],
+		},
+		{
+			path: "payments",
+			element: <PaymentsDashboard />,
 		},
 		{
 			path: "news",

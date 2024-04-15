@@ -30,31 +30,26 @@ export function isIncomeMessage(message: IncomeMessage | WriteMessage): message 
 const MetaData: React.FC<Props> = ({ message, myMessage }) => {
 	return (
 		<span className="text-[10px] text-gray-400 flex items-center gap-[0.15rem] float-right p-0 pl-2 relative -bottom-2">
-			{isIncomeMessage(message) ? (
-				<>
-					<span className="time inline-block">
-						{new Date(message.date).toLocaleTimeString("ru-RU", {
-							minute: "numeric",
-							hour: "numeric",
-						})}
-					</span>
-					{myMessage && (
-						<>
-							<span className="status inline-block">
-								{message.read ? (
-									<CheckCheck height={15} width={15} color="#4fc3f7" />
-								) : message.delivered ? (
-									<CheckCheck height={15} width={15} color="#88AEA5" />
-								) : (
-									<Check height={15} width={15} />
-								)}
-							</span>
-						</>
-					)}
-				</>
-			) : (
-				<Clock height={11} width={11} />
-			)}
+			<span className="time inline-block">
+				{new Date(message.date).toLocaleTimeString("ru-RU", {
+					minute: "numeric",
+					hour: "numeric",
+				})}
+			</span>
+			<span className="status inline-block">
+				{isIncomeMessage(message) ? (
+					myMessage &&
+					(message.read ? (
+						<CheckCheck height={15} width={15} color="#4fc3f7" />
+					) : message.delivered ? (
+						<CheckCheck height={15} width={15} color="#88AEA5" />
+					) : (
+						<Check height={15} width={15} />
+					))
+				) : (
+					<Clock height={15} width={15} />
+				)}
+			</span>
 		</span>
 	);
 };

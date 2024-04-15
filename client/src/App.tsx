@@ -14,6 +14,21 @@ import NotFound from "./shared/components/404";
 import ScreenLoading from "./shared/components/global-loading-page";
 import { chatRoutes } from "@pages/chat/chat.route";
 import { authRoutes } from "@pages/auth/auth.route";
+import { callRoutes } from "@pages/call/call.route";
+
+export const router = createBrowserRouter([
+	callRoutes,
+	marketingRoutes,
+	authRoutes,
+	specialistRoutes,
+	dashboardRoutes,
+	chatRoutes,
+	mainRoutes,
+	{
+		path: "*",
+		element: <NotFound />,
+	},
+]);
 
 const App = () => {
 	const fetchMe = useAuthStore((store) => store.fetchMe);
@@ -25,20 +40,7 @@ const App = () => {
 		<>
 			<ScreenLoading />
 			<Toaster richColors />
-			<RouterProvider
-				router={createBrowserRouter([
-					marketingRoutes,
-					authRoutes,
-					specialistRoutes,
-					dashboardRoutes,
-					chatRoutes,
-					mainRoutes,
-					{
-						path: "*",
-						element: <NotFound />,
-					},
-				])}
-			/>
+			<RouterProvider router={router} />
 		</>
 	);
 };

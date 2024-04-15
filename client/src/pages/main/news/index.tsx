@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useNewsArticle } from "./hooks/user-news-article";
 import NewsHeader from "./components/NewsHeader";
 import NewsContent from "./components/NewsContent";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 type Props = {};
@@ -27,7 +27,7 @@ const NewsPage: React.FC<Props> = ({}) => {
 	if (!item) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

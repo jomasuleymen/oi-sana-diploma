@@ -9,9 +9,8 @@ import { cn } from "@utils/utils";
 import { useHeaderStore } from "@/store/header-mode.store";
 import { TopNav } from "@components/navigation/top-nav";
 import { UserNav } from "@components/navigation/user-nav";
-import { Sidebar } from "./sidebar";
-import { GroupNavItems, dashboardGroupNavItems, mainNavItems } from "../navigation/nav-items";
 import { useAuthStore } from "@store/auth.store";
+import { GroupNavItems, dashboardGroupNavItems, mainNavItems } from "../navigation/nav-items";
 
 type HeaderProps = {
 	className?: React.HTMLAttributes<HTMLDivElement>["className"];
@@ -20,7 +19,7 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ className }) => {
 	const headerMode = useHeaderStore((s) => s.mode);
 	const user = useAuthStore((store) => store.user);
-	const [navGroups, setNavGroups] = useState<GroupNavItems[]>([]);
+	const [_, setNavGroups] = useState<GroupNavItems[]>([]);
 
 	useEffect(() => {
 		if (!user) return;
@@ -42,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 	return (
 		<div
 			className={cn(
-				"w-full border-b z-[9] bg-white flex items-center justify-between px-4 top-0 mb-0",
+				"w-full border-b z-[9] bg-white flex items-center justify-between px-4 top-0 mb-0 select-none",
 				className,
 				{ "bg-transparent shadow-none border-none": headerMode === "transparent" }
 			)}
@@ -58,10 +57,7 @@ const Header: React.FC<HeaderProps> = ({ className }) => {
 			</div>
 
 			<div className="right flex items-center justify-center">
-				<TopNav
-					className={cn("top-nav block mr-6")}
-					navitems={user ? mainNavItems : []}
-				/>
+				<TopNav className={cn("top-nav block mr-6")} navitems={user ? mainNavItems : []} />
 				<UserNav />
 			</div>
 		</div>

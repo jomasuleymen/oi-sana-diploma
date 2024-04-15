@@ -1,25 +1,19 @@
-import { Badge } from "@components/ui/badge";
-import { Button } from "@components/ui/button";
+import NoDataFound from "@components/empty-data";
+import Loading from "@components/loading";
 import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
+	CardTitle
 } from "@components/ui/card";
-import Typography from "@components/ui/typography";
-import { ArrowRight } from "lucide-react";
+import Container from "@components/ui/container";
+import ServerImage from "@components/ui/image";
+import ArticleOptions from "@pages/specialist/profile/components/profile-articles/options";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Article } from "../../article.service";
 import { useArticles } from "../../hooks/use-articles";
 import ArticleCardHeader from "./components/ArticleCardHeader";
-import ServerImage from "@components/ui/image";
-import ArticleOptions from "@pages/specialist/profile/components/profile-articles/options";
-import EmptyDataPage from "@components/empty-data";
-import Container from "@components/ui/container";
-import Loading from "@components/loading";
 
 type Props = {
 	specId?: number;
@@ -36,7 +30,7 @@ const ArticlesListPage: React.FC<Props> = ({ specId, withOptions }) => {
 	if (!articles.length) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

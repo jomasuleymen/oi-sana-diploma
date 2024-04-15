@@ -9,7 +9,7 @@ import React from "react";
 import ReactQuill from "react-quill";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useArticle } from "../../hooks/use-article";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 const ArticlePage: React.FC = () => {
@@ -29,7 +29,7 @@ const ArticlePage: React.FC = () => {
 	if (!item) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

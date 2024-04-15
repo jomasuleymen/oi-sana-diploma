@@ -2,7 +2,8 @@ import RatingStars from "@components/stars";
 import { Button } from "@components/ui/button";
 import { Card } from "@components/ui/card";
 import ServerImage from "@components/ui/image";
-import { Course } from "@pages/main/course/course.service";
+import Typography from "@components/ui/typography";
+import { buyCourse, Course } from "@pages/main/course/course.service";
 import { formatDate } from "@utils/utils";
 import { OctagonAlert } from "lucide-react";
 import React from "react";
@@ -13,6 +14,14 @@ type Props = {
 };
 
 const CoursePageHeader: React.FC<Props> = ({ course }) => {
+	const buyCourseHandle = () => {
+		buyCourse(course.id).then((res) => {
+			if (res) {
+				window.location.href = res.redirectUrl;
+			}
+		});
+	};
+
 	return (
 		<div className="bg-[#F7F9FA] p-2 flex">
 			<div className="flex-1 px-12 my-auto">
@@ -61,18 +70,23 @@ const CoursePageHeader: React.FC<Props> = ({ course }) => {
 						/>
 					</div>
 					<div className="p-4">
-						{/* <div>
-							<Typography variant="h3">{course.price} KZT</Typography>
-						<Button className="w-full mt-4">Buy now</Button>
-						</div> */}
-						<div>
-							<Link to={`/courses/view/${course.slug}`}>
-								<Button className="w-full mt-4">Go to course</Button>
-							</Link>
-							<Link to={`/courses/view/${course.slug}/review`}>
-								<Button className="w-full mt-4">Rate</Button>
-							</Link>
-						</div>
+						{course.enrolled || course.price === 0 ? (
+							<div>
+								<Link to={`/courses/view/${course.slug}`}>
+									<Button className="w-full mt-4">Go to course</Button>
+								</Link>
+								<Link to={`/courses/view/${course.slug}/review`}>
+									<Button className="w-full mt-4">Rate</Button>
+								</Link>
+							</div>
+						) : (
+							<div>
+								<Typography variant="h3">{course.price} KZT</Typography>
+								<Button className="w-full mt-4" onClick={buyCourseHandle}>
+									Buy now
+								</Button>
+							</div>
+						)}
 					</div>
 				</Card>
 			</div>

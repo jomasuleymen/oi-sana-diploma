@@ -45,7 +45,7 @@ const ProfileHeader: React.FC<Props> = ({ specialist, setActiveTab, activeTab, o
 					)}
 				</Link>
 				{!ownPage && (
-					<Link to="/chat">
+					<Link to={{ pathname: "/chat", search: `?user=${user.id}` }}>
 						<Card className="shadow-sm p-2 flex items-center font-semibold gap-1 bg-primary text-white cursor-pointer">
 							<MessageCircleMore />
 							Message

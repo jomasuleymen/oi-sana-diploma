@@ -1,4 +1,4 @@
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 import { Card } from "@components/ui/card";
 import Container from "@components/ui/container";
@@ -19,7 +19,7 @@ const MeditationsListPage: React.FC<Props> = ({}) => {
 	if (items.length === 0) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

@@ -10,7 +10,7 @@ import ServerImage from "@components/ui/image";
 import { Dot } from "lucide-react";
 import React from "react";
 import { useMethodologies } from "./hooks/use-methodologies";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 
 type Props = {};
 
@@ -24,7 +24,7 @@ const MethodologiesPage: React.FC<Props> = ({}) => {
 	if (!items.length) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

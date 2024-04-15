@@ -16,7 +16,7 @@ import { FormSuccess } from "@components/ui/form-success";
 import { UploadDropZone } from "@components/upload-dropzone";
 import { SpecialistRegisterSchema } from "@pages/auth/auth.schema";
 import { useMutation } from "@tanstack/react-query";
-import { AtSign, Lock, User } from "lucide-react";
+import { AtSign, Lock, Phone, User } from "lucide-react";
 import { registerSpecialist } from "../../auth.service";
 import { CardWrapper } from "../../components/card-wrapper/card-wrapper";
 import { FormInputField } from "../../components/inputField";
@@ -40,6 +40,7 @@ const SpecialistRegisterPage: React.FC = () => {
 			password: "",
 			confirmPassword: "",
 			resume: "",
+			phone: "",
 		},
 	});
 
@@ -83,6 +84,16 @@ const SpecialistRegisterPage: React.FC = () => {
 						label="Username"
 						placeholder="Username"
 					/>
+
+					<FormInputField
+						icon={Phone}
+						form={form}
+						disabled={isPending}
+						name="phone"
+						label="Phone"
+						placeholder="Phone number"
+					/>
+
 					<FormInputField
 						icon={AtSign}
 						form={form}
@@ -90,6 +101,7 @@ const SpecialistRegisterPage: React.FC = () => {
 						name="email"
 						label="Email"
 						placeholder="Email"
+						className="col-span-full"
 					/>
 
 					<FormInputField
@@ -100,6 +112,7 @@ const SpecialistRegisterPage: React.FC = () => {
 						type="password"
 						label="Password"
 						placeholder="Password"
+						// className="col-span-full"
 					/>
 
 					<FormInputField
@@ -110,6 +123,7 @@ const SpecialistRegisterPage: React.FC = () => {
 						type="password"
 						label="Confirm password"
 						placeholder="Confirm password"
+						// className="col-span-full"
 					/>
 
 					<FormField

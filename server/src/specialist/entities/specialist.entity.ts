@@ -30,6 +30,9 @@ export class Specialist {
 	@Column({ type: "varchar", nullable: true })
 	about: string;
 
+	@Column({ type: "varchar", nullable: true })
+	phone: string;
+
 	@OneToMany(() => Course, course => course.author, {
 		onDelete: "CASCADE",
 	})

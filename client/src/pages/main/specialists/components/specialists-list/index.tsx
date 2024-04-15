@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import { useSpecialists } from "../../hooks/use-specialists";
 import SpecialistCard from "./card";
 import Container from "@components/ui/container";
-import EmptyDataPage from "@components/empty-data";
-import Loading from "@components/global-loading-page";
+import NoDataFound from "@components/empty-data";
+import Loading from "@components/loading";
 
 type Props = {
 	search?: string;
@@ -19,7 +19,7 @@ const SpecialistsListPage: React.FC<Props> = ({ search }) => {
 	if (!items.length) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}

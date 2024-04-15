@@ -1,3 +1,4 @@
+import { socket } from "@lib/socket";
 import { LoginUserType, fetchMe, login, logout } from "@pages/auth/auth.service";
 import {
 	UpdateProfileType,
@@ -37,6 +38,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 		const res = await logout();
 		set({ user: null, isAuth: false, loading: false });
 
+		if (socket.connected) {
+			socket.disconnect();
+		}
+
+		window.location.reload();
+
 		return res;
 	},
 
@@ -46,6 +53,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 		set({ loading: true, triedFetch: true });
 
 		const user = (await fetchMe()) || null;
+
+		if (user && !socket.connected) {
+			socket.connect();
+		}
+
 		set({ user, isAuth: user != null, loading: false });
 	},
 

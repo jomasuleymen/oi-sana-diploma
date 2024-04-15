@@ -1,18 +1,18 @@
 import NotFound from "@components/404";
+import Loading from "@components/loading";
 import AvatarWrapper from "@components/ui/avatar-wrapper";
+import { Button } from "@components/ui/button";
+import { Card } from "@components/ui/card";
 import Container from "@components/ui/container";
-import { Input } from "@components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip";
 import Typography from "@components/ui/typography";
 import { useSpecialist } from "@pages/specialist/hooks/use-specialist";
+import { updateSpecialistStatus } from "@pages/specialist/specialist.service";
+import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@utils/utils";
 import { Check, X } from "lucide-react";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip";
-import { Button } from "@components/ui/button";
-import { cn } from "@utils/utils";
-import { updateSpecialistStatus } from "@pages/specialist/specialist.service";
-import { useQueryClient } from "@tanstack/react-query";
-import Loading from "@components/loading";
 
 const SpecialistUpdate: React.FC = () => {
 	const params = useParams<{ id: string }>();
@@ -34,23 +34,38 @@ const SpecialistUpdate: React.FC = () => {
 					username={specialist.user.username}
 					className="w-20 h-20"
 				/>
-				<Typography variant="h4" className="">
-					{specialist.user.username}
-				</Typography>
 			</div>
-			<div className="flex flex-col gap-3 mx-auto">
+			<div className="flex flex-col gap-3 mx-auto text-sm">
 				<div>
 					<Typography variant="h6" className="mb-1">
 						Username
 					</Typography>
-					<Input className="w-60" value={specialist.user.username} disabled />
+					<Card className="w-60 p-2">{specialist.user.username}</Card>
+				</div>
+				<div>
+					<Typography variant="h6" className="mb-1">
+						Firstname
+					</Typography>
+					<Card className="w-60 p-2">{specialist.user.firstname}</Card>
+				</div>
+				<div>
+					<Typography variant="h6" className="mb-1">
+						Lastname
+					</Typography>
+					<Card className="w-60 p-2">{specialist.user.lastname}</Card>
+				</div>
+				<div>
+					<Typography variant="h6" className="mb-1">
+						Phone
+					</Typography>
+					<Card className="w-60 p-2">{specialist.phone}</Card>
 				</div>
 				<div>
 					<Typography variant="h6" className="mb-1">
 						Email
 					</Typography>
 					<div className="flex items-center gap-2">
-						<Input className="w-60" value={specialist.user.email} disabled />
+						<Card className="w-60 p-2">{specialist.user.email}</Card>
 						<TooltipProvider>
 							<Tooltip>
 								<TooltipTrigger>

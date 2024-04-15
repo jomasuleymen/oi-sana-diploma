@@ -3,12 +3,16 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import { Lesson } from "./lesson.entity";
 import { CourseReview } from "./review.entity";
+import { User } from "src/user/entities/user.entity";
+import { Payment } from "src/payment/entities/payment.entity";
 
 @Entity({
 	name: "courses",
@@ -53,6 +57,13 @@ export class Course {
 	})
 	reviews: CourseReview[];
 
+	@ManyToMany(() => User)
+	@JoinTable()
+	enrollers: User[];
+
 	@CreateDateColumn({ type: "timestamptz" })
 	createdAt: Date;
+
+	@OneToMany(() => Payment, payment => payment.course)
+	payments: Payment[];
 }

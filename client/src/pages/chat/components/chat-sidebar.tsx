@@ -2,20 +2,32 @@ import AvatarWrapper from "@components/ui/avatar-wrapper";
 import { Button } from "@components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@components/ui/tooltip";
 import { cn } from "@utils/utils";
-import { Room } from "../chat.types";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useChatStore } from "../store/chat.store";
 
 interface SidebarProps {
 	isCollapsed: boolean;
-	rooms: Room[];
 	isMobile: boolean;
 }
 
-export function ChatSidebar({ rooms, isCollapsed, isMobile }: SidebarProps) {
-	const [selectedRoom, setSelectedRoom] = useChatStore((state) => [
+export function ChatSidebar({ isCollapsed, isMobile }: SidebarProps) {
+	const [rooms, selectedRoom, selectRoom, findRoomByUsername] = useChatStore((state) => [
+		state.rooms,
 		state.selectedRoom,
 		state.selectRoom,
+		state.fetchRoom,
 	]);
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	useEffect(() => {
+		const selectedUsername = searchParams.get("user");
+		if (selectedUsername) {
+			findRoomByUsername(selectedUsername).finally(() => {
+				setSearchParams({});
+			});
+		}
+	}, [searchParams, setSearchParams]);
 
 	return (
 		<div
@@ -51,7 +63,7 @@ export function ChatSidebar({ rooms, isCollapsed, isMobile }: SidebarProps) {
 										<Button
 											variant={variant}
 											size="icon"
-											onClick={() => setSelectedRoom(room.id)}
+											onClick={() => selectRoom(room.id)}
 											className={cn(
 												"h-11 w-11 md:h-16 md:w-16",
 												variant === "grey" &&
@@ -77,7 +89,7 @@ export function ChatSidebar({ rooms, isCollapsed, isMobile }: SidebarProps) {
 						) : (
 							<Button
 								key={room.id}
-								onClick={() => setSelectedRoom(room.id)}
+								onClick={() => selectRoom(room.id)}
 								variant={variant}
 								size={"xl"}
 								className={cn(

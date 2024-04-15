@@ -5,6 +5,7 @@ import {
 	Param,
 	Query,
 } from "@nestjs/common";
+import { isNumberString, isString } from "class-validator";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
 import UseSession from "src/auth/decorators/use-session.decorator";
 import { UserSession } from "src/auth/dto/session-user.dto";
@@ -14,25 +15,26 @@ import { ChatService } from "./chat.service";
 export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
 
+	@Get("dialogs")
+	@UseAuthorized()
+	async getDialogByQuery(
+		@Query("user") userId: string,
+		@Query("room") roomId: string,
+		@UseSession() user: UserSession,
+	) {
+		if (userId && isNumberString(userId)) {
+			return await this.chatService.findDialog(user.id, +userId);
+		} else if (roomId && isString(roomId)) {
+			return await this.chatService.findDialogByRoomId(user.id, roomId);
+		} else {
+			throw new BadRequestException("User ID or Room ID is required");
+		}
+	}
+
 	@Get("recent-dialogs")
 	@UseAuthorized()
 	async getRecentDialogs(@UseSession() user: UserSession) {
 		return await this.chatService.findRecentDialogs(user.id);
-	}
-
-	@Get("dialogs/:anotherUserId")
-	@UseAuthorized()
-	async getDialog(
-		@Param("anotherUserId") anotherUserId: string,
-		@UseSession() user: UserSession,
-	) {
-		const room = await this.chatService.findDialogDetailsById(
-			user.id,
-			+anotherUserId,
-		);
-		if (!room) throw new BadRequestException("Dialog not found");
-
-		return room;
 	}
 
 	@Get("dialog-messages/:roomId")

@@ -19,6 +19,7 @@ import MethodologiesPage from "./methodology";
 import NewsPage from "./news";
 import SettingsPage from "./settings";
 import SpecialistsPage from "./specialists";
+import TestsPage from "./tests";
 
 export const mainRoutes: RouteObject = {
 	path: "/",
@@ -71,13 +72,12 @@ export const mainRoutes: RouteObject = {
 					element: <CoursesPage />,
 				},
 				{
-					path: ":slug",
-					children: [
-						{
-							index: true,
-							element: <CoursePage />,
-						},
-					],
+					path: "my",
+					element: <CoursesPage myEnrolledCourses />,
+				},
+				{
+					path: "new",
+					element: <CreateCoursePage />,
 				},
 				{
 					path: "view",
@@ -98,8 +98,13 @@ export const mainRoutes: RouteObject = {
 					],
 				},
 				{
-					path: "new",
-					element: <CreateCoursePage />,
+					path: ":slug",
+					children: [
+						{
+							index: true,
+							element: <CoursePage />,
+						},
+					],
 				},
 			],
 		},
@@ -130,6 +135,16 @@ export const mainRoutes: RouteObject = {
 				{
 					index: true,
 					element: <SpecialistsPage />,
+				},
+			],
+		},
+		{
+			path: "tests",
+			element: <ProtectedRoute />,
+			children: [
+				{
+					index: true,
+					element: <TestsPage />,
 				},
 			],
 		},

@@ -5,7 +5,7 @@ import { useCourse } from "../../hooks/use-course";
 import CoursePageContent from "./components/CoursePageContent";
 import CoursePageFooter from "./components/CoursePageFooter";
 import CoursePageHeader from "./components/CoursePageHeader";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 import Loading from "@components/loading";
 
 type Props = {};
@@ -28,10 +28,11 @@ const CoursePage: React.FC<Props> = ({}) => {
 	if (!course) {
 		return (
 			<Container>
-				<EmptyDataPage />
+				<NoDataFound />
 			</Container>
 		);
 	}
+
 
 	return (
 		<Container className="max-w-6xl p-0 overflow-hidden">

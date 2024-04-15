@@ -20,7 +20,7 @@ import { Server, Socket } from "socket.io";
 import { UserSession } from "src/auth/dto/session-user.dto";
 import { SessionService } from "src/session/session.service";
 import { ChatService } from "./chat.service";
-import { SocketAuthenticateGuard } from "./decorators/socket-auth.guard";
+import { SocketAuthenticateGuard } from "../guards/socket-auth.guard";
 import SocketUseSession from "./decorators/socket-use-session.decorator";
 import { MessageDTO } from "./dto/message.dto";
 
@@ -60,7 +60,7 @@ export class ChatGateway
 			senderId: message.sender.id,
 			roomId: message.roomId,
 		};
-		
+
 		this.sendMessageToClients(message.sender.id, {
 			...messageDTO,
 			tempId: createChatDto.tempId,
@@ -71,7 +71,7 @@ export class ChatGateway
 	async sendMessageToClients(userId: number, data: any) {
 		const redis = this.redisService.getClient();
 
-		const clientIds = await redis.lrange(`chat:user:${userId}`, 0, -1);
+		const clientIds = await redis.lrange(`user:${userId}`, 0, -1);
 		if (clientIds.length > 0) {
 			this.server.to(clientIds).emit("new-message", data);
 		}
@@ -83,20 +83,19 @@ export class ChatGateway
 
 		// clear all clients on server restart
 		const redis = this.redisService.getClient();
-		redis.del("chat:client:*", "chat:user:*");
+		redis.del("client:*", "user:*");
 	}
 
 	async handleDisconnect(client: Socket) {
 		const redis = this.redisService.getClient();
-		const userId = await redis.get(`chat:client:${client.id}`);
+		const userId = await redis.get(`client:${client.id}`);
 		if (userId) {
-			await redis.lrem(`chat:user:${userId}`, 1, client.id);
-			await redis.del(`chat:client:${client.id}`);
+			await redis.lrem(`user:${userId}`, 1, client.id);
+			await redis.del(`client:${client.id}`);
 		}
 	}
 
 	async handleConnection(client: Socket) {
-		console.log("Trying connect");
 		const request = client.request as IncomingMessage & Record<string, any>;
 		const user = request?.session?.passport?.user as UserSession | undefined;
 
@@ -104,8 +103,8 @@ export class ChatGateway
 			client.disconnect(true);
 		} else {
 			const redis = this.redisService.getClient();
-			await redis.lpush(`chat:user:${user.id}`, client.id);
-			await redis.set(`chat:client:${client.id}`, user.id);
+			await redis.lpush(`user:${user.id}`, client.id);
+			await redis.set(`client:${client.id}`, user.id);
 		}
 	}
 }

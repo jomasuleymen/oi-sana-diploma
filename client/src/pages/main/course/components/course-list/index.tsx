@@ -1,18 +1,28 @@
+import Loading from "@components/loading";
+import CourseOptions from "@pages/specialist/profile/components/profile-courses/options";
 import React from "react";
 import { useCourses } from "../../hooks/use-courses";
 import CourseCard from "./course-card";
 import CoursesNotFound from "./courses-notfound";
-import CourseOptions from "@pages/specialist/profile/components/profile-courses/options";
-import Loading from "@components/loading";
 
 type Props = {
 	specialistId?: string | number;
 	withOptions?: boolean;
 	search?: string;
+	myEnrolledCourses?: boolean;
 };
 
-const CoursesListPage: React.FC<Props> = ({ specialistId, withOptions, search }) => {
-	const { items, isLoading } = useCourses({ userId: specialistId, search });
+const CoursesListPage: React.FC<Props> = ({
+	specialistId,
+	withOptions,
+	search,
+	myEnrolledCourses,
+}) => {
+	const { items, isLoading } = useCourses({
+		specId: specialistId,
+		search,
+		my: myEnrolledCourses,
+	});
 
 	if (isLoading) {
 		return <Loading />;

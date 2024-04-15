@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { methodologySchema } from "../methodology.schema";
 import { CreateMethodologyType, createMethodology } from "../methodology.service";
+import { Textarea } from "@components/ui/textarea";
 
 type IForm = z.infer<typeof methodologySchema>;
 
@@ -107,8 +108,8 @@ const NewMethodologyForm: React.FC = () => {
 							<FormItem className="w-full">
 								<FormLabel>Behaviour</FormLabel>
 								<FormControl>
-									<Input
-										type="text"
+									<Textarea
+										rows={4}
 										disabled={isPending}
 										placeholder="Behaviour"
 										{...field}

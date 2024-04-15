@@ -22,6 +22,7 @@ import "react-quill/dist/quill.snow.css";
 import { BookSchema } from "../book.schema";
 import { CreateBookType, createBook } from "../book.service";
 import Container from "@components/ui/container";
+import { Textarea } from "@components/ui/textarea";
 
 type IForm = z.infer<typeof BookSchema>;
 
@@ -109,7 +110,7 @@ export function BookCreateForm() {
 									<Input
 										type="text"
 										disabled={isPending}
-										placeholder="Title"
+										placeholder="Author"
 										{...field}
 									/>
 								</FormControl>
@@ -124,10 +125,10 @@ export function BookCreateForm() {
 							<FormItem className="w-full">
 								<FormLabel>Details</FormLabel>
 								<FormControl>
-									<Input
-										type="text"
+									<Textarea
+										rows={7}
 										disabled={isPending}
-										placeholder="Title"
+										placeholder="Details"
 										{...field}
 									/>
 								</FormControl>

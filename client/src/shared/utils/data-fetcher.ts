@@ -32,6 +32,7 @@ export type FetchDataParams = {
 	pagination?: PaginationState | null;
 	sorting?: SortingState | null;
 	columnFilters?: ColumnFilterType[] | null;
+	additionalParams?: Record<string, any>;
 };
 
 const defaultOperation: FilterOperation = "eq";
@@ -41,8 +42,17 @@ export async function fetchData<TData>({
 	pagination,
 	sorting,
 	columnFilters,
+	additionalParams,
 }: FetchDataParams): Promise<PaginatedResource<TData> | null> {
 	var params = new URLSearchParams();
+
+	if (additionalParams) {
+		for (const key in additionalParams) {
+			if (additionalParams.hasOwnProperty(key)) {
+				params.append(key, additionalParams[key]);
+			}
+		}
+	}
 
 	if (pagination) {
 		const { pageIndex, pageSize } = pagination;

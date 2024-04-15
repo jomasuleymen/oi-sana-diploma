@@ -60,4 +60,10 @@ export class SpecialistController {
 	) {
 		return this.specialistService.updateById(session.id, dto);
 	}
+
+	@UseAuthorized(ROLE.ADMIN)
+	@Get("statistics/count")
+	async countStatistics() {
+		return await this.specialistService.getCountStatistics();
+	}
 }

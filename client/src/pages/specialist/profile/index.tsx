@@ -31,7 +31,7 @@ const SpecialistProfile: React.FC = () => {
 
 	return (
 		<Container transparent className="max-w-[960px] h-full my-4">
-			<Card className="page-header col-span-2 p-3 pb-0 mb-6">
+			<Card className="page-header col-span-2 p-4 pb-0 mb-6">
 				<ProfileHeader
 					specialist={specialist}
 					setActiveTab={setActiveTab}

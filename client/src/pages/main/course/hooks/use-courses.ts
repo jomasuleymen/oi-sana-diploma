@@ -5,14 +5,15 @@ import { getCourses } from "../course.service";
 
 type Props = {
 	search?: string;
-	userId?: number | string;
+	specId?: number | string;
+	my?: boolean;
 };
 
-export const useCourses = ({ search, userId }: Props) => {
+export const useCourses = ({ search, specId, my }: Props) => {
 	const [page, setPage] = useState<number>(1);
 	const { data, error, isError, isLoading } = useQuery({
-		queryKey: ["courses", search, userId, page.toString()],
-		queryFn: async () => await getCourses({ page, userId, name: search}),
+		queryKey: ["courses", search, specId, my, page.toString()],
+		queryFn: async () => await getCourses({ page, specId, name: search, my }),
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: true,
 	});

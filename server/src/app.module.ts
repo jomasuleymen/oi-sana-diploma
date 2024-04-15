@@ -24,6 +24,8 @@ import { CourseModule } from "./course/course.module";
 import { MethodologyModule } from './methodology/methodology.module';
 import { NewsModule } from './news/news.module';
 import { AffirmationsModule } from './affirmations/affirmations.module';
+import { CallModule } from './call/call.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
 	imports: [
@@ -54,6 +56,8 @@ import { AffirmationsModule } from './affirmations/affirmations.module';
 		MethodologyModule,
 		NewsModule,
 		AffirmationsModule,
+		CallModule,
+		PaymentModule,
 	],
 	controllers: [],
 	providers: [],

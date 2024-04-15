@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNews } from "../../hooks/use-news";
 import Loading from "@components/loading";
-import EmptyDataPage from "@components/empty-data";
+import NoDataFound from "@components/empty-data";
 
 type Props = {};
 
@@ -22,7 +22,7 @@ const News: React.FC<Props> = ({}) => {
 			</Typography>
 			<div className="flex flex-col gap-6">
 				{news.length === 0 ? (
-					<EmptyDataPage className="mt-10" />
+					<NoDataFound className="mt-10" />
 				) : (
 					news.map((article) => (
 						<Link to={`/news/${article.slug}`} key={article.id}>

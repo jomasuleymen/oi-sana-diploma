@@ -1,4 +1,10 @@
-import { LogOut, MessageSquareIcon, Settings, User as UserIcon } from "lucide-react";
+import {
+	LogOut,
+	MessageSquareIcon,
+	MonitorPlayIcon,
+	Settings,
+	User as UserIcon,
+} from "lucide-react";
 
 import { useAuthStore } from "@/store/auth.store";
 import { useHeaderStore } from "@/store/header-mode.store";
@@ -97,20 +103,28 @@ export function UserNav({ className }: UserNavProps) {
 							</DropdownMenuItem>
 						</Link>
 					)}
+					{
+						<Link to="/courses/my">
+							<DropdownMenuItem className="cursor-pointer">
+								<MonitorPlayIcon className="mr-2 h-4 w-4" />
+								<span>My courses</span>
+							</DropdownMenuItem>
+						</Link>
+					}
 					<Link to="/chat">
 						<DropdownMenuItem className="cursor-pointer">
 							<MessageSquareIcon className="mr-2 h-4 w-4" />
 							<span>Chat</span>
 						</DropdownMenuItem>
 					</Link>
-					<Link to="/settings">
-						<DropdownMenuItem className="cursor-pointer">
-							<Settings className="mr-2 h-4 w-4" />
-							<span>Settings</span>
-						</DropdownMenuItem>
-					</Link>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
+				<Link to="/settings">
+					<DropdownMenuItem className="cursor-pointer">
+						<Settings className="mr-2 h-4 w-4" />
+						<span>Settings</span>
+					</DropdownMenuItem>
+				</Link>
 				<DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
 					<LogOut className="mr-2 h-4 w-4" />
 					<span>Log out</span>

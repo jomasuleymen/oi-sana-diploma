@@ -4,7 +4,7 @@ export type Room = {
 	id: string;
 	user: Pick<User, "id" | "profileImage" | "username">;
 	unReadMessagesCount: number;
-	latestMessage: IncomeMessage;
+	latestMessage: IncomeMessage | null;
 };
 
 export type RoomState = Room & {
@@ -27,4 +27,5 @@ export interface WriteMessage {
 	tempId: number;
 	receiverId: number;
 	content: string;
+	date: Date;
 }

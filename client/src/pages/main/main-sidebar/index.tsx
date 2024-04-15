@@ -20,12 +20,9 @@ const MainSidebar: React.FC = () => {
 		store.isShownSidebar,
 	]);
 
-	if (isLoading) {
-		return <Loading />;
-	}
-
 	return (
 		<div className="w-full h-full shadow-none">
+			{isLoading && <Loading />}
 			{!sideBarShown && (
 				<div className="mb-6 cursor-pointer mr-2" onClick={() => showSideBar()}>
 					<VerticalText>
