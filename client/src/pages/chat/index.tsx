@@ -1,6 +1,7 @@
 import React from "react";
 import { ChatLayout } from "./components/chat-layout";
 import { useChatStore } from "./store/chat.store";
+import "@pages/call/pages/video/video-socket";
 
 type Props = {};
 

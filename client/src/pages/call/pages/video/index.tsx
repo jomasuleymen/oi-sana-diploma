@@ -5,8 +5,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 // @ts-ignore
 import { ZegoUIKitPrebuiltCall } from "@zegocloud/zego-uikit-prebuilt-call-rn";
 
-import "./video-socket";
-
 function VideoCallPage() {
 	const navigate = useNavigate();
 	const { user, loading: userLoading } = useAuth();
