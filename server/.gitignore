@@ -4,7 +4,7 @@
 /client
 public/
 
-/generatedFiles
+migrations/
 
 # Logs
 logs
