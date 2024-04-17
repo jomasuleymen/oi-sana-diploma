@@ -11,7 +11,6 @@ import { NewsArticle } from "@pages/main/home/services/news.service";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface CellActionProps {
 	row: Row<NewsArticle>;
@@ -19,7 +18,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navigate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (

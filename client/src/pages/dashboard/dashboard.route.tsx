@@ -1,25 +1,26 @@
+import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
-import ProtectedRoute from "@/shared/components/protected-route";
-import AffirmationsDashboard from "./affirmations";
-import AffirmationCreatePage from "./affirmations/new";
-import ArticlesDashboard from "./articles";
-import BooksDashboard from "./books";
-import BookCreatePage from "./books/new";
-import CourseReviewsDashboard from "./course-reviews";
-import CoursesDashboard from "./courses";
-import DashboardLayout from "./dashboard.layout";
-import MeditationsDashboard from "./meditations";
-import MeditationCreatePage from "./meditations/new";
-import MethodologiesDashboard from "./methodologies";
-import NewMethodologyPage from "./methodologies/new";
-import NewsDashboard from "./news";
-import NewsCreatePage from "./news/new";
-import OverviewDashboard from "./overview";
-import PaymentsDashboard from "./payments";
-import SpecialistsDashboard from "./specialists";
-import SpecialistUpdate from "./specialists/specialist";
-import UsersDashboard from "./users";
+const ProtectedRoute = lazy(() => import("@/shared/components/protected-route"));
+const AffirmationsDashboard = lazy(() => import("./affirmations"));
+const AffirmationCreatePage = lazy(() => import("./affirmations/new"));
+const ArticlesDashboard = lazy(() => import("./articles"));
+const BooksDashboard = lazy(() => import("./books"));
+const BookCreatePage = lazy(() => import("./books/new"));
+const CourseReviewsDashboard = lazy(() => import("./course-reviews"));
+const CoursesDashboard = lazy(() => import("./courses"));
+const DashboardLayout = lazy(() => import("./dashboard.layout"));
+const MeditationsDashboard = lazy(() => import("./meditations"));
+const MeditationCreatePage = lazy(() => import("./meditations/new"));
+const MethodologiesDashboard = lazy(() => import("./methodologies"));
+const NewMethodologyPage = lazy(() => import("./methodologies/new"));
+const NewsDashboard = lazy(() => import("./news"));
+const NewsCreatePage = lazy(() => import("./news/new"));
+const OverviewDashboard = lazy(() => import("./overview"));
+const PaymentsDashboard = lazy(() => import("./payments"));
+const SpecialistsDashboard = lazy(() => import("./specialists"));
+const SpecialistUpdate = lazy(() => import("./specialists/specialist"));
+const UsersDashboard = lazy(() => import("./users"));
 
 export const dashboardRoutes: RouteObject = {
 	path: "/dashboard",

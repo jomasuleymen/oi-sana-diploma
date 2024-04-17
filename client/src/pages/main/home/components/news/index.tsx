@@ -1,15 +1,15 @@
+import NoDataFound from "@components/empty-data";
+import Loading from "@components/loading";
 import ServerImage from "@components/ui/image";
 import Typography from "@components/ui/typography";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNews } from "../../hooks/use-news";
-import Loading from "@components/loading";
-import NoDataFound from "@components/empty-data";
 
 type Props = {};
 
 const News: React.FC<Props> = ({}) => {
-	const { items: news, nextPage, isLoading } = useNews();
+	const { items: news, isLoading } = useNews();
 
 	if (isLoading) {
 		return <Loading />;

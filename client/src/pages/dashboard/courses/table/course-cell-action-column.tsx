@@ -9,9 +9,8 @@ import {
 } from "@components/ui/dropdown-menu";
 import { Course } from "@pages/main/course/course.service";
 import { Row } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface PostCellActionProps {
 	row: Row<Course>;
@@ -19,7 +18,6 @@ interface PostCellActionProps {
 }
 
 export const PostCellAction: React.FC<PostCellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navifate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (

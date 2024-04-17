@@ -1,6 +1,6 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 
+import CustomOutlet from "@components/customOutlet";
 import Header from "@components/layout/header";
 import DashboardSidebar from "@pages/dashboard/components/dashboard-sidebar";
 
@@ -13,7 +13,7 @@ const DashboardLayout: React.FC<Props> = ({}) => {
 			<div className="flex flex-1 !overflow-hidden">
 				<DashboardSidebar className="overflow-y-auto" />
 				<main className="flex-1 overflow-y-auto paragraph p-2">
-					<Outlet />
+					<CustomOutlet />
 				</main>
 			</div>
 		</div>

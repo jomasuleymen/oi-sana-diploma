@@ -1,5 +1,4 @@
 import { Button } from "@components/ui/button";
-import { Card } from "@components/ui/card";
 import Container from "@components/ui/container";
 import CoursesListPage from "@pages/main/course/components/course-list";
 import { Specialist } from "@pages/specialist/specialist.service";

@@ -1,15 +1,14 @@
+import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
 import {
 	DataTableFilterableColumn,
 	DataTableSearchableColumn,
 } from "@components/data-table/data-table.types";
 import { Checkbox } from "@components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./book-cell-action-column";
-import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
-import { Book } from "@pages/main/book/book.service";
-import { Link } from "react-router-dom";
-import { LinkIcon } from "lucide-react";
 import ServerImage from "@components/ui/image";
+import { Book } from "@pages/main/book/book.service";
+import { ColumnDef } from "@tanstack/react-table";
+import { Link } from "react-router-dom";
+import { CellAction } from "./book-cell-action-column";
 
 interface GenerateColumnsProps {
 	onRowDeleteAction?: (user: Book) => Promise<any>;

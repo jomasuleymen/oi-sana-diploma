@@ -14,16 +14,15 @@ import * as z from "zod";
 import { Input } from "@components/ui/input";
 import { ArticleSchema } from "@pages/main/article/article.schema";
 import { useEffect } from "react";
-import ReactQuill from "react-quill";
 import { toast } from "sonner";
 
+import RichTextEditor from "@components/rich-text-editor";
+import Container from "@components/ui/container";
 import { FormErrorProps } from "@components/ui/form-error";
 import { UploadDropZone } from "@components/upload-dropzone";
 import { CreateArticleType, createArticle } from "@pages/main/article/article.service";
 import { useMutation } from "@tanstack/react-query";
 import "react-quill/dist/quill.snow.css";
-import Container from "@components/ui/container";
-import RichTextEditor from "@components/rich-text-editor";
 
 type IArticleForm = z.infer<typeof ArticleSchema>;
 

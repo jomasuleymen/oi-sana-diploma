@@ -88,20 +88,4 @@ const AboutApp: React.FC<Props> = ({}) => {
 	);
 };
 
-const StepsView: React.FC<{ steps: Step[] }> = ({ steps }) => {
-	return (
-		<div>
-			{steps.map((step, index) => (
-				<div className="flex rounded-lg py-4 px-8 hover:bg-white gap-5 cursor-pointer w-[468px]">
-					<div className="relative flex items-start justify-center text-2xl">{index}</div>
-					<div>
-						<div className="text-[22px] mb-1 font-bold leading-5">{step.title}</div>
-						<div className="text-">{step.description}</div>
-					</div>
-				</div>
-			))}
-		</div>
-	);
-};
-
 export default AboutApp;

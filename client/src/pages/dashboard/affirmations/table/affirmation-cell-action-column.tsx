@@ -7,11 +7,10 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { Row } from "@tanstack/react-table";
 import { Affirmation } from "@pages/main/home/services/affirmation.service";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Row } from "@tanstack/react-table";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface CellActionProps {
 	row: Row<Affirmation>;
@@ -19,7 +18,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navigate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (

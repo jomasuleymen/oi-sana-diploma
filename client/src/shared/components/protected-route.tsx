@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { showLoading } from "react-global-loading";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
+import CustomOutlet from "./customOutlet";
 
 interface ProtectedRouteProps {
 	admin?: boolean;
@@ -13,7 +14,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 	admin,
 	specialist,
-	element = <Outlet />,
+	element = <CustomOutlet />,
 	navigateTo,
 }) => {
 	const { user, loading } = useAuth({ admin, specialist });

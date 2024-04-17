@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { Outlet } from "react-router-dom";
 
+import CustomOutlet from "@components/customOutlet";
 import Header from "@components/layout/header";
 
 const ChatLayout: React.FC = memo(() => {
@@ -10,7 +10,7 @@ const ChatLayout: React.FC = memo(() => {
 				<Header className="h-16" />
 				<div className="flex flex-1 !overflow-hidden">
 					<main className="flex-1 overflow-y-auto paragraph">
-						<Outlet />
+						<CustomOutlet />
 					</main>
 				</div>
 			</div>

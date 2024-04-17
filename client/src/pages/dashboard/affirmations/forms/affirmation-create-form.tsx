@@ -14,6 +14,7 @@ import * as z from "zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
+import Container from "@components/ui/container";
 import { FormErrorProps } from "@components/ui/form-error";
 import { UploadDropZone } from "@components/upload-dropzone";
 import {
@@ -23,12 +24,11 @@ import {
 } from "@pages/main/home/services/affirmation.service";
 import { useMutation } from "@tanstack/react-query";
 import "react-quill/dist/quill.snow.css";
-import Container from "@components/ui/container";
 
 type IForm = z.infer<typeof affirmationSchema>;
 
 export function AffirmationCreateForm() {
-	const { mutate, isPending, isSuccess, isError, error } = useMutation<
+	const { mutate, isSuccess, isError, error } = useMutation<
 		any,
 		FormErrorProps,
 		CreateAffirmationType

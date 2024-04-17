@@ -1,13 +1,12 @@
+import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
 import {
 	DataTableFilterableColumn,
 	DataTableSearchableColumn,
 } from "@components/data-table/data-table.types";
 import { Checkbox } from "@components/ui/checkbox";
+import { User } from "@pages/main/user/user.service";
 import { ColumnDef } from "@tanstack/react-table";
-import capitalize from "lodash/capitalize";
 import { UserCellAction } from "./user-cell-action-column";
-import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
-import { User, USER_ROLE } from "@pages/main/user/user.service";
 
 interface GenerateColumnsProps {
 	onRowDeleteAction?: (user: User) => Promise<any>;

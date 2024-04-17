@@ -1,12 +1,12 @@
+import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
-import AuthLayout from "./auth.layout";
-
-import EmailVerificationPage from "./pages/email-verification";
-import ForgotPasswordPage from "./pages/forgot-password";
-import ResetPasswordPage from "./pages/reset-password";
-import SpecialistRegisterPage from "./pages/specialist-register";
-import AuthPage from ".";
+const AuthLayout = lazy(() => import("./auth.layout"));
+const EmailVerificationPage = lazy(() => import("./pages/email-verification"));
+const ForgotPasswordPage = lazy(() => import("./pages/forgot-password"));
+const ResetPasswordPage = lazy(() => import("./pages/reset-password"));
+const SpecialistRegisterPage = lazy(() => import("./pages/specialist-register"));
+const AuthPage = lazy(() => import("."));
 
 export const authRoutes: RouteObject = {
 	path: "/auth",

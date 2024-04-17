@@ -1,6 +1,5 @@
 import AvatarWrapper from "@components/ui/avatar-wrapper";
-import { Badge } from "@components/ui/badge";
-import { CardDescription, CardHeader, CardTitle } from "@components/ui/card";
+import { CardHeader } from "@components/ui/card";
 import { Article } from "@pages/main/article/article.service";
 import { getElapsedTime } from "@utils/utils";
 import React from "react";

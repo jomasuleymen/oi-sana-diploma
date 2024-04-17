@@ -1,4 +1,3 @@
-import { SortingHeaderCell } from "@components/data-table/data-table-header-cells/sorting-header-cell";
 import {
 	DataTableFilterableColumn,
 	DataTableSearchableColumn,

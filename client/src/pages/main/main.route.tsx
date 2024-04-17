@@ -1,25 +1,25 @@
+import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
-import MainLayout from "./main.layout";
-
-import ProtectedRoute from "@/shared/components/protected-route";
-import ArticlesPage from "./article";
-import ArticlePage from "./article/components/article-item";
-import CreateArticlePage from "./article/components/new";
-import BooksPage from "./book";
-import CoursesPage from "./course";
-import CoursePage from "./course/components/course-page";
-import CourseViewPage from "./course/components/course-view-page";
-import CreateCoursePage from "./course/components/new";
-import ReviewCoursePage from "./course/components/review";
-import HomePage from "./home";
-import MeditationCategoriesPage from "./meditation";
-import MeditationsPage from "./meditation/components/meditations";
-import MethodologiesPage from "./methodology";
-import NewsPage from "./news";
-import SettingsPage from "./settings";
-import SpecialistsPage from "./specialists";
-import TestsPage from "./tests";
+const MainLayout = lazy(() => import("./main.layout"));
+const ProtectedRoute = lazy(() => import("@/shared/components/protected-route"));
+const ArticlesPage = lazy(() => import("./article"));
+const ArticlePage = lazy(() => import("./article/components/article-item"));
+const CreateArticlePage = lazy(() => import("./article/components/new"));
+const BooksPage = lazy(() => import("./book"));
+const CoursesPage = lazy(() => import("./course"));
+const CoursePage = lazy(() => import("./course/components/course-page"));
+const CourseViewPage = lazy(() => import("./course/components/course-view-page"));
+const CreateCoursePage = lazy(() => import("./course/components/new"));
+const ReviewCoursePage = lazy(() => import("./course/components/review"));
+const HomePage = lazy(() => import("./home"));
+const MeditationCategoriesPage = lazy(() => import("./meditation"));
+const MeditationsPage = lazy(() => import("./meditation/components/meditations"));
+const MethodologiesPage = lazy(() => import("./methodology"));
+const NewsPage = lazy(() => import("./news"));
+const SettingsPage = lazy(() => import("./settings"));
+const SpecialistsPage = lazy(() => import("./specialists"));
+const TestsPage = lazy(() => import("./tests"));
 
 export const mainRoutes: RouteObject = {
 	path: "/",

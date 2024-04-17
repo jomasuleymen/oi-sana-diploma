@@ -9,9 +9,8 @@ import {
 } from "@components/ui/dropdown-menu";
 import { Book } from "@pages/main/book/book.service";
 import { Row } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface CellActionProps {
 	row: Row<Book>;
@@ -19,7 +18,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navifate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (

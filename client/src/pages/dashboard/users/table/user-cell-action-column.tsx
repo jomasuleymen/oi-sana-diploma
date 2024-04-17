@@ -9,9 +9,8 @@ import {
 } from "@components/ui/dropdown-menu";
 import { User } from "@pages/main/user/user.service";
 import { Row } from "@tanstack/react-table";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface UserCellActionProps {
 	row: Row<User>;
@@ -19,7 +18,6 @@ interface UserCellActionProps {
 }
 
 export const UserCellAction: React.FC<UserCellActionProps> = ({ row, onRowDeleteAction }) => {
-	const navigate = useNavigate();
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (

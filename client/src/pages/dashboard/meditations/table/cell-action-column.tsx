@@ -11,7 +11,6 @@ import { Meditation } from "@pages/main/meditation/meditation.service";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface CellActionProps {
 	row: Row<Meditation>;

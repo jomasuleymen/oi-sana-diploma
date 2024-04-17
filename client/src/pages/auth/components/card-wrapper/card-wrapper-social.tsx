@@ -3,7 +3,6 @@ import { cn } from "@utils/utils";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { RiTwitterXFill } from "react-icons/ri";
-import { useParams } from "react-router-dom";
 import { getOAuthLink } from "../../auth.service";
 
 const SocialButton: React.FC<React.ComponentProps<"a"> & { provider: "google" | "twitter" }> = ({
@@ -21,9 +20,6 @@ const SocialButton: React.FC<React.ComponentProps<"a"> & { provider: "google" | 
 );
 
 const Social = () => {
-	const searchParams = useParams();
-	const callbackUrl = searchParams.callbackUrl;
-
 	return (
 		<div className="bottom w-full px-2">
 			<div className="relative mb-2">

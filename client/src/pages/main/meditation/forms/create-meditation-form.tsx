@@ -38,7 +38,7 @@ import CreateMeditationCategory from "./create-meditation-category-form";
 type IForm = z.infer<typeof MeditationSchema>;
 
 export function CreateMeditationForm() {
-	const { mutate, isPending, isSuccess, isError, error } = useMutation<
+	const { mutate, isSuccess, isError, error } = useMutation<
 		any,
 		FormErrorProps,
 		CreateMeditationType

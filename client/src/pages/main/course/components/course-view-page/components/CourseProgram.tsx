@@ -2,10 +2,9 @@ import {
 	Sheet,
 	SheetClose,
 	SheetContent,
-	SheetDescription,
 	SheetHeader,
 	SheetTitle,
-	SheetTrigger,
+	SheetTrigger
 } from "@components/ui/sheet";
 import { Course, Lesson } from "@pages/main/course/course.service";
 import { SquarePlay } from "lucide-react";

@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { Outlet } from "react-router-dom";
 
+import CustomOutlet from "@components/customOutlet";
 import Header from "@components/layout/header";
 
 const SpecialistsLayout: React.FC = memo(() => {
@@ -8,7 +8,7 @@ const SpecialistsLayout: React.FC = memo(() => {
 		<>
 			<Header className="fixed h-16 shadow-sm" />
 			<main className="pt-16">
-				<Outlet />
+				<CustomOutlet />
 			</main>
 		</>
 	);

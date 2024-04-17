@@ -1,6 +1,7 @@
+import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 
-import MarketingLayout from "./marketing.layout";
+const MarketingLayout = lazy(() => import("./marketing.layout"));
 
 export const marketingRoutes: RouteObject = {
 	path: "/",

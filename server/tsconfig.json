@@ -33,7 +33,7 @@
   },
   "include": [
     "*.d.ts",
-    "**/*.ts",
+    "**/*.ts", "pvm.dev.config.js",
   ],
   "exclude": [
     "node_modules",

@@ -1,8 +1,7 @@
-import React from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
 import { Button } from "@components/ui/button";
 import Typography from "@components/ui/typography";
 import { cn } from "@utils/utils";
+import React from "react";
 
 type Props = {};
 

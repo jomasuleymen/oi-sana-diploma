@@ -1,7 +1,6 @@
 import $api from "@lib/http";
 import { z } from "zod";
 import { methodologySchema } from "./methodology.schema";
-import { FetchDataParams, fetchData } from "@utils/data-fetcher";
 
 export type Methodology = {
 	id: number;

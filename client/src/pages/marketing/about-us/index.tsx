@@ -3,7 +3,6 @@ import { Card } from "@components/ui/card";
 import Typography from "@components/ui/typography";
 import { useIsVisible } from "@hooks/use-component-visible";
 import { cn } from "@utils/utils";
-import { LockIcon } from "lucide-react";
 import { useRef } from "react";
 import { Divider } from "../components/divider";
 import { features } from "./features";
