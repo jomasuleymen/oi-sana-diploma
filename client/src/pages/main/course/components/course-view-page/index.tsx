@@ -1,3 +1,5 @@
+import NoDataFound from "@components/empty-data";
+import Loading from "@components/loading";
 import Container from "@components/ui/container";
 import Plyr from "plyr-react";
 import React, { useState } from "react";
@@ -5,8 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCourse } from "../../hooks/use-course";
 import CourseContent from "./components/CourseContent";
 import CourseHeader from "./components/CourseHeader";
-import NoDataFound from "@components/empty-data";
-import Loading from "@components/loading";
 
 type Props = {};
 

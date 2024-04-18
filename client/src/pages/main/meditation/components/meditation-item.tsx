@@ -26,7 +26,7 @@ const MeditationItem: React.FC<Props> = ({ mediation }) => {
 							{
 								src:
 									import.meta.env.VITE_SERVER_URL +
-									"/api/upload/stream/" +
+									"/uploads/stream/" +
 									mediation.audio,
 								type: "audio/mp3",
 							},

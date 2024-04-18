@@ -56,7 +56,7 @@ export const generateColumns = ({
 								{
 									src:
 										import.meta.env.VITE_SERVER_URL +
-										"/api/upload/stream/" +
+										"/uploads/stream/" +
 										getValue(),
 									type: "audio/mp3",
 								},
