@@ -16,8 +16,7 @@ const TestPage: React.FC = () => {
 			testometrika_widget.AutoInit();
 			testometrika_widget.Test({
 				key: code,
-				auto_height: false,
-				height_initial: "700px",
+				auto_height: true,
 			});
 		}
 	}, [code]);
@@ -36,7 +35,7 @@ const TestPage: React.FC = () => {
 					See all tests
 				</Link>
 			</div>
-			<Container className="h-[700px]">
+			<Container>
 				<div className="testometrika_widget" id={code}></div>
 			</Container>
 		</Container>
