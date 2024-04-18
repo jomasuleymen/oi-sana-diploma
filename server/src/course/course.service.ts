@@ -7,7 +7,7 @@ import { Sorting } from "src/decorators/sorting-params.decorator";
 import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
 import { SpecialistService } from "src/specialist/specialist.service";
 import { User } from "src/user/entities/user.entity";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { UserService } from "src/user/user.service";
 import { slugifyText } from "src/utils/slug";
 import {

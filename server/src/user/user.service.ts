@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+	BadRequestException,
+	Injectable,
+	InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { isEmail } from "class-validator";
+import UserOAuthDTO from "src/auth/dto/register-user-oauth.dto";
 import UserRegisterDTO from "src/auth/dto/register-user.dto";
 import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Pagination } from "src/decorators/pagination-params.decorator";
@@ -10,7 +15,7 @@ import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
 import { Equal, FindManyOptions, Repository } from "typeorm";
 import UserDTO from "./dto/user.dto";
 import { User } from "./entities/user.entity";
-import { ROLE } from "./user-roles";
+import { ROLE } from "./user-enums";
 
 @Injectable()
 export class UserService {
@@ -36,6 +41,7 @@ export class UserService {
 		});
 
 		if (userByEmail) throw new BadRequestException("email is already taken");
+		if (!dto.password) throw new BadRequestException("password is required");
 
 		const data: Partial<User> = {
 			firstname: dto.firstname,
@@ -48,6 +54,34 @@ export class UserService {
 
 		const user = await this.usersRepository.save(data);
 		return user;
+	}
+
+	async createOAuth(dto: UserOAuthDTO) {
+		let baseUsername = (
+			dto.firstname || dto.email.split("@")[0].slice(0, 6)
+		).toLowerCase();
+		let username = baseUsername;
+		let counter = 0;
+
+		while (await this.usersRepository.exists({ where: { username } })) {
+			username = `${baseUsername}${Math.floor(Math.random() * 1000)}`;
+
+			if (counter++ > 100) {
+				throw new InternalServerErrorException("username generation failed");
+			}
+		}
+
+		const data: Partial<User> = {
+			firstname: dto.firstname,
+			lastname: dto.lastname,
+			email: dto.email,
+			username,
+			role: ROLE.USER,
+			emailVerified: new Date(),
+			profileImage: dto.profileImage,
+		};
+
+		return await this.usersRepository.save(data);
 	}
 
 	async findAll(filter: FindManyOptions<User> = {}): Promise<User[]> {

@@ -1,8 +1,8 @@
-import { SignInPanel, SignUpPanel } from "./components/panels";
-import { LoginForm } from "./forms/login-form";
-import { RegisterForm } from "./forms/register-form";
 import clsx, { ClassValue } from "clsx";
 import { useEffect, useState } from "react";
+import { AuthPanel } from "./components/panels";
+import { LoginForm } from "./forms/login-form";
+import { RegisterForm } from "./forms/register-form";
 
 import "./auth.style.scss";
 
@@ -16,7 +16,7 @@ const FormContainer = ({
 	return (
 		<div
 			className={clsx(
-				"form-container flex items-center justify-center overflow-hidden md:overflow-visible",
+				"form-container flex items-center justify-center overflow-visible absolute top-0",
 				className
 			)}
 		>
@@ -26,7 +26,7 @@ const FormContainer = ({
 };
 
 const AuthPage = () => {
-	const [isSignupMode, setIsSignUpMode] = useState(true);
+	const [isSignupMode, setIsSignUpMode] = useState(false);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -36,7 +36,7 @@ const AuthPage = () => {
 		<>
 			<div
 				id="auth_container"
-				className="w-full h-full relative flex justify-center md:items-center md:my-10"
+				className="w-full h-full relative flex justify-center md:items-center mt-4"
 			>
 				<FormContainer
 					className={clsx("sign-in-container", {
@@ -44,7 +44,12 @@ const AuthPage = () => {
 						show: !isSignupMode,
 					})}
 				>
-					<SignUpPanel setIsSignUpMode={setIsSignUpMode} />
+					<AuthPanel
+						mode="signup"
+						title="Don't have an account?"
+						onClick={() => setIsSignUpMode(true)}
+						className="-mr-[2px]"
+					/>
 					<LoginForm />
 				</FormContainer>
 				<FormContainer
@@ -54,7 +59,12 @@ const AuthPage = () => {
 					})}
 				>
 					<RegisterForm />
-					<SignInPanel setIsSignUpMode={setIsSignUpMode} />
+					<AuthPanel
+						mode="signin"
+						title="Already a member?"
+						onClick={() => setIsSignUpMode(false)}
+						className="-ml-[2px]"
+					/>
 				</FormContainer>
 			</div>
 		</>

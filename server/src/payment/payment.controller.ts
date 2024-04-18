@@ -18,7 +18,7 @@ import {
 	Sorting,
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { PaymentCallbackOrderDTO } from "./dto/callback-order.dto";
 import { Payment } from "./entities/payment.entity";
 import { PaymentService } from "./payment.service";

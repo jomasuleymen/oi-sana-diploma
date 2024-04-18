@@ -2,10 +2,9 @@ import { buttonVariants } from "@components/ui/button";
 import { cn } from "@utils/utils";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
-import { RiTwitterXFill } from "react-icons/ri";
 import { getOAuthLink } from "../../auth.service";
 
-const SocialButton: React.FC<React.ComponentProps<"a"> & { provider: "google" | "twitter" }> = ({
+const SocialButton: React.FC<React.ComponentProps<"a"> & { provider: "google" }> = ({
 	children,
 	provider,
 	...props
@@ -36,10 +35,6 @@ const Social = () => {
 				<SocialButton provider="google">
 					<FcGoogle size={17} />
 					<span>Google</span>
-				</SocialButton>
-				<SocialButton provider="twitter">
-					<RiTwitterXFill size={17} />
-					<span>Twitter</span>
 				</SocialButton>
 			</div>
 		</div>

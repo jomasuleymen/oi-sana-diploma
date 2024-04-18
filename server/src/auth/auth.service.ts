@@ -4,11 +4,12 @@ import { compareHash, hashPlainText } from "src/lib/hash.util";
 import { SpecialistService } from "src/specialist/specialist.service";
 import UserDTO from "src/user/dto/user.dto";
 import { User } from "src/user/entities/user.entity";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { UserService } from "src/user/user.service";
 import { Equal, Repository } from "typeorm";
 import SpecialistRegisterDTO from "../specialist/dto/register-specialist.dto";
 import UserLoginDTO from "./dto/login-user.dto";
+import UserOAuthDTO from "./dto/register-user-oauth.dto";
 import UserRegisterDTO from "./dto/register-user.dto";
 import {
 	EmailNotVerifiedException,
@@ -40,23 +41,20 @@ export class AuthService {
 		return UserDTO.fromEntity(user);
 	}
 
-	async validateUser(dto: UserLoginDTO): Promise<UserDTO> {
-		const user = await this.usersRepository.findOne({
-			where: [{ email: Equal(dto.email) }, { username: Equal(dto.email) }],
-			select: [
-				"id",
-				"username",
-				"email",
-				"password",
-				"emailVerified",
-				"firstname",
-				"lastname",
-				"role",
-				"createdAt",
-				"profileImage",
-			],
-		});
-		if (!user) throw new LoginFailedException();
+	async validateOAuthUser(dto: UserOAuthDTO): Promise<UserDTO> {
+		let user = await this.getUserByEmailOrUsername(dto.email);
+		if (!user) user = await this.userService.createOAuth(dto);
+
+		if (!user.emailVerified) {
+			await this.userService.updateById(user.id, { emailVerified: new Date() });
+		}
+
+		return UserDTO.fromEntity(user);
+	}
+
+	async validateLocalUser(dto: UserLoginDTO): Promise<UserDTO> {
+		const user = await this.getUserByEmailOrUsername(dto.email);
+		if (!user || !user.password) throw new LoginFailedException();
 
 		const isPasswordCorrect = compareHash(dto.password, user.password);
 		if (!isPasswordCorrect) throw new LoginFailedException();
@@ -71,6 +69,24 @@ export class AuthService {
 		}
 
 		return UserDTO.fromEntity(user);
+	}
+
+	private async getUserByEmailOrUsername(email: string) {
+		return await this.usersRepository.findOne({
+			where: [{ email: Equal(email) }, { username: Equal(email) }],
+			select: [
+				"id",
+				"username",
+				"email",
+				"password",
+				"emailVerified",
+				"firstname",
+				"lastname",
+				"role",
+				"createdAt",
+				"profileImage",
+			],
+		});
 	}
 
 	async verifyEmailWithToken(token: string) {

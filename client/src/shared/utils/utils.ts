@@ -63,3 +63,9 @@ export function getUsernameColor(username?: string | null): string {
 
 	return color;
 }
+
+export function isURL(str?: string | null) {
+	if (!str) return false;
+	const urlRegex = /^(https?):\/\/[^\s/$.?#].[^\s]*$/i;
+	return urlRegex.test(str);
+}

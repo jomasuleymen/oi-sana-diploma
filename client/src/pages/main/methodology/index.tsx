@@ -36,11 +36,11 @@ const MethodologiesPage: React.FC<Props> = ({}) => {
 					<AccordionItem value={methodology.title} key={methodology.id}>
 						<AccordionTrigger className="pb-2">
 							<div className="flex gap-2 items-center border-none">
-								<div className="overflow-hidden rounded-full">
+								<div className="w-24 h-24 overflow-hidden rounded-full">
 									<ServerImage
 										src={methodology.image}
 										alt={methodology.title}
-										className="w-24 h-24 object-cover rounded-full"
+										className="w-full h-full object-cover rounded-full"
 									/>
 								</div>
 								<div className="text-left">

@@ -11,7 +11,7 @@ import { ArticleDTO } from "./dto/article.dto";
 import { CreateArticleDto } from "./dto/create-article.dto";
 import { UpdateArticleDto } from "./dto/update-article.dto";
 import { Article } from "./entities/article.entity";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 
 @Injectable()
 export class ArticleService {

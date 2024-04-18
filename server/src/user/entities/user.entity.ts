@@ -9,7 +9,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from "typeorm";
-import { ROLE } from "../user-roles";
+import { ROLE } from "../user-enums";
 
 @Entity({
 	name: "users",
@@ -54,10 +54,10 @@ export class User {
 	})
 	role: ROLE;
 
-	@Column({ type: "varchar", nullable: false, select: false })
+	@Column({ type: "varchar", nullable: true, select: false })
 	@Exclude()
 	password: string;
 
-	@OneToMany(() => Payment, (payment) => payment.user)
+	@OneToMany(() => Payment, payment => payment.user)
 	payments: Payment[];
 }

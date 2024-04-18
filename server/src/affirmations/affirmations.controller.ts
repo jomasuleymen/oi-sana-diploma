@@ -5,7 +5,7 @@ import {
 	PaginationParams,
 } from "src/decorators/pagination-params.decorator";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { AffirmationsService } from "./affirmations.service";
 import { CreateAffirmationDto } from "./dto/create-affirmation.dto";
 

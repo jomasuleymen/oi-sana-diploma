@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { mainRoutes } from "@/pages/main/main.route";
 import { useAuthStore } from "@store/auth.store";
 
+// import Loading from "@components/loading";
 import Loading from "@components/loading";
 import { Toaster } from "@components/ui/sonner";
 import { authRoutes } from "@pages/auth/auth.route";

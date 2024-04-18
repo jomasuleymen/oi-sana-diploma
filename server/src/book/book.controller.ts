@@ -21,7 +21,7 @@ import {
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { BookService } from "./book.service";
 import { CreateBookDto } from "./dto/create-book.dto";
 import { UpdateBookDto } from "./dto/update-book.dto";

@@ -23,7 +23,7 @@ import {
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { ArticleService } from "./article.service";
 import { CreateArticleDto } from "./dto/create-article.dto";
 import { UpdateArticleDto } from "./dto/update-article.dto";

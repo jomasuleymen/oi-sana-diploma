@@ -22,6 +22,8 @@ export class PaymentService {
 	private readonly KASSA_ID: string;
 	private readonly KASSA_PASSWORD: string;
 
+	private readonly TENGE_TO_TIYN: number = 100;
+
 	constructor(
 		private readonly userService: UserService,
 		private readonly courseService: CourseService,
@@ -43,8 +45,7 @@ export class PaymentService {
 		if (!course) throw new BadRequestException("Course not found");
 
 		const paymentPayload: PaymentPayload = {
-			// amount: course.price * 100,
-			amount: 50 * 100,
+			amount: course.price * this.TENGE_TO_TIYN,
 			merchantId: this.KASSA_ID,
 			demo: isProd ? false : true,
 			orderId: uuidv4(),

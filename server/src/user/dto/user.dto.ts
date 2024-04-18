@@ -1,5 +1,5 @@
 import { User } from "src/user/entities/user.entity";
-import { ROLE } from "../user-roles";
+import { ROLE } from "../user-enums";
 
 export class UserDTO implements Partial<User> {
 	id: number;

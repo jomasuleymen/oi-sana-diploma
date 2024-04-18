@@ -9,7 +9,7 @@ import {
 class UserRegisterDTO {
 	@IsString()
 	@IsNotEmpty()
-	@MinLength(4)
+	@MinLength(3)
 	username: string;
 
 	@IsString()

@@ -30,7 +30,8 @@ export class EmailNotVerifiedException extends BadRequestException {
 export class SpecialistNotVerifiedException extends BadRequestException {
 	constructor() {
 		super({
-			message: "Specialist has not been verified. Please wait for the admin to verify your account.",
+			message:
+				"Specialist has not been verified. Please wait for the admin to verify your account.",
 			type: "SpecialistNotVerifiedException",
 		});
 	}

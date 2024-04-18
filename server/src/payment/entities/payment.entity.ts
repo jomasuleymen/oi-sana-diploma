@@ -15,10 +15,16 @@ export class Payment {
 	@PrimaryColumn("uuid")
 	orderId: string;
 
-	@ManyToOne(() => User, user => user.payments)
+	@ManyToOne(() => User, user => user.payments, {
+		onDelete: "CASCADE",
+		onUpdate: "CASCADE",
+	})
 	user: User;
 
-	@ManyToOne(() => Course, course => course.payments)
+	@ManyToOne(() => Course, course => course.payments, {
+		onDelete: "CASCADE",
+		onUpdate: "CASCADE",
+	})
 	course: Course;
 
 	@Column("decimal", { precision: 10, scale: 2 })

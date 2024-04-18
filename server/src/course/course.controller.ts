@@ -24,7 +24,7 @@ import {
 } from "src/decorators/sorting-params.decorator";
 import { PaymentService } from "src/payment/payment.service";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { CourseService } from "./course.service";
 import { CourseReviewDTO } from "./dto/course-review.dto";
 import { CreateCourseDto } from "./dto/create-course.dto";

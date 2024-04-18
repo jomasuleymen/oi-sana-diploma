@@ -6,6 +6,7 @@ import { formatDate } from "@utils/utils";
 import { Calendar } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import DefaultUserProfile from "/images/default-user-profile.png?url";
 
 type Props = {
 	specialist: Specialist;
@@ -17,11 +18,21 @@ const SpecialistCard: React.FC<Props> = ({ specialist }) => {
 			<div className="left flex flex-col w-40">
 				<div className="w-40">
 					<Link to={String(specialist.userId)}>
-						<ServerImage
-							src={specialist.user.profileImage}
-							alt="Profile image"
-							className="w-full h-40 object-fill"
-						/>
+						<div className="w-full h-40">
+							{specialist.user.profileImage ? (
+								<ServerImage
+									src={specialist.user.profileImage}
+									alt="Profile image"
+									className="w-full h-full object-fill"
+								/>
+							) : (
+								<img
+									src={DefaultUserProfile}
+									alt="Profile image"
+									className="w-full h-full object-fill"
+								/>
+							)}
+						</div>
 					</Link>
 					<Link to={String(specialist.userId)}>
 						<Button className="w-full mt-4 rounded-md hover:opacity-90">

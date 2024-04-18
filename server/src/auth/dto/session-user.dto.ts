@@ -1,5 +1,5 @@
 import UserDTO from "src/user/dto/user.dto";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 
 export class UserSession implements Partial<UserDTO> {
 	id: number;

@@ -54,7 +54,7 @@ const CourseViewPage: React.FC<Props> = () => {
 									{
 										src:
 											import.meta.env.VITE_SERVER_URL +
-											"/api/upload/stream/" +
+											"/uploads/stream/" +
 											lesson.video,
 										type: "video/mp4",
 									},

@@ -22,32 +22,37 @@ const MainSidebar: React.FC = () => {
 
 	return (
 		<div className="w-full h-full shadow-none">
-			{isLoading && <Loading />}
 			{!sideBarShown && (
-				<div className="mb-6 cursor-pointer mr-2" onClick={() => showSideBar()}>
+				<div className="mb-6 cursor-pointer" onClick={() => showSideBar()}>
 					<VerticalText>
-						<Typography variant="h4" className="mb-2 mt-4 flex items-center gap-2">
+						<div className="px-1 mb-2 mt-4 flex items-center gap-2 font-semibold text-xl">
 							<ChevronLeft size={17} className="inline-block align-center" />
 							<span>Latest Reviews</span>
-						</Typography>
+						</div>
 					</VerticalText>
 				</div>
 			)}
-			{sideBarShown && (
-				<div className="min-w-72 max-w-72">
-					<div className="mb-6 cursor-pointer" onClick={() => hideSideBar()}>
-						<Typography variant="h4" className="mb-2 mt-4">
-							<span>Latest Reviews</span>
-							<ChevronRight size={17} className="align-center inline-block ml-1" />
-						</Typography>
+			{sideBarShown &&
+				(isLoading ? (
+					<Loading />
+				) : (
+					<div className="min-w-72 max-w-72">
+						<div className="mb-6 cursor-pointer" onClick={() => hideSideBar()}>
+							<Typography variant="h4" className="mb-2 mt-4">
+								<span>Latest Reviews</span>
+								<ChevronRight
+									size={17}
+									className="align-center inline-block ml-1"
+								/>
+							</Typography>
+						</div>
+						<div className="mr-1">
+							{reviews?.map((review) => (
+								<ReviewCard key={review.id} review={review} />
+							))}
+						</div>
 					</div>
-					<div className="mr-1">
-						{reviews?.map((review) => (
-							<ReviewCard key={review.id} review={review} />
-						))}
-					</div>
-				</div>
-			)}
+				))}
 		</div>
 	);
 };

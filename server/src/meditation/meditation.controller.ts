@@ -17,7 +17,7 @@ import { CreateMeditationDto } from "./dto/create-meditation.dto";
 import { MeditationService } from "./meditation.service";
 import { Meditation } from "./entities/meditation.entity";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { DeleteManyDTO } from "src/user/dto/user-delete.dto";
 
 @Controller("meditations")

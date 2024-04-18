@@ -26,7 +26,7 @@ import {
 } from "src/decorators/sorting-params.decorator";
 import { DeleteManyDTO } from "./dto/user-delete.dto";
 import { User } from "./entities/user.entity";
-import { ROLE } from "./user-roles";
+import { ROLE } from "./user-enums";
 import { UserService } from "./user.service";
 import { UserUpdateDTO } from "./dto/user-update.dto";
 

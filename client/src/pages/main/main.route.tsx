@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
+import TestPage from "./tests/components/test-page";
 
 const MainLayout = lazy(() => import("./main.layout"));
 const ProtectedRoute = lazy(() => import("@/shared/components/protected-route"));
@@ -145,6 +146,10 @@ export const mainRoutes: RouteObject = {
 				{
 					index: true,
 					element: <TestsPage />,
+				},
+				{
+					path: ":code",
+					element: <TestPage />,
 				},
 			],
 		},

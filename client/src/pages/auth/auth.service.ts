@@ -55,6 +55,6 @@ export const verifyEmail = async (token: string) => {
 		.then((res) => res.data);
 };
 
-export const getOAuthLink = (provider: "google" | "twitter") => {
+export const getOAuthLink = (provider: "google") => {
 	return `${API_ENDPOINT}${AUTH_ENDPOINT}/${provider}`;
 };

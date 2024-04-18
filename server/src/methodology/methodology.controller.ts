@@ -8,7 +8,7 @@ import {
 	Post,
 } from "@nestjs/common";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
-import { ROLE } from "src/user/user-roles";
+import { ROLE } from "src/user/user-enums";
 import { CreateMethodologyDto } from "./dto/create-methodology.dto";
 import { UpdateMethodologyDto } from "./dto/update-methodology.dto";
 import { MethodologyService } from "./methodology.service";

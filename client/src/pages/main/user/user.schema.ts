@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 export const UserFieldsSchema = z.object({
-	username: z.string().min(6, {
-		message: "Username must be at least 6 characters long",
+	username: z.string().min(3, {
+		message: "Username must be at least 3 characters long",
 	}),
-	firstname: z.string().min(6, {
-		message: "Firstname must be at least 6 characters long",
+	firstname: z.string().min(1, {
+		message: "Field can not be empty",
 	}),
-	lastname: z.string().min(6, {
-		message: "Lastname must be at least 6 characters long",
+	lastname: z.string().min(1, {
+		message: "Field can not be empty",
 	}),
 	email: z.string().email({ message: "Email is required" }),
 	password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/, {

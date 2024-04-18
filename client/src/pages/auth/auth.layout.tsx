@@ -17,7 +17,9 @@ const AuthLayout: React.FC = memo(() => {
 	return (
 		<>
 			<Header className="fixed h-16 shadow-sm" />
-			<main className="pt-20">{loading || user ? <Loading /> : <CustomOutlet />}</main>
+			<main className="pt-20 relative">
+				{loading || user ? <Loading /> : <CustomOutlet />}
+			</main>
 		</>
 	);
 });

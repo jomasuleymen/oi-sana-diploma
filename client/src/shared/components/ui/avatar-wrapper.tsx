@@ -1,5 +1,5 @@
-import { cn, getUsernameColor } from "@utils/utils";
-import React from "react";
+import { cn, getUsernameColor, isURL } from "@utils/utils";
+import React, { memo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 function getInitials(name?: string | null): string {
@@ -24,12 +24,13 @@ type Props = {
 };
 
 const AvatarWrapper: React.FC<Props> = ({ src, username, className, rounded = true }) => {
+	if (src) {
+		src = isURL(src) ? src : `${import.meta.env.VITE_SERVER_URL}/uploads/${src}`;
+	}
+
 	return (
 		<Avatar className={cn("h-10 w-10", !rounded && "rounded-none", className)}>
-			<AvatarImage
-				src={src ? import.meta.env.VITE_SERVER_URL + "/uploads/" + src : ""}
-				alt="avatar"
-			/>
+			<AvatarImage src={src || ""} alt="avatar" className="object-cover" />
 			<AvatarFallback
 				style={{ backgroundColor: getUsernameColor(username) }}
 				className={cn(!rounded && "rounded-none")}
@@ -40,4 +41,4 @@ const AvatarWrapper: React.FC<Props> = ({ src, username, className, rounded = tr
 	);
 };
 
-export default AvatarWrapper;
+export default memo(AvatarWrapper);
