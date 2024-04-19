@@ -3,9 +3,9 @@ import { cn, formatDate } from "@utils/utils";
 import { MessageCircleMore, SettingsIcon } from "lucide-react";
 
 import AvatarWrapper from "@components/ui/avatar-wrapper";
-import React from "react";
+import { checkMessagePermission, Specialist } from "@pages/specialist/specialist.service";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Specialist } from "@pages/specialist/specialist.service";
 
 type Props = {
 	specialist: Specialist;
@@ -14,9 +14,29 @@ type Props = {
 	ownPage: boolean;
 };
 
+type MessagePermissionData = {
+	loading: boolean;
+	allowed: boolean;
+};
+
 const ProfileHeader: React.FC<Props> = ({ specialist, setActiveTab, activeTab, ownPage }) => {
 	const user = specialist.user;
 	const createdAt = new Date(user.createdAt);
+
+	const [messagePermission, setMessagePermission] = React.useState<MessagePermissionData>({
+		loading: true,
+		allowed: false,
+	});
+
+	useEffect(() => {
+		checkMessagePermission(user.id)
+			.then((res) => {
+				setMessagePermission({ loading: false, allowed: res });
+			})
+			.catch(() => {
+				setMessagePermission({ loading: false, allowed: false });
+			});
+	}, [specialist]);
 
 	return (
 		<div className="flex flex-col gap-2 relative">
@@ -44,7 +64,7 @@ const ProfileHeader: React.FC<Props> = ({ specialist, setActiveTab, activeTab, o
 						</Card>
 					)}
 				</Link>
-				{!ownPage && (
+				{!ownPage && messagePermission.allowed && (
 					<Link to={{ pathname: "/chat", search: `?user=${user.id}` }}>
 						<Card className="shadow-sm p-2 flex items-center font-semibold gap-1 bg-primary text-white cursor-pointer">
 							<MessageCircleMore />

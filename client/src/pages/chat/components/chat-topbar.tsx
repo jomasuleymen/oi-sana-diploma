@@ -1,14 +1,14 @@
 import AvatarWrapper from "@components/ui/avatar-wrapper";
 import { Button } from "@components/ui/button";
+import { useAuth } from "@hooks/use-auth";
 import { socket } from "@lib/socket";
+import { generateRoomToken } from "@pages/call/call.service";
 import { useVideoStore } from "@pages/call/store/video.store";
 import { User } from "@pages/main/user/user.service";
 import { Video } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Room } from "../chat.types";
-import { useAuth } from "@hooks/use-auth";
-import { generateRoomToken } from "@pages/call/call.service";
 import { useNavigate } from "react-router-dom";
+import { Room } from "../chat.types";
 
 interface ChatTopbarProps {
 	room: Room;
@@ -55,11 +55,7 @@ export default function ChatTopbar({ selectedUser, room }: ChatTopbarProps) {
 			<div className="flex items-center gap-2">
 				{videoOpened && (
 					<div className="flex gap-2">
-						<Button
-							variant="outline-2"
-							className="px-3"
-							onClick={handleJoinRoom}
-						>
+						<Button variant="outline-2" className="px-3" onClick={handleJoinRoom}>
 							Join room
 						</Button>
 						<Button

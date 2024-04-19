@@ -1,10 +1,16 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+	BadRequestException,
+	forwardRef,
+	Inject,
+	Injectable
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import _ from "lodash";
+import { ChatService } from "src/chat/chat.service";
 import { Filtering } from "src/decorators/filtering-params.decorator";
 import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
-import { PaginatedResource, getOrder, getWhere } from "src/lib/typeorm.util";
+import { getOrder, getWhere, PaginatedResource } from "src/lib/typeorm.util";
 import { SpecialistService } from "src/specialist/specialist.service";
 import { User } from "src/user/entities/user.entity";
 import { ROLE } from "src/user/user-enums";
@@ -31,6 +37,8 @@ export class CourseService {
 		private reviewRepository: Repository<CourseReview>,
 		private readonly userSerivce: UserService,
 		private readonly specialistService: SpecialistService,
+		@Inject(forwardRef(() => ChatService))
+		private readonly chatService: ChatService,
 	) {}
 
 	async create(userId: number, dto: CreateCourseDto) {
@@ -303,10 +311,10 @@ export class CourseService {
 		});
 	}
 
-	async giveAccessToCourse(courseId: string, userId: number) {
+	async enrollCourse(courseId: string, userId: number) {
 		const course = await this.courseRepository.findOne({
 			where: { id: courseId },
-			relations: ["enrollers"],
+			relations: ["enrollers", "author"],
 		});
 
 		const user = await this.userSerivce.findById(userId);
@@ -320,6 +328,10 @@ export class CourseService {
 		}
 
 		course.enrollers.push(user);
+		await this.chatService.clearMessagePermissionCache(
+			course.author.userId,
+			userId,
+		);
 
 		return await this.courseRepository.save(course);
 	}
@@ -350,6 +362,17 @@ export class CourseService {
 		}
 
 		return await this.courseRepository.delete({ id: Equal(id) });
+	}
+
+	async checkIfUserEnrolledSpecCourse(specId: number, userId: number) {
+		return await this.courseRepository.existsBy({
+			author: {
+				userId: Equal(specId),
+			},
+			enrollers: {
+				id: Equal(userId),
+			},
+		});
 	}
 
 	async deleteManyById(ids: Course["id"][]) {

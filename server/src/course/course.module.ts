@@ -1,5 +1,6 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { ChatModule } from "src/chat/chat.module";
 import { PaymentModule } from "src/payment/payment.module";
 import { SpecialistModule } from "src/specialist/specialist.module";
 import { UserModule } from "src/user/user.module";
@@ -11,13 +12,14 @@ import { CourseReview } from "./entities/review.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([Course, Lesson, CourseReview]),
+		forwardRef(() => PaymentModule),
+		forwardRef(() => ChatModule),
 		SpecialistModule,
 		UserModule,
-		forwardRef(() => PaymentModule),
+		TypeOrmModule.forFeature([Course, Lesson, CourseReview]),
 	],
 	controllers: [CourseController],
 	providers: [CourseService],
-	exports: [CourseService],
+	exports: [TypeOrmModule, CourseService],
 })
 export class CourseModule {}

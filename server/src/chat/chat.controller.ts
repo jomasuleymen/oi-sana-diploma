@@ -48,6 +48,17 @@ export class ChatController {
 		const isMember = this.chatService.isMemberOfRoom(roomId, user.id);
 		if (!isMember) throw new BadRequestException("Dialog not found");
 
-		return this.chatService.findDialogMessages(roomId, before);
+		return await this.chatService.findDialogMessages(roomId, before);
+	}
+
+	@Get("message-permission/:userId")
+	@UseAuthorized()
+	async checkMessagePermission(
+		@Param("userId") userId: string,
+		@UseSession() user: UserSession,
+	): Promise<boolean> {
+		if (user.isAdmin) return true;
+		const roomId = this.chatService.getRoomIdByUsers(user.id, +userId);
+		return await this.chatService.checkMessagePermission(roomId, user.id);
 	}
 }

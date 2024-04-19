@@ -104,7 +104,7 @@ export class PaymentService {
 
 		const { user, course } = payment;
 
-		await this.courseService.giveAccessToCourse(course.id, user.id);
+		await this.courseService.enrollCourse(course.id, user.id);
 
 		payment.isPaid = true;
 		payment.paidAt = new Date();

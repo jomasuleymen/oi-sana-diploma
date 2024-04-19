@@ -1,17 +1,28 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { RedisService } from "@liaoliaots/nestjs-redis";
+import {
+	BadRequestException,
+	forwardRef,
+	Inject,
+	Injectable,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { isUUID } from "class-validator";
+import { CourseService } from "src/course/course.service";
+import { ROLE } from "src/user/user-enums";
 import { UserService } from "src/user/user.service";
 import { Repository } from "typeorm";
 import { MessageDTO } from "./dto/message.dto";
 import { Message } from "./entities/message.entity";
-import { isUUID } from "class-validator";
 
 @Injectable()
 export class ChatService {
 	constructor(
 		@InjectRepository(Message)
-		readonly messageRepo: Repository<Message>,
-		readonly userService: UserService,
+		private readonly messageRepo: Repository<Message>,
+		private readonly userService: UserService,
+		@Inject(forwardRef(() => CourseService))
+		private readonly courseService: CourseService,
+		private readonly redisService: RedisService,
 	) {}
 
 	async findDialogByRoomId(userId: number, roomId: string) {
@@ -133,6 +144,13 @@ export class ChatService {
 
 	async sendMessage(userId: number, createChatDto: MessageDTO) {
 		try {
+			const roomId = this.getRoomIdByUsers(userId, +createChatDto.receiverId);
+
+			const isAllowed = await this.checkMessagePermission(roomId, userId);
+			if (!isAllowed) {
+				throw new BadRequestException("You are not allowed to send messages");
+			}
+
 			const sender = await this.userService.findById(userId);
 			if (!sender) {
 				throw new BadRequestException("Sender user not found");
@@ -145,17 +163,20 @@ export class ChatService {
 				throw new BadRequestException("Receiver not found");
 			}
 
-			// TODO: Check if user is part of the room
 			const message = await this.messageRepo.save({
 				sender,
 				receiver,
-				roomId: this.getRoomIdByUsers(userId, +createChatDto.receiverId),
+				roomId,
 				content: createChatDto.content,
 			});
 
 			return message;
 		} catch (e) {
-			throw new BadRequestException("Receiver not found");
+			if (e instanceof BadRequestException) {
+				throw e;
+			}
+
+			throw new BadRequestException("Failed to send message");
 		}
 	}
 
@@ -217,10 +238,10 @@ export class ChatService {
 		return result;
 	}
 
-	getRoomIdByUsers(senderId: number, receiverId: number) {
-		senderId = Number(senderId);
-		receiverId = Number(receiverId);
-		return `room_${Math.min(senderId, receiverId)}_${Math.max(senderId, receiverId)}`;
+	getRoomIdByUsers(id1: number, id2: number) {
+		id1 = Number(id1);
+		id2 = Number(id2);
+		return `room_${Math.min(id1, id2)}_${Math.max(id1, id2)}`;
 	}
 
 	isMemberOfRoom(roomId: string, userId: number) {
@@ -228,5 +249,66 @@ export class ChatService {
 		const [, id1, id2] = roomId.split("_");
 		if (!id1 || !id2) return false;
 		return +id1 == userId || +id2 == userId;
+	}
+
+	getMembersOfRoom(roomId: string) {
+		const [, id1, id2] = roomId.split("_");
+		if (!id1 || !id2) return null;
+		return [+id1, +id2];
+	}
+
+	async checkMessagePermission(roomId: string, userId: number) {
+		const redis = this.redisService.getClient();
+
+		const members = this.getMembersOfRoom(roomId);
+		if (!members) throw new BadRequestException("Invalid room id");
+		if (members[0] !== userId && members[1] !== userId)
+			throw new BadRequestException("You are not a member of this room");
+
+		const counterPartyId = members.find(id => id !== userId);
+		if (!counterPartyId) throw new BadRequestException("Invalid room id");
+
+		const redisKey = this.getMessagePermissionCacheKey(userId, counterPartyId);
+
+		const cache = await redis.get(redisKey);
+		if (cache !== null) {
+			return cache === "1";
+		}
+
+		const user = await this.userService.findById(userId);
+		if (!user) throw new BadRequestException("User not found");
+
+		if (user.role === ROLE.ADMIN) {
+			await redis.set(redisKey, 1);
+			return true;
+		}
+
+		const counterparty = await this.userService.findById(counterPartyId);
+		if (!counterparty) throw new BadRequestException("Counterparty not found");
+
+		if (user.role === ROLE.SPECIAL && counterparty.role === ROLE.USER) {
+			await redis.set(redisKey, 1);
+			return true;
+		}
+
+		const isEnrolled = await this.courseService.checkIfUserEnrolledSpecCourse(
+			counterPartyId,
+			userId,
+		);
+
+		await redis.set(redisKey, isEnrolled ? 1 : 0);
+
+		return isEnrolled;
+	}
+
+	async clearMessagePermissionCache(userId: number, counterPartyId: number) {
+		const redis = this.redisService.getClient();
+
+		await redis.del(this.getMessagePermissionCacheKey(userId, counterPartyId));
+		await redis.del(this.getMessagePermissionCacheKey(counterPartyId, userId));
+	}
+
+	private getMessagePermissionCacheKey(userId: number, counterPartyId: number) {
+		return `message:permission:${userId}:${counterPartyId}`;
 	}
 }
