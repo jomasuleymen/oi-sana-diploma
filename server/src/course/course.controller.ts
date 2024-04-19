@@ -134,7 +134,7 @@ export class CourseController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.courseService.deleteManyById(dto.id as any);
 
-		return { message: "Курсы успешно удалены" };
+		return { message: "Courses deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN, ROLE.SPECIAL)
@@ -142,7 +142,7 @@ export class CourseController {
 	async deleteOne(@Param("id") id: string, @UseSession() user: UserSession) {
 		await this.courseService.deleteById(id, user.id);
 
-		return { message: "Курс успешно удален" };
+		return { message: "Course deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN)
@@ -151,7 +151,7 @@ export class CourseController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.courseService.deleteManyReviewsById(dto.id as any);
 
-		return { message: "Отзывы успешно удалены" };
+		return { message: "Review deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN)

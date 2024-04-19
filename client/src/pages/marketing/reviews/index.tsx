@@ -8,9 +8,8 @@ import "slick-carousel/slick/slick.css";
 
 import SpecialistReviewCard from "./specialist-review";
 import { specialistReviews } from "./reviews";
-type Props = {};
 
-const MarketingSpecialists: React.FC<Props> = ({}) => {
+const MarketingSpecialists: React.FC = () => {
 	return (
 		<div className="flex flex-col gap-8">
 			<div className="top flex flex-col gap-3 items-center justify-center">

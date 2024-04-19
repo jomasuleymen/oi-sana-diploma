@@ -35,7 +35,7 @@ const MarketingPage = (props: Props) => {
 			<section className="feedbacks">
 				<AppReviews />
 			</section>
-			<section className="app-download">
+			<section className="app-download mt-10">
 				<DownloadApp />
 			</section>
 			<section className="faq">

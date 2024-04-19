@@ -1,7 +1,6 @@
 import RatingStars from "@components/stars";
 import { Card } from "@components/ui/card";
 import Typography from "@components/ui/typography";
-import { useIsVisible } from "@hooks/use-component-visible";
 import { cn } from "@utils/utils";
 import { useRef } from "react";
 import { Divider } from "../components/divider";
@@ -9,30 +8,26 @@ import { features } from "./features";
 
 const AboutUs: React.FC = () => {
 	const ref = useRef<HTMLDivElement>(null);
-	const isVisible = useIsVisible(ref);
 
 	return (
-		<div
-			className={cn(
-				"transition-opacity ease duration-1000 px-4 max-w-7xl mx-auto",
-				isVisible ? "opacity-100" : "opacity-0"
-			)}
-		>
+		<div className={cn("transition-opacity ease duration-1000 px-4 max-w-7xl mx-auto")}>
 			<div className="top flex justify-between mb-8" ref={ref}>
 				<div className="left">
 					<Typography variant="h2">
-						В Нашем Портале Вы Найдете Лучших Специалистов.
+						You will find the best specialists on our platform.
 					</Typography>
 
 					<Divider className="w-12 border-y-2" />
-
-					<p className="m-0 p-0">
-						Наша главная миссия показать, что источник энергии, сил, стремление - внутри
-						вас самих.
-					</p>
-					<p className="m-0 p-0">
-						Мы здесь для того, чтобы вы научились слышать себя, свое тело, и свой дух.
-					</p>
+					<div>
+						<p className="m-0 p-0">
+							Our main mission is to show that the source of energy, strength, and
+							aspiration is within yourself.
+						</p>
+						<p className="m-0 p-0">
+							We are here so that you can learn to hear yourself, your body, and your
+							spirit.
+						</p>
+					</div>
 				</div>
 				<div className="right max-w-xs flex justify-end min-w-80 min-h-48">
 					<Card className="w-full bg-[#F5F99FB] p-6">
@@ -42,7 +37,9 @@ const AboutUs: React.FC = () => {
 						<div className="stars mb-3">
 							<RatingStars maxRating={5} rating={4.8} />
 						</div>
-						<Typography variant="h6" className="max-w-40">Средняя оценка наших психологов</Typography>
+						<Typography variant="h6" className="max-w-44">
+							The average rating of our psychologists
+						</Typography>
 					</Card>
 				</div>
 			</div>

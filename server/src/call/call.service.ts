@@ -1,25 +1,31 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { generateToken04 } from "./utils/token-generator";
 
 @Injectable()
 export class CallService {
-	// @WebSocketServer() private readonly server: Server;
+	private readonly APP_ID: number;
+	private readonly APP_SECRET: string;
 
-	// constructor(private readonly redisService: RedisService) {}
-
-	private generateToken(userId: string | number) {
-		const appID = 146140608;
-		const serverSecret = "a3b32455f70b0d1aaa75fedbfe0e0abf";
-
-		return generateToken04(appID, userId.toString(), serverSecret, 3600, "");
+	constructor(private readonly configService: ConfigService) {
+		this.APP_ID = Number(
+			this.configService.getOrThrow<number>("ZEGOCLOUD_APP_ID"),
+		);
+		this.APP_SECRET = this.configService.getOrThrow<string>(
+			"ZEGOCLOUD_APP_SECRET",
+		);
 	}
 
-	async joinRoom(roomId: string, userId: number) {
-		// const redis = this.redisService.getClient();
+	generateToken(userId: string | number) {
+		return generateToken04(
+			this.APP_ID,
+			userId.toString(),
+			this.APP_SECRET,
+			3600,
+		);
+	}
 
-		const token = this.generateToken(userId);
-		// const clientIds = await redis.lrange(`user:${id1}`, 0, -1);
-		// redis.a
-		return { roomId, token };
+	getCacheRoomKey(callerId: string, receiverId: string) {
+		return `video-room:${callerId}:${receiverId}`;
 	}
 }

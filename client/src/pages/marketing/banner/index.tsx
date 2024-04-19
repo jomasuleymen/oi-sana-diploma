@@ -36,7 +36,7 @@ const Banner: React.FC = () => {
 					Oi-Sana
 				</h1>
 				<h3 className="scroll-m-20 text-xl font-semibold tracking-tight text-center">
-					Платформа для отслеживания и улучшения ментального здоровья
+					“Oi-Sana” - a platform for tracking and improving mental health
 				</h3>
 				<div className="flex flex-wrap justify-center items-center gap-3 mt-12">
 					<Link to="/auth">

@@ -25,10 +25,10 @@ import {
 	SortingParams,
 } from "src/decorators/sorting-params.decorator";
 import { DeleteManyDTO } from "./dto/user-delete.dto";
+import { UserUpdateDTO } from "./dto/user-update.dto";
 import { User } from "./entities/user.entity";
 import { ROLE } from "./user-enums";
 import { UserService } from "./user.service";
-import { UserUpdateDTO } from "./dto/user-update.dto";
 
 @Controller("users")
 export class UserController {
@@ -40,7 +40,13 @@ export class UserController {
 	async find(
 		@PaginationParams() pagination: Pagination,
 		@SortingParams<User>(["username", "email"]) sort?: Sorting[],
-		@FilteringParams<User>(["username", "email", "role", "firstname", "lastname"])
+		@FilteringParams<User>([
+			"username",
+			"email",
+			"role",
+			"firstname",
+			"lastname",
+		])
 		filter?: Filtering[],
 	) {
 		return await this.userService.findBy(pagination, sort, filter);
@@ -67,7 +73,7 @@ export class UserController {
 		if (!Array.isArray(dto.id)) dto.id = [dto.id];
 		await this.userService.deleteManyById(dto.id);
 
-		return { message: "Пользователь успешно удален" };
+		return { message: "User deleted successfully" };
 	}
 
 	@UseAuthorized()
@@ -85,7 +91,7 @@ export class UserController {
 
 		await this.userService.deleteById(+userId);
 
-		return { message: "Пользователь успешно удален" };
+		return { message: "User deleted successfully" };
 	}
 
 	@UseAuthorized()

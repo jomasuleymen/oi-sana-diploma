@@ -67,7 +67,7 @@ export class ArticleController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.articleService.deleteManyById(dto.id as any);
 
-		return { message: "Артиклы успешно удалены" };
+		return { message: "Articles deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN, ROLE.SPECIAL)
@@ -75,6 +75,6 @@ export class ArticleController {
 	async deleteOne(@Param("id") id: string, @UseSession() user: UserSession) {
 		await this.articleService.deleteById(id, user.id);
 
-		return { message: "Артикл успешно удален" };
+		return { message: "Article deleted successfully" };
 	}
 }

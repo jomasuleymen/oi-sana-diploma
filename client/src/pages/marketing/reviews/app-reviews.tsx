@@ -1,10 +1,10 @@
+import RatingStars from "@components/stars";
 import Typography from "@components/ui/typography";
 import React from "react";
-import { Divider } from "../components/divider";
 import Slider from "react-slick";
-import { appReviews } from "./reviews";
-import RatingStars from "@components/stars";
+import { Divider } from "../components/divider";
 import QuoteMark from "../components/quote-mark";
+import { appReviews } from "./reviews";
 
 type Review = {
 	rate: number;
@@ -18,11 +18,11 @@ const AppReviews: React.FC<Props> = ({}) => {
 	return (
 		<div>
 			<div className="heading text-center flex flex-col items-center mx-auto max-w-lg mb-16">
-				<Typography variant="h2">Отзывы</Typography>
+				<Typography variant="h2">Reviews</Typography>
 				<Divider />
 				<div>
-					Для нашей компании отзывы клиентов имеют высокое значение, они являются
-					ключевыми инструментом в поиске путей улучшения и развитие наших услуг
+					For our company, customer feedback is of great importance, they are key tools in
+					finding ways to improve and develop our services.
 				</div>
 			</div>
 			<div className="reviews">

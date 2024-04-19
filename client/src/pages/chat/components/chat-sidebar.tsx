@@ -8,10 +8,9 @@ import { useChatStore } from "../store/chat.store";
 
 interface SidebarProps {
 	isCollapsed: boolean;
-	isMobile: boolean;
 }
 
-export function ChatSidebar({ isCollapsed, isMobile }: SidebarProps) {
+export function ChatSidebar({ isCollapsed }: SidebarProps) {
 	const [rooms, selectedRoom, selectRoom, findRoomByUsername] = useChatStore((state) => [
 		state.rooms,
 		state.selectedRoom,

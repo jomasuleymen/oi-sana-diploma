@@ -1,7 +1,6 @@
 import { buttonVariants } from "@components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
 import { cn } from "@utils/utils";
-import { FileImage, Paperclip, PlusCircle, SendHorizontal, ThumbsUp } from "lucide-react";
+import { FileImage, Paperclip, SendHorizontal, ThumbsUp } from "lucide-react";
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Room } from "../chat.types";
@@ -56,38 +55,6 @@ export default function ChatBottombar({ room }: ChatBottombarProps) {
 
 	return (
 		<div className="p-2 flex justify-between w-full items-center gap-2 border-t-accent border-t-[1px]">
-			<div className="flex">
-				<Popover>
-					<PopoverTrigger asChild>
-						<Link
-							to="#"
-							className={cn(
-								buttonVariants({ variant: "ghost", size: "icon" }),
-								"h-9 w-9",
-								"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-							)}
-						>
-							<PlusCircle size={20} className="text-muted-foreground" />
-						</Link>
-					</PopoverTrigger>
-					<PopoverContent side="top" className="w-full p-2">
-						{BottombarIcons.map((icon, index) => (
-							<Link
-								key={index}
-								to="#"
-								className={cn(
-									buttonVariants({ variant: "ghost", size: "icon" }),
-									"h-9 w-9",
-									"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-								)}
-							>
-								<icon.icon size={20} className="text-muted-foreground" />
-							</Link>
-						))}
-					</PopoverContent>
-				</Popover>
-			</div>
-
 			<div className="w-full h-full border rounded-md relative flex items-center p-2">
 				<div
 					contentEditable={true}

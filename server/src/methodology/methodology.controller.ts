@@ -71,7 +71,7 @@ export class MethodologyController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.methodologyService.deleteManyById(dto.id as any);
 
-		return { message: "Методология успешно удалены" };
+		return { message: "Methodology deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN)
@@ -79,6 +79,6 @@ export class MethodologyController {
 	async deleteOne(@Param("id") id: number) {
 		await this.methodologyService.deleteById(id);
 
-		return { message: "Методология успешно удален" };
+		return { message: "Methodology deleted successfully" };
 	}
 }

@@ -2,29 +2,34 @@ import { Button } from "@components/ui/button";
 import Typography from "@components/ui/typography";
 import { cn } from "@utils/utils";
 import React from "react";
+import BlushedSmilingFace from "./emojies/Blushed Smiling Emoji.png?url";
+import NeutralFace from "./emojies/Neutral Emoji.png?url";
+import SlightlySmilingFace from "./emojies/Slightly Smiling Face Emoji.png?url";
+import UnhappyFace from "./emojies/Unhappy Emoji.png?url";
+import VeryHappyFace from "./emojies/Very Happy Emoji.png?url";
 
 type Props = {};
 
 const feelings = [
 	{
-		code: "😐",
-		description: "Neutral Face!",
+		image: NeutralFace,
+		description: "Do not be sad! Life is Beautiful!",
 	},
 	{
-		code: "🙁",
-		description: "Slightly Frowning Face!",
+		image: UnhappyFace,
+		description: "If you start the day with a positive, something good is sure to happen!",
 	},
 	{
-		code: "🙂",
-		description: "Slightly Smiling Face!",
+		image: SlightlySmilingFace,
+		description: "Keep it up! Have a good day!",
 	},
 	{
-		code: "😄",
-		description: "Grinning Face with Smiling Eyes!",
+		image: VeryHappyFace,
+		description: "May your every day be full of smiles!",
 	},
 	{
-		code: "😊",
-		description: "Smiling Face with Smiling Eyes!",
+		image: BlushedSmilingFace,
+		description: "Let the smile never leave your face",
 	},
 ];
 
@@ -46,12 +51,14 @@ const Feeling: React.FC<Props> = ({}) => {
 					<Button
 						key={index}
 						variant="outline-2"
-						className={cn("rounded-full text-4xl px-4 py-10", {
+						className={cn("rounded-full text-4xl px-5 py-10", {
 							"bg-primary": selectedFeeling === index,
 						})}
 						onClick={() => setSelectedFeeling(index)}
 					>
-						{feeling.code}
+						<div className="w-10 h-10">
+							<img src={feeling.image} alt="emoji" className="w-full h-full" />
+						</div>
 					</Button>
 				))}
 			</div>

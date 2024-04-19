@@ -8,3 +8,7 @@ type JoinRoom = {
 export const generateRoomToken = async (roomId: string) => {
 	return (await http.get<JoinRoom>(`/call/${roomId}`)).data;
 };
+
+export const findRooms = async () => {
+	return (await http.get<string[]>(`/call/rooms`)).data;
+};

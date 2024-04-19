@@ -58,13 +58,15 @@ export default function ChatTopbar({ selectedUser, room }: ChatTopbarProps) {
 						<Button variant="outline-2" className="px-3" onClick={handleJoinRoom}>
 							Join room
 						</Button>
-						<Button
-							variant="outline-2"
-							className="px-3 border-red-500 text-red-500"
-							onClick={handleCloseRoom}
-						>
-							Close room
-						</Button>
+						{user?.isSpecialist && (
+							<Button
+								variant="outline-2"
+								className="px-3 border-red-500 text-red-500"
+								onClick={handleCloseRoom}
+							>
+								Close room
+							</Button>
+						)}
 					</div>
 				)}
 				{!videoOpened && user?.isSpecialist && (

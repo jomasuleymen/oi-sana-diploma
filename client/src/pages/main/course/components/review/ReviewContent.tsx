@@ -1,12 +1,12 @@
+import { Textarea } from "@components/ui/textarea";
 import React, { useState } from "react";
 import { Rating } from "react-simple-star-rating";
-import { Textarea } from "@components/ui/textarea";
 
-import styled from "styled-components";
 import { Button } from "@components/ui/button";
 import { Send } from "lucide-react";
-import { Course, sendReview } from "../../course.service";
 import { toast } from "sonner";
+import styled from "styled-components";
+import { Course, sendReview } from "../../course.service";
 
 type Props = {
 	course: Course;
@@ -24,18 +24,18 @@ const ReviewContent: React.FC<Props> = ({ course }) => {
 
 	const handleSendReview = () => {
 		if (!rating) {
-			toast.error("Поставьте оценку курсу");
+			toast.error("Rate the course");
 			return;
 		}
 
 		if (!review) {
-			toast.error("Напишите отзыв");
+			toast.error("Review can not be empty");
 			return;
 		}
 
 		sendReview(course.slug, rating, review)
 			.then(() => {
-				toast.success("Спасибо за ваш отзыв!");
+				toast.success("Thanks for your feedback!");
 				setRating(0);
 				setReview("");
 			})

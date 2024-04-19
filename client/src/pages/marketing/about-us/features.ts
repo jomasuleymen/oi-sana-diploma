@@ -2,23 +2,23 @@ import { Book, Headphones, LockIcon, Rocket } from "lucide-react";
 
 export const features = [
 	{
-		title: "Полная конфиденциальность",
-		description: "Полная конфиденциальность",
+		title: "Complete confidentiality",
+		description: "Your data remains confidential and protected",
 		icon: LockIcon,
 	},
 	{
-		title: "Онлайн консультация",
-		description: "Ментальная помощь всегда и везде от наших психологов",
+		title: "Online consultation",
+		description: "Mental help is always and everywhere from our psychologists",
 		icon: Headphones,
 	},
 	{
-		title: "Бесплатная библиотека",
-		description: "Мы собираем для вас лучшие книги и статьи для саморазвития",
+		title: "Free library",
+		description: "We collect for you the best books and articles for self-development",
 		icon: Book,
 	},
 	{
-		title: "Результативность работы",
-		description: "Мы помогаем вам стать лучше",
+		title: "The effectiveness of the work",
+		description: "We are helping you to become a better person",
 		icon: Rocket,
 	},
 ];

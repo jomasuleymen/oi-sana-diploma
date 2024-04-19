@@ -61,7 +61,7 @@ export class BookController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.bookService.deleteManyById(dto.id as any);
 
-		return { message: "Пользователь успешно удален" };
+		return { message: "User deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN)
@@ -69,6 +69,6 @@ export class BookController {
 	async deleteOne(@Param("id") id: string) {
 		await this.bookService.deleteById(+id);
 
-		return { message: "Пользователь успешно удален" };
+		return { message: "User deleted successfully" };
 	}
 }

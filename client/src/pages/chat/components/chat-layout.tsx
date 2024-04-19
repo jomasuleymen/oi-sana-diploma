@@ -1,7 +1,6 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@components/ui/resizable";
 import { cn } from "@utils/utils";
-import React, { useEffect, useState } from "react";
-import { useChatStore } from "../store/chat.store";
+import React from "react";
 import { Chat } from "./chat";
 import { ChatSidebar } from "./chat-sidebar";
 
@@ -17,30 +16,6 @@ export function ChatLayout({
 	navCollapsedSize,
 }: ChatLayoutProps) {
 	const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-	const [isMobile, setIsMobile] = useState(false);
-
-	const [fetchRooms] = useChatStore((state) => [state.fetchRooms]);
-
-	useEffect(() => {
-		fetchRooms();
-	}, [fetchRooms]);
-
-	useEffect(() => {
-		const checkScreenWidth = () => {
-			setIsMobile(window.innerWidth <= 768);
-		};
-
-		// Initial check
-		checkScreenWidth();
-
-		// Event listener for screen width changes
-		window.addEventListener("resize", checkScreenWidth);
-
-		// Cleanup the event listener on component unmount
-		return () => {
-			window.removeEventListener("resize", checkScreenWidth);
-		};
-	}, []);
 
 	return (
 		<ResizablePanelGroup direction="horizontal" className="h-full items-stretch">
@@ -48,8 +23,8 @@ export function ChatLayout({
 				defaultSize={defaultLayout[0]}
 				collapsedSize={navCollapsedSize}
 				collapsible={true}
-				minSize={isMobile ? 0 : 18}
-				maxSize={isMobile ? 8 : 30}
+				minSize={18}
+				maxSize={30}
 				onCollapse={() => {
 					setIsCollapsed(true);
 				}}
@@ -61,7 +36,7 @@ export function ChatLayout({
 						"min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out"
 				)}
 			>
-				<ChatSidebar isCollapsed={isCollapsed || isMobile} isMobile={isMobile} />
+				<ChatSidebar isCollapsed={isCollapsed} />
 			</ResizablePanel>
 			<ResizableHandle withHandle />
 			<ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>

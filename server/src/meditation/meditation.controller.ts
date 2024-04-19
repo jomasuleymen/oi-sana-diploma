@@ -74,7 +74,7 @@ export class MeditationController {
 		if (typeof dto.id === "string") dto.id = [dto.id];
 		await this.meditationService.deleteManyById(dto.id as any);
 
-		return { message: "Медитация успешно удалены" };
+		return { message: "Meditations deleted successfully" };
 	}
 
 	@UseAuthorized(ROLE.ADMIN)
@@ -82,6 +82,6 @@ export class MeditationController {
 	async deleteOne(@Param("id") id: number) {
 		await this.meditationService.deleteById(id);
 
-		return { message: "Медитация успешно удален" };
+		return { message: "Meditation deleted successfully" };
 	}
 }

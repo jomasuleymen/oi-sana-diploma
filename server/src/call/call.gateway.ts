@@ -19,7 +19,9 @@ import { UserSession } from "src/auth/dto/session-user.dto";
 import SocketUseSession from "src/chat/decorators/socket-use-session.decorator";
 import { SocketAuthenticateGuard } from "src/guards/socket-auth.guard";
 import { WebsocketExceptionsFilter } from "src/socket/socket.filter";
+import { ROLE } from "src/user/user-enums";
 import { UserService } from "src/user/user.service";
+import { CallService } from "./call.service";
 
 @WebSocketGateway()
 @UseFilters(WebsocketExceptionsFilter)
@@ -29,6 +31,7 @@ export class CallGateway {
 
 	constructor(
 		private readonly userService: UserService,
+		private readonly callService: CallService,
 		private readonly redisService: RedisService,
 	) {}
 
@@ -41,20 +44,23 @@ export class CallGateway {
 		if (!roomId || !isString(roomId))
 			throw new BadGatewayException("roomId is required");
 
+		if (user.role !== ROLE.SPECIAL)
+			throw new BadGatewayException("Room can be opened only by specialists");
+
 		const callerId = String(user.id);
 		const [, id1, id2] = roomId.split("_");
 		const receiverId = callerId === id1 ? id2 : id1;
 
 		const redis = this.redisService.getClient();
-		const receiverClientIds = await redis.lrange(`user:${receiverId}`, 0, -1);
-		const hostClientIds = await redis.lrange(`user:${callerId}`, 0, -1);
-
 		const callerUser = await this.userService.findById(+callerId);
 		const receiverUser = await this.userService.findById(+receiverId);
 
 		if (!callerUser || !receiverUser) {
 			throw new BadGatewayException("User not found");
 		}
+
+		const receiverClientIds = await redis.lrange(`user:${receiverId}`, 0, -1);
+		const hostClientIds = await redis.lrange(`user:${callerId}`, 0, -1);
 
 		// Notify the receiver about the incoming call
 		this.server
@@ -72,6 +78,9 @@ export class CallGateway {
 					profileImage: receiverUser.profileImage,
 				},
 			});
+
+		const roomKey = this.callService.getCacheRoomKey(callerId, receiverId);
+		redis.setex(roomKey, 60 * 30, roomId);
 	}
 
 	@UseGuards(SocketAuthenticateGuard)
@@ -82,6 +91,9 @@ export class CallGateway {
 	) {
 		if (!roomId || !isString(roomId))
 			throw new BadGatewayException("roomId is required");
+
+		if (user.role !== ROLE.SPECIAL)
+			throw new BadGatewayException("Room can be closed only by specialists");
 
 		const callerId = String(user.id);
 		const [, id1, id2] = roomId.split("_");
@@ -97,5 +109,8 @@ export class CallGateway {
 			.emit("closed-video-room", {
 				roomId,
 			});
+
+		const roomKey = this.callService.getCacheRoomKey(callerId, receiverId);
+		redis.del(roomKey);
 	}
 }
