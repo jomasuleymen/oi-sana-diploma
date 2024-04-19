@@ -36,7 +36,7 @@ const MeditationsListPage: React.FC<Props> = ({}) => {
 							<ServerImage
 								src={item.image}
 								alt={item.name}
-								className="object-fill w-full h-full"
+								className="object-cover w-full h-full"
 							/>
 							<div className="absolute bottom-[5px] left-[5px] text-xs text-white bg-gray-600 bg-opacity-60 px-2 py-[1px] rounded-lg">
 								{item.meditations.length} sessions

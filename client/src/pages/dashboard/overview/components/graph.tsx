@@ -15,7 +15,7 @@ interface Data {
 
 const getDefaultData = () =>
 	Array.from({ length: 12 }, (_, month) => ({
-		name: new Date(0, month).toLocaleString("default", { month: "short" }),
+		name: new Date(0, month).toLocaleString("en-US", { month: "short" }),
 		total: 0,
 	}));
 

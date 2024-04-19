@@ -23,7 +23,7 @@ const SpecialistCard: React.FC<Props> = ({ specialist }) => {
 								<ServerImage
 									src={specialist.user.profileImage}
 									alt="Profile image"
-									className="w-full h-full object-fill"
+									className="w-full h-full object-cover"
 								/>
 							) : (
 								<img
