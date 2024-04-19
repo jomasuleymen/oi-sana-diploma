@@ -2,6 +2,9 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { isEmail } from "class-validator";
+import ejs from "ejs";
+import * as fs from "fs";
+import path from "path";
 import { MailService } from "src/mail/mail.service";
 import { HOUR } from "time-constants";
 import { Equal, Repository } from "typeorm";
@@ -12,6 +15,7 @@ import { ResetPassword } from "../entities/reset-password.entity";
 export class ResetPasswordTokenService {
 	private domain: string;
 	private DOMAIN_ENV = "CLIENT_DOMAIN";
+	private readonly resetPasswordTemplate;
 
 	constructor(
 		@InjectRepository(ResetPassword)
@@ -20,6 +24,11 @@ export class ResetPasswordTokenService {
 		private readonly config: ConfigService,
 	) {
 		this.domain = this.config.getOrThrow(this.DOMAIN_ENV)!;
+
+		const templatePath = path.join("html", "reset-password.ejs");
+		this.resetPasswordTemplate = ejs.compile(
+			fs.readFileSync(templatePath, "utf8"),
+		);
 	}
 
 	private generateToken = () => {
@@ -47,7 +56,7 @@ export class ResetPasswordTokenService {
 		await this.mailService.sendMail({
 			to: tokenEntity.email,
 			subject: "Reset password",
-			html: `<p>Click <a href="${confirmLink}">here</a> to reset password.</p>`,
+			html: this.resetPasswordTemplate({ link: confirmLink, domain: this.domain }),
 		});
 	};
 

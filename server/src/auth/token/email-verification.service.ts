@@ -1,17 +1,21 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
+import { isEmail } from "class-validator";
+import ejs from "ejs";
+import * as fs from "fs";
+import path from "path";
 import { MailService } from "src/mail/mail.service";
 import { HOUR } from "time-constants";
 import { Equal, Repository } from "typeorm";
 import { v4 as uuidv4 } from "uuid";
 import { VerificationTokenEntity } from "../entities/email-verification.entity";
-import { isEmail } from "class-validator";
 
 @Injectable()
 export class EmailVerificationService {
-	private domain: string;
-	private DOMAIN_ENV = "CLIENT_DOMAIN";
+	private readonly domain: string;
+	private readonly DOMAIN_ENV = "CLIENT_DOMAIN";
+	private readonly emailVerificationTemplate;
 
 	constructor(
 		@InjectRepository(VerificationTokenEntity)
@@ -20,6 +24,11 @@ export class EmailVerificationService {
 		private readonly config: ConfigService,
 	) {
 		this.domain = this.config.getOrThrow(this.DOMAIN_ENV)!;
+
+		const templatePath = path.join("html", "email-verification.ejs");
+		this.emailVerificationTemplate = ejs.compile(
+			fs.readFileSync(templatePath, "utf8"),
+		);
 	}
 
 	private generateToken = () => {
@@ -47,7 +56,10 @@ export class EmailVerificationService {
 		await this.mailService.sendMail({
 			to: tokenEntity.email,
 			subject: "Confirm your email",
-			html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`,
+			html: this.emailVerificationTemplate({
+				link: confirmLink,
+				domain: this.domain,
+			}),
 		});
 	};
 
