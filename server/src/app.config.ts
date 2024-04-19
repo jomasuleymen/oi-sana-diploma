@@ -2,6 +2,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import ValidationException from "./exceptions/validation.exception";
 import { SocketIoAdapter } from "./socket/socket.adapter";
+import { isProd } from "./utils/constants";
 
 export const configApp = async (app: INestApplication<any>) => {
 	const configService = app.get<ConfigService>(ConfigService);
@@ -34,5 +35,6 @@ export const configApp = async (app: INestApplication<any>) => {
 	await app.listen(PORT, () => {
 		console.log(`Server started on port ${PORT}`);
 		console.log("Origins: ", origins);
+		console.log("Production:", isProd);
 	});
 };
