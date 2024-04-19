@@ -3,7 +3,8 @@ import { cn, formatDate } from "@utils/utils";
 import { MessageCircleMore, SettingsIcon } from "lucide-react";
 
 import AvatarWrapper from "@components/ui/avatar-wrapper";
-import { checkMessagePermission, Specialist } from "@pages/specialist/specialist.service";
+import { checkMessagePermission } from "@pages/chat/chat.service";
+import { Specialist } from "@pages/specialist/specialist.service";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 

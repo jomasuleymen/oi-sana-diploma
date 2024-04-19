@@ -57,11 +57,3 @@ export const updateSpecialistStatus = async (id: string, isVerified: boolean) =>
 			return res.data;
 		});
 };
-
-export const checkMessagePermission = async (userId: string | number) => {
-	return await $api
-		.get<boolean>(`${SPECIALISTS_ENDPOINT}/message-permission/${userId}`)
-		.then((res) => {
-			return res.data;
-		});
-};
