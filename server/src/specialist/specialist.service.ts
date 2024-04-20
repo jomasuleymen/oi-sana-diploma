@@ -71,16 +71,26 @@ export class SpecialistService {
 	}
 
 	async updateById(userId: Specialist["userId"], data: UpdateSpecialistDTO) {
-		const updateUser = this.userService.updateById(userId, {
-			profileImage: data.profileImage || undefined,
-		});
+		const promises = [];
 
-		const updateSpec = this.specRepository.update(
-			{ userId },
-			{ about: data.about || undefined },
-		);
+		if (data.profileImage) {
+			const updateUser = this.userService.updateById(userId, {
+				profileImage: data.profileImage,
+			});
 
-		await Promise.all([updateUser, updateSpec]);
+			promises.push(updateUser);
+		}
+
+		if (data.about) {
+			const updateSpec = this.specRepository.update(
+				{ userId },
+				{ about: data.about },
+			);
+
+			promises.push(updateSpec);
+		}
+
+		await Promise.all(promises);
 	}
 
 	async getCountStatistics() {
