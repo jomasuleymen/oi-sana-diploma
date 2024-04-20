@@ -5,11 +5,11 @@ import { Pagination } from "src/decorators/pagination-params.decorator";
 import { Sorting } from "src/decorators/sorting-params.decorator";
 import { getOrder, getWhere } from "src/lib/typeorm.util";
 import { User } from "src/user/entities/user.entity";
+import { UserService } from "src/user/user.service";
 import { Equal, Repository } from "typeorm";
 import SpecialistRegisterDTO from "./dto/register-specialist.dto";
-import { Specialist } from "./entities/specialist.entity";
-import { UserService } from "src/user/user.service";
 import { UpdateSpecialistDTO } from "./dto/update-specialist.dto";
+import { Specialist } from "./entities/specialist.entity";
 
 @Injectable()
 export class SpecialistService {
@@ -71,11 +71,11 @@ export class SpecialistService {
 	}
 
 	async updateById(userId: Specialist["userId"], data: UpdateSpecialistDTO) {
-		const updateUser = await this.userService.updateById(userId, {
-			profileImage: data.profileImage,
+		const updateUser = this.userService.updateById(userId, {
+			profileImage: data.profileImage || undefined,
 		});
 
-		const updateSpec = await this.specRepository.update(
+		const updateSpec = this.specRepository.update(
 			{ userId },
 			{ about: data.about || undefined },
 		);
