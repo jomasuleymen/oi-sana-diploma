@@ -102,7 +102,7 @@ export class SpecialistService {
 				"EXTRACT(MONTH FROM user.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE)",
 			)
 			.groupBy("user.id")
-			.getRawOne();
+			.getCount();
 
 		const lastMonthSql = this.specRepository
 			.createQueryBuilder("spec")
@@ -112,7 +112,7 @@ export class SpecialistService {
 				"EXTRACT(MONTH FROM user.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '1 month')",
 			)
 			.groupBy("user.id")
-			.getRawOne();
+			.getCount();
 
 		const [thisMonthCount, lastMonthCount] = await Promise.all([
 			thisMonthSql,
@@ -120,8 +120,8 @@ export class SpecialistService {
 		]);
 
 		return {
-			thisMonth: Number(thisMonthCount?.count) || 0,
-			lastMonth: Number(lastMonthCount?.count) || 0,
+			thisMonth: thisMonthCount || 0,
+			lastMonth: lastMonthCount || 0,
 		};
 	}
 }
