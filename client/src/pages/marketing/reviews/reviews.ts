@@ -1,28 +1,34 @@
+import AlimaImage from "/psychologists/alima.png?url";
+import DiasImage from "/psychologists/dias.png?url";
+import DinaraImage from "/psychologists/dinara.png?url";
+import SaltanatImage from "/psychologists/saltanat.png?url";
+import SanzharImage from "/psychologists/sanzhar.png?url";
+
 export const specialistReviews = [
 	{
-		image: "https://assets-global.website-files.com/5f6b627361bad8cad0fc5c99/64c434bf7f29e6de7c9d9b41_Teodorie-p-500.png",
-		name: "Dorie",
-		review: "Having a Oi-Sana therapist is like somebody coming in and kind of shining a light down the path. You know, it's still up to me to walk that path, but it just makes it a little bit easier.",
+		image: DiasImage,
+		name: "Dias",
+		review: "My goal is not only to heal wounds, but also to strengthen mental health so that everyone can live a full life.",
 	},
 	{
-		image: "https://assets-global.website-files.com/5f6b627361bad8cad0fc5c99/64c434bfba9c9471e88508d9_Corisha.png",
-		name: "Corisha",
-		review: "I feel like I'm more in control of my life, and I'm not just letting my anxiety control me. I'm able to recognize it and then work through it.",
+		image: AlimaImage,
+		name: "Alima",
+		review: "There are answers hidden in every story, and I help solve these riddles.",
 	},
 	{
-		image: "https://assets-global.website-files.com/5f6b627361bad8cad0fc5c99/64c434bf434d9807c68f396c_April.png",
-		name: "April",
-		review: "I felt very comfortable with my therapist immediately.",
+		image: SaltanatImage,
+		name: "Saltanat",
+		review: "I believe that there is wisdom in every person, and my task is to help them unlock this potential.",
 	},
 	{
-		image: "https://assets-global.website-files.com/5f6b627361bad8cad0fc5c99/64c434bfe3ffa0d067da717e_Ozzie.png",
-		name: "Ozzie",
-		review: "I was so surprised at how much better I felt after just one session.",
+		image: SanzharImage,
+		name: "Sanzhar",
+		review: "By exploring the dark corners of the human soul, I help to find light and understanding.",
 	},
 	{
-		image: "https://assets-global.website-files.com/5f6b627361bad8cad0fc5c99/64c434bf4f45d1dc643d3537_Evert.png",
-		name: "Evert",
-		review: "Oi-sana has changed my life because it's given me the confidence to do difficult things.",
+		image: DinaraImage,
+		name: "Dinara",
+		review: "I serve as a guide on a journey to self-discovery and self-development, helping clients discover their inner resources.",
 	},
 ];
 

@@ -37,17 +37,19 @@ const SpecialistReviewCard: React.FC<Props> = ({ review, reverse, colorIndex }) 
 			)}
 		>
 			<div
-				className={cn("info rounded-[20px] flex-[12] relative")}
+				className={cn("info rounded-[20px] flex-[12] relative overflow-hidden")}
 				style={{
 					backgroundColor: color[0],
 				}}
 			>
 				<span className="absolute top-5 left-5 text-sm font-semibold">{review.name}</span>
-				<img
-					alt="Real Talkspace customer"
-					src={review.image}
-					className="w-full h-full object-cover"
-				/>
+				{review.image && (
+					<img
+						alt="Real Talkspace customer"
+						src={review.image}
+						className="w-full h-full object-cover"
+					/>
+				)}
 			</div>
 			<div
 				className="review p-4 leading-tight rounded-[20px] flex-[5] flex items-center justify-center text-lg font-bold"

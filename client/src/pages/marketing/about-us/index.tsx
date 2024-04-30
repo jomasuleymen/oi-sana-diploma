@@ -1,4 +1,3 @@
-import RatingStars from "@components/stars";
 import { Card } from "@components/ui/card";
 import Typography from "@components/ui/typography";
 import { cn } from "@utils/utils";
@@ -28,19 +27,6 @@ const AboutUs: React.FC = () => {
 							spirit.
 						</p>
 					</div>
-				</div>
-				<div className="right max-w-xs flex justify-end min-w-80 min-h-48">
-					<Card className="w-full bg-[#F5F99FB] p-6">
-						<Typography variant="h2" className="mb-3">
-							4.8
-						</Typography>
-						<div className="stars mb-3">
-							<RatingStars maxRating={5} rating={4.8} />
-						</div>
-						<Typography variant="h6" className="max-w-44">
-							The average rating of our psychologists
-						</Typography>
-					</Card>
 				</div>
 			</div>
 			<div className="bottom flex gap-6 flex-wrap">

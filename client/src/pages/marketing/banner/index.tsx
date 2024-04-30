@@ -3,7 +3,8 @@ import { useHeaderMode } from "@hooks/use-header-mode";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import SpecialistImage from "/undraw_certificate_re_yadi.svg?url";
+import SpecialistImage from "/banner/specialist.svg?url";
+import ClientImage from "/banner/client.svg?url";
 
 const ClientTypeCard = styled(Card)<{ $bgColor: string; $image: string }>`
 	width: 290px;
@@ -17,7 +18,6 @@ const ClientTypeCard = styled(Card)<{ $bgColor: string; $image: string }>`
 
 	background-color: ${({ $bgColor }) => $bgColor};
 	background-image: url(${({ $image }) => $image});
-	background-size: 150px 150px;
 	background-repeat: no-repeat;
 	background-position: bottom right;
 
@@ -36,22 +36,22 @@ const Banner: React.FC = () => {
 					Oi-Sana
 				</h1>
 				<h3 className="scroll-m-20 text-xl font-semibold tracking-tight text-center">
-					“Oi-Sana” - a platform for tracking and improving mental health
+					A platform for tracking and improving mental health
 				</h3>
-				<div className="flex flex-wrap justify-center items-center gap-3 mt-12">
+				<div className="flex flex-wrap justify-center items-center gap-4 mt-12">
 					<Link to="/auth">
-						<ClientTypeCard $image={SpecialistImage} $bgColor="#FCBD2D">
+						<ClientTypeCard $image={ClientImage} $bgColor="#BCCCFF" className="bg-[length:160px_145px]">
 							<CardHeader>
 								<CardTitle>Client</CardTitle>
 								<CardDescription className="font-semibold">
-									I need specialist
+									I need a specialist
 								</CardDescription>
 							</CardHeader>
 							<CardFooter className="flex justify-between"></CardFooter>
 						</ClientTypeCard>
 					</Link>
 					<Link to="/auth/specialist">
-						<ClientTypeCard $image={SpecialistImage} $bgColor="#fea1bc">
+						<ClientTypeCard $image={SpecialistImage} $bgColor="#c0a4fc" className="bg-[length:160px_170px]">
 							<CardHeader>
 								<CardTitle>Specialist</CardTitle>
 								<CardDescription>I am specialist</CardDescription>

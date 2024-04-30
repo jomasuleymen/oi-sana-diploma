@@ -48,10 +48,10 @@ const AboutApp: React.FC<Props> = ({}) => {
 							></path>
 						</svg>
 					</div>
-					<div className="absolute inset-0 flex items-center justify-center transition-all duration-1000 ease-in">
+					<div className="absolute inset-0 flex items-center overflow-hidden justify-center transition-all duration-1000 ease-in">
 						<img
 							src={step.image}
-							className="max-w-[302px] min-w-[190px] w-full"
+							className="max-w-[280px] min-w-[190px] w-full rounded-lg"
 							alt={step.title}
 						></img>
 					</div>

@@ -11,12 +11,9 @@ import { specialistReviews } from "./reviews";
 
 const MarketingSpecialists: React.FC = () => {
 	return (
-		<div className="flex flex-col gap-8">
+		<div className="flex flex-col gap-8 pt-4">
 			<div className="top flex flex-col gap-3 items-center justify-center">
-				<div className="stars">
-					<RatingStars maxRating={5} rating={5} size={32} />
-				</div>
-				<Typography variant="h2">More than 60,000 5-star reviews</Typography>
+				<Typography variant="h2">Our psychologists</Typography>
 			</div>
 			<div className="overflow-hidden">
 				<Slider
