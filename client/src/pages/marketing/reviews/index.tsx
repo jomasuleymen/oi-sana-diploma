@@ -1,4 +1,3 @@
-import RatingStars from "@components/stars";
 import Typography from "@components/ui/typography";
 import React from "react";
 
