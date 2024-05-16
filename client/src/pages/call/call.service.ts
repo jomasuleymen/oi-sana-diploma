@@ -3,6 +3,7 @@ import http from "@lib/http";
 type JoinRoom = {
 	roomId: string;
 	token: string;
+	appId: string;
 };
 
 export const generateRoomToken = async (roomId: string) => {

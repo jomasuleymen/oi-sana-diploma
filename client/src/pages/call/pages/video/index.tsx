@@ -11,19 +11,19 @@ function VideoCallPage() {
 	const [searchParams, _] = useSearchParams();
 	const ref = useRef(null);
 
-	const token = "a3b32455f70b0d1aaa75fedbfe0e0abf" || searchParams.get("token");
+	const token = searchParams.get("token");
 	const roomId = searchParams.get("roomId");
+	const appID = searchParams.get("appId");
 
 	useEffect(() => {
 		if (userLoading) return;
 
-		if (!roomId || !token || !user) {
+		if (!roomId || !token || !appID || !user) {
 			return;
 		}
 
-		const appID = 146140608;
 		const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-			appID,
+			Number(appID),
 			token,
 			roomId,
 			user.id.toString(),

@@ -39,6 +39,7 @@ export class CallController {
 		@Param("room") roomId: string,
 	) {
 		const token = this.callService.generateToken(user.id);
-		return { roomId, token };
+		const appId = this.callService.getAppId();
+		return { roomId, token, appId };
 	}
 }

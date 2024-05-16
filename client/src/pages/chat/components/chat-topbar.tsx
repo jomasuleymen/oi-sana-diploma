@@ -32,7 +32,7 @@ export default function ChatTopbar({ selectedUser, room }: ChatTopbarProps) {
 
 	const handleJoinRoom = () => {
 		generateRoomToken(room.id).then((data) => {
-			navigate(`/call/video?roomId=${data.roomId}&token=${data.token}`);
+			navigate(`/call/video?roomId=${data.roomId}&token=${data.token}&appId=${data.appId}`);
 		});
 	};
 

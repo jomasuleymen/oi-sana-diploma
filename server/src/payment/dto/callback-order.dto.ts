@@ -22,4 +22,7 @@ export class PaymentCallbackOrderDTO {
 	@IsString()
 	@IsOptional()
 	errMessage: string;
+	
+	@IsOptional()
+	errCode: string;
 }

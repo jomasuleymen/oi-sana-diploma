@@ -4,6 +4,8 @@ import {
 	Controller,
 	Get,
 	Post,
+	ValidationPipe,
+	UsePipes
 } from "@nestjs/common";
 import { UseAuthorized } from "src/auth/decorators/use-auth.decorator";
 import {
@@ -28,7 +30,9 @@ export class PaymentController {
 	constructor(private readonly paymentService: PaymentService) {}
 
 	@Post("callback")
+	@UsePipes(new ValidationPipe({ whitelist: false }))
 	async callBack(@Body() callbackDto: PaymentCallbackOrderDTO) {
+		console.log(callbackDto)
 		if (callbackDto.status === 1) {
 			return this.paymentService.completePayment(callbackDto.orderId);
 		}

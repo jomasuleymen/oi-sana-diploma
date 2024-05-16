@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { generateToken04 } from "./utils/token-generator";
+// import { generateToken04 } from "./utils/token-generator";
 
 @Injectable()
 export class CallService {
@@ -17,15 +17,21 @@ export class CallService {
 	}
 
 	generateToken(userId: string | number) {
-		return generateToken04(
-			this.APP_ID,
-			userId.toString(),
-			this.APP_SECRET,
-			3600,
-		);
+		// return generateToken04(
+		//	this.APP_ID,
+		//	userId.toString(),
+		//	this.APP_SECRET,
+		//	3600,
+		// );
+		
+		return this.APP_SECRET;
 	}
 
 	getCacheRoomKey(callerId: string, receiverId: string) {
 		return `video-room:${callerId}:${receiverId}`;
+	}
+	
+	getAppId(){
+		return this.APP_ID;
 	}
 }
