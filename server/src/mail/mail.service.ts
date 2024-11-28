@@ -14,7 +14,6 @@ export class MailService {
 			host: config.getOrThrow("MAIL_HOST"),
 			port: config.getOrThrow("MAIL_PORT"),
 			secure: true,
-			from: config.getOrThrow("MAIL_EMAIL"),
 			auth: {
 				user: this.config.getOrThrow("MAIL_EMAIL"),
 				pass: this.config.getOrThrow("MAIL_PASSWORD"),
@@ -23,6 +22,9 @@ export class MailService {
 	}
 
 	async sendMail(options: Mail.Options) {
-		await this.transporter.sendMail(options);
+		await this.transporter.sendMail({
+			...options,
+			from: this.config.getOrThrow("MAIL_EMAIL"),
+		});
 	}
 }
