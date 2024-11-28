@@ -69,7 +69,7 @@ export class ChatGateway
 	}
 
 	async sendMessageToClients(userId: number, data: any) {
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 
 		const clientIds = await redis.lrange(`user:${userId}`, 0, -1);
 		if (clientIds.length > 0) {
@@ -82,12 +82,12 @@ export class ChatGateway
 		server.engine.use(passport.initialize());
 
 		// clear all clients on server restart
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 		redis.del("client:*", "user:*");
 	}
 
 	async handleDisconnect(client: Socket) {
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 		const userId = await redis.get(`client:${client.id}`);
 		if (userId) {
 			await redis.lrem(`user:${userId}`, 1, client.id);
@@ -102,7 +102,7 @@ export class ChatGateway
 		if (!user) {
 			client.disconnect(true);
 		} else {
-			const redis = this.redisService.getClient();
+			const redis = this.redisService.getOrThrow();
 			await redis.lpush(`user:${user.id}`, client.id);
 			await redis.set(`client:${client.id}`, user.id);
 		}

@@ -1,7 +1,7 @@
 import { RedisService } from "@liaoliaots/nestjs-redis";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import RedisStore from "connect-redis";
+import { RedisStore } from "connect-redis";
 import session, { Store } from "express-session";
 import { WEEK } from "time-constants";
 
@@ -15,7 +15,7 @@ export class SessionService {
 		private readonly config: ConfigService,
 	) {
 		this.sessionStore = new RedisStore({
-			client: this.redis.getClient(),
+			client: this.redis.getOrThrow(),
 			prefix: "sid:",
 		});
 

@@ -51,7 +51,7 @@ export class CallGateway {
 		const [, id1, id2] = roomId.split("_");
 		const receiverId = callerId === id1 ? id2 : id1;
 
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 		const callerUser = await this.userService.findById(+callerId);
 		const receiverUser = await this.userService.findById(+receiverId);
 
@@ -99,7 +99,7 @@ export class CallGateway {
 		const [, id1, id2] = roomId.split("_");
 		const receiverId = callerId === id1 ? id2 : id1;
 
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 		const receiverClientIds = await redis.lrange(`user:${receiverId}`, 0, -1);
 		const hostClientIds = await redis.lrange(`user:${callerId}`, 0, -1);
 

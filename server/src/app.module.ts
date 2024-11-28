@@ -24,18 +24,16 @@ import { SessionService } from "./session/session.service";
 import { SpecialistModule } from "./specialist/specialist.module";
 import { UploadModule } from "./upload/upload.module";
 import { UserModule } from "./user/user.module";
-import { isProd } from "./utils/constants";
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: [".env", isProd ? ".env.production" : ".env.development"],
 		}),
 		TypeOrmModule.forRoot(getPostgresConfig()),
 		RedisModule.forRootAsync({
 			inject: [ConfigService],
-			useFactory: getRedisConfig,
+			useFactory: getRedisConfig as any,
 		}),
 		SessionModule,
 		AuthModule,

@@ -15,7 +15,7 @@ export class CallController {
 	@Get("rooms")
 	@UseAuthorized()
 	async findVideoRooms(@UseSession() user: UserSession) {
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 		const keys = redis.keys(`video-room:${user.id}:*`);
 		const keys2 = redis.keys(`video-room:*:${user.id}`);
 

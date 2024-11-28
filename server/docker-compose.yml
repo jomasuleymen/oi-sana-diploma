@@ -2,26 +2,24 @@ version: "3.9"
 
 services:
   postgres-db:
-    image: postgres
-    restart: always
+    image: postgres:16.6-alpine
     ports:
-      - 5432:5432
-    volumes:
-      - db:/var/lib/postgresql/data
+      - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=root
-      - POSTGRES_DB=oi-sana
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is not specified}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not specified}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is not specified}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   redisdb:
-    image: redis:alpine
-    restart: always
+    image: redis:6.2.16-alpine
     ports:
-      - 6379:6379
-    command: redis-server --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t8
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD is not specified} --save 300 10
     volumes:
-      - redis-data:/data
+      - redis_data:/data
 
 volumes:
-  db:
-  redis-data:
+  postgres_data:
+  redis_data:

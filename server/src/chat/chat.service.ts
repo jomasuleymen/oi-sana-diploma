@@ -258,7 +258,7 @@ export class ChatService {
 	}
 
 	async checkMessagePermission(roomId: string, userId: number) {
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 
 		const members = this.getMembersOfRoom(roomId);
 		if (!members) throw new BadRequestException("Invalid room id");
@@ -302,7 +302,7 @@ export class ChatService {
 	}
 
 	async clearMessagePermissionCache(userId: number, counterPartyId: number) {
-		const redis = this.redisService.getClient();
+		const redis = this.redisService.getOrThrow();
 
 		await redis.del(this.getMessagePermissionCacheKey(userId, counterPartyId));
 		await redis.del(this.getMessagePermissionCacheKey(counterPartyId, userId));
